@@ -1,0 +1,72 @@
+buildscript {
+	ext {
+		springBootVersion = '2.7.11'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+		classpath "io.spring.gradle:dependency-management-plugin:1.0.11.RELEASE"
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+
+	group 'org.example'
+	version '1.0-SNAPSHOT'
+
+	sourceCompatibility = '17'
+	targetCompatibility = '17'
+	compileJava.options.encoding = 'UTF-8'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		// Spring
+		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+		// lombok
+		compileOnly 'org.projectlombok:lombok'
+		annotationProcessor 'org.projectlombok:lombok'
+
+		// hasText
+		implementation 'org.apache.commons:commons-lang3:3.12.0' // util 을 사용 하기 위해
+
+		// Swagger
+//        implementation 'io.springfox:springfox-boot-starter:3.0.0'
+//        implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+}
+
+project(':suldaksuldak-core') {
+	// 공통 코드
+	bootJar { enabled = false } // core 은 bootJar 로 패키징 할 필요 없음
+	jar { enabled = true }
+
+	dependencies {
+	}
+}
+
+project(':suldaksuldak') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':suldaksuldak-core') // 컴파일 시 velog-core project 로딩
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+	}
+}
