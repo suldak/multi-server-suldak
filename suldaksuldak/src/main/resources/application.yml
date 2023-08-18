@@ -9,3 +9,9 @@ spring:
     password: 1234
   main:
     allow-bean-definition-overriding: 'true'
+
+auth:
+  kakao:
+    code: c14c29936ab91bf8d5ff8ccf7ab0c06f
+    redirect: http://localhost:8080/api/v1/oauth/kakao
+    access_url: https://kauth.kakao.com/oauth/token
