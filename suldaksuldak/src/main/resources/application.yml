@@ -9,3 +9,24 @@ spring:
     password: 1234
   main:
     allow-bean-definition-overriding: 'true'
+  profiles:
+    include: oauth
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: c14c29936ab91bf8d5ff8ccf7ab0c06f
+            #          redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://localhost:8080/api/v1/oauth/kakao"
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            scope: account_email, age_range, birthday #동의 항목
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
