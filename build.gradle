@@ -77,3 +77,12 @@ project(':suldaksuldak') {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 	}
 }
+
+project(':suldaksuldak-reservation') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':suldaksuldak-core')
+	}
+}

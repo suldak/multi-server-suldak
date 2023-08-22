@@ -1,4 +1,5 @@
 rootProject.name = 'multi-server-suldak'
 include 'suldaksuldak'
 include 'suldaksuldak-core'
+include 'suldaksuldak-reservation'
 
