@@ -24,24 +24,27 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 @Slf4j
-public class ToKakao {
-    // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token
+public class ToNaver {
+    // https://developers.naver.com/docs/login/profile/profile.md
     private final RestTemplate restTemplate;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String restApiKey;
 
-    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
     private String redirectUrl;
 
-    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
     private String tokenUrl;
 
-    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    @Value("${spring.security.oauth2.client.provider.naver.user-info-uri}")
     private String infoUrl;
 
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String clientSecret;
+
     @Autowired
-    public ToKakao() {
+    public ToNaver() {
         HttpComponentsClientHttpRequestFactory factory
                 = new HttpComponentsClientHttpRequestFactory();
         factory.setConnectTimeout(5000);
@@ -53,20 +56,21 @@ public class ToKakao {
                 .add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
-    // https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#request-token
-    public String getAccessToken(
-            String code
+    public String getAccessToken (
+            String code,
+            String state
     ) {
         try {
-            HttpEntity<MultiValueMap<String, String>> kakaoTokenReq =
-                    new HttpEntity<>(getParams(code), getHeader());
+            HttpEntity<MultiValueMap<String, String>> naverTokenReq =
+                    new HttpEntity<>(getParams(code, state), getHeader());
             ResponseEntity<String> response = restTemplate.exchange(
                     tokenUrl,
                     HttpMethod.POST,
-                    kakaoTokenReq,
+                    naverTokenReq,
                     String.class
             );
             String tokenJson = response.getBody();
+            log.info(tokenJson);
             JSONObject jsonObject = new JSONObject(tokenJson);
             return jsonObject.getString("access_token");
         } catch (Exception e) {
@@ -78,28 +82,28 @@ public class ToKakao {
             String accessToken
     ) {
         try {
-            HttpEntity<MultiValueMap<String, String>> kakaoTokenReq =
+            HttpEntity<MultiValueMap<String, String>> naverTokenReq =
                     new HttpEntity<>(getHeader(accessToken));
             ResponseEntity<String> response = restTemplate.exchange(
                     infoUrl,
                     HttpMethod.GET,
-                    kakaoTokenReq,
+                    naverTokenReq,
                     String.class
             );
             String tokenJson = response.getBody();
-            log.info(tokenJson);
             JSONObject jsonObject = new JSONObject(tokenJson);
+            log.info(tokenJson);
             return UserDto.of(
                     null,
-                    jsonObject.getJSONObject("kakao_account").getString("email"),
+                    jsonObject.getJSONObject("response").getString("email"),
                     AuthTool.encryptPassword(
-                            jsonObject.getJSONObject("kakao_account").getString("email"),
-                            Integer.toString(jsonObject.getInt("id"))
+                            jsonObject.getJSONObject("response").getString("email"),
+                            jsonObject.getJSONObject("response").getString("id")
                     ),
-                    jsonObject.getJSONObject("properties").getString("nickname"),
+                    jsonObject.getJSONObject("response").getString("nickname"),
                     null,
                     null,
-                    Registration.KAKAO
+                    Registration.NAVER
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +120,6 @@ public class ToKakao {
 
         return headers;
     }
-
     private HttpHeaders getHeader(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(
@@ -130,20 +133,16 @@ public class ToKakao {
 
         return headers;
     }
-
     private MultiValueMap<String, String> getParams(
-            String code
+            String code,
+            String state
     ) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        // authorization_code로 고정
         params.add("grant_type", "authorization_code");
-        // 앱 REST API 키
         params.add("client_id", restApiKey);
-        // 인가 코드가 리다이렉트된 URI
-        params.add("redirect_uri", redirectUrl);
-        // 인가 코드 받기 요청으로 얻은 인가 코드
+        params.add("client_secret", clientSecret);
         params.add("code", code);
-
+        params.add("state", state);
         return params;
     }
 }
