@@ -42,6 +42,19 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public Optional<UserDto> loginUser(String email, String password) {
+        return Optional.ofNullable(
+                getUserDtoQuery()
+                        .from(user)
+                        .where(
+                                emailEq(email),
+                                passwordEq(password)
+                        )
+                        .fetchFirst()
+        );
+    }
+
     private JPAQuery<UserDto> getUserDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -70,5 +83,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             String nickname
     ) {
         return user.nickname.eq(nickname);
+    }
+
+    private BooleanExpression passwordEq(
+            String password
+    ) {
+        return user.password.eq(password);
     }
 }

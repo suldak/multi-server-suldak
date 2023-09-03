@@ -13,4 +13,8 @@ public interface UserRepositoryCustom {
             String email,
             String nickname
     );
+    Optional<UserDto> loginUser(
+            String email,
+            String password
+    );
 }
