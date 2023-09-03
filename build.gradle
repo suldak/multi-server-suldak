@@ -43,8 +43,8 @@ subprojects {
 		implementation 'org.apache.commons:commons-lang3:3.12.0' // util 을 사용 하기 위해
 
 		// Swagger
-//        implementation 'io.springfox:springfox-boot-starter:3.0.0'
-//        implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+        implementation 'io.springfox:springfox-boot-starter:3.0.0'
+        implementation 'io.springfox:springfox-swagger-ui:3.0.0'
 
 		// kakao access token
 		implementation group: 'org.json', name: 'json', version: '20210307'
