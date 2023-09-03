@@ -9,3 +9,6 @@ spring:
     password: 1234
   main:
     allow-bean-definition-overriding: 'true'
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
