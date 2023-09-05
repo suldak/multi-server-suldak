@@ -86,3 +86,12 @@ project(':suldaksuldak-reservation') {
 		implementation project(':suldaksuldak-core')
 	}
 }
+
+project(':suldaksuldak-admin') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':suldaksuldak-core')
+	}
+}
