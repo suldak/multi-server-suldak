@@ -23,8 +23,16 @@ public class Liquor extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Setter
+    @Column(nullable = false)
+    private String summaryExplanation;
+
+    @Setter
+    @Column(nullable = false)
+    private String detailExplanation;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -75,4 +83,32 @@ public class Liquor extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
     private Set<SnToLi> snToLis = new LinkedHashSet<>();
+
+    protected Liquor () {}
+
+    protected Liquor (
+            Long id,
+            String name,
+            String summaryExplanation,
+            String detailExplanation
+    ) {
+        this.id = id;
+        this.name = name;
+        this.summaryExplanation = summaryExplanation;
+        this.detailExplanation = detailExplanation;
+    }
+
+    public static Liquor of (
+            Long id,
+            String name,
+            String summaryExplanation,
+            String detailExplanation
+    ) {
+        return new Liquor(
+                id,
+                name,
+                summaryExplanation,
+                detailExplanation
+        );
+    }
 }
