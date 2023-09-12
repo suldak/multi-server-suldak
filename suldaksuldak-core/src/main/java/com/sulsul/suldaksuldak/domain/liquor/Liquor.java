@@ -54,7 +54,7 @@ public class Liquor extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private Set<TpToLi> tpToLis = new LinkedHashSet<>();
+    private Set<LiquorRecipe> liquorRecipes = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
