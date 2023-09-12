@@ -70,4 +70,9 @@ public class Liquor extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
     private Set<TtToLi> ttToLis = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    private Set<SnToLi> snToLis = new LinkedHashSet<>();
 }
