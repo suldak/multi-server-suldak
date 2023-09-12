@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class MaterialTypeRepositoryImpl implements MaterialTypeRepositoryCustom {
+public class LiquorMaterialRepositoryImpl implements LiquorMaterialRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 }

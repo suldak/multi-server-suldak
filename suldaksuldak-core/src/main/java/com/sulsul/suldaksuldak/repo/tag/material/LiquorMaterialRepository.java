@@ -7,9 +7,9 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
 import org.springframework.data.querydsl.binding.QuerydslBindings;
 
-public interface MaterialTypeRepository extends
+public interface LiquorMaterialRepository extends
         JpaRepository<LiquorMaterial, Long>,
-        MaterialTypeRepositoryCustom,
+        LiquorMaterialRepositoryCustom,
         QuerydslPredicateExecutor<LiquorMaterial>,
         QuerydslBinderCustomizer<QLiquorMaterial>
 {

@@ -1,6 +1,5 @@
 package com.sulsul.suldaksuldak.domain.liquor;
 
-import com.sulsul.suldaksuldak.domain.bridge.AbvToLi;
 import com.sulsul.suldaksuldak.domain.bridge.SnToLi;
 import lombok.Getter;
 import lombok.Setter;
