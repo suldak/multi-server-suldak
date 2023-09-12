@@ -1,7 +1,7 @@
 package com.sulsul.suldaksuldak.domain.bridge;
 
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
-import com.sulsul.suldaksuldak.domain.tag.MaterialType;
+import com.sulsul.suldaksuldak.domain.tag.LiquorMaterial;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -20,7 +20,7 @@ public class MtToLi {
     private Long id;
 
     @ManyToOne(optional = false)
-    private MaterialType materialType;
+    private LiquorMaterial liquorMaterial;
 
     @ManyToOne(optional = false)
     private Liquor liquor;
@@ -29,22 +29,22 @@ public class MtToLi {
 
     protected MtToLi(
             Long id,
-            MaterialType materialType,
+            LiquorMaterial liquorMaterial,
             Liquor liquor
     ) {
         this.id = id;
-        this.materialType = materialType;
+        this.liquorMaterial = liquorMaterial;
         this.liquor = liquor;
     }
 
     public static MtToLi of (
             Long id,
-            MaterialType materialType,
+            LiquorMaterial liquorMaterial,
             Liquor liquor
     ) {
         return new MtToLi(
                 id,
-                materialType,
+                liquorMaterial,
                 liquor
         );
     }

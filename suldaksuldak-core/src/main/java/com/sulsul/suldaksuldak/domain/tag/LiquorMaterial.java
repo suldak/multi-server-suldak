@@ -12,11 +12,11 @@ import java.util.Set;
 @Getter
 @ToString
 @Table(
-        name = "tb_material_type"
+        name = "tb_liquor_material"
 )
 @EntityListeners(AutoCloseable.class)
-@Entity(name = "materialType")
-public class MaterialType {
+@Entity(name = "liquorMaterial")
+public class LiquorMaterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,12 +27,12 @@ public class MaterialType {
 
     @ToString.Exclude
     @OrderBy("id")
-    @OneToMany(mappedBy = "materialType", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "liquorMaterial", cascade = CascadeType.REMOVE)
     private Set<MtToLi> mtToLis = new LinkedHashSet<>();
 
-    protected MaterialType() {}
+    protected LiquorMaterial() {}
 
-    protected MaterialType(
+    protected LiquorMaterial(
             Long id,
             String name
     ) {
@@ -40,11 +40,11 @@ public class MaterialType {
         this.name = name;
     }
 
-    public static MaterialType of (
+    public static LiquorMaterial of (
             Long id,
             String name
     ) {
-        return new MaterialType(
+        return new LiquorMaterial(
                 id,
                 name
         );
