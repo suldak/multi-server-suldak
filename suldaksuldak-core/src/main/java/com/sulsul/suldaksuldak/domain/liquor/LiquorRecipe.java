@@ -22,11 +22,9 @@ public class LiquorRecipe {
     @Column(nullable = false)
     private String content;
 
-    @Setter
-    @Column(nullable = false)
-    private Integer contentCnt;
-
-    @ManyToOne(optional = false)
+//    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "liquor_id")
     private Liquor liquor;
 
     protected LiquorRecipe() {}
@@ -34,25 +32,21 @@ public class LiquorRecipe {
     protected LiquorRecipe(
             Long id,
             String content,
-            Integer contentCnt,
             Liquor liquor
     ) {
         this.id = id;
         this.content = content;
-        this.contentCnt = contentCnt;
         this.liquor = liquor;
     }
 
     public static LiquorRecipe of (
             Long id,
             String content,
-            Integer contentCnt,
             Liquor liquor
     ) {
         return new LiquorRecipe(
                 id,
                 content,
-                contentCnt,
                 liquor
         );
     }
