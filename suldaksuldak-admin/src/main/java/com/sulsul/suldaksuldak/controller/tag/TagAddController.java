@@ -3,10 +3,7 @@ package com.sulsul.suldaksuldak.controller.tag;
 import com.sulsul.suldaksuldak.Service.tag.TagAddService;
 import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.tag.DrinkingCapacityDto;
-import com.sulsul.suldaksuldak.dto.tag.LiquorAbvDto;
-import com.sulsul.suldaksuldak.dto.tag.LiquorDetailDto;
-import com.sulsul.suldaksuldak.dto.tag.LiquorMaterialDto;
+import com.sulsul.suldaksuldak.dto.tag.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -84,6 +81,69 @@ public class TagAddController {
                 tagAddService.createLiquorMaterial(
                         liquorMaterialDto.getId(),
                         liquorMaterialDto.getName()
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "1차 분류 저장",
+            notes = "1차 분류를 생성하거나 수정합니다."
+    )
+    @PostMapping(value = "/liquor-name")
+    public ApiDataResponse<Boolean> createLiquorName (
+            @RequestBody LiquorNameDto liquorNameDto
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createLiquorName(
+                        liquorNameDto.getId(),
+                        liquorNameDto.getName()
+                )
+        );
+    }
+    @ApiOperation(
+            value = "판매처 저장",
+            notes = "판매처를 생성하거나 수정합니다."
+    )
+    @PostMapping(value = "/liquor-sell")
+    public ApiDataResponse<Boolean> createLiquorSell (
+            @RequestBody LiquorSellDto liquorSellDto
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createLiquorSell(
+                        liquorSellDto.getId(),
+                        liquorSellDto.getName()
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "상태(기분) 저장",
+            notes = "상태(기분)를 생성하거나 수정합니다."
+    )
+    @PostMapping(value = "/state-type")
+    public ApiDataResponse<Boolean> createStateType (
+            @RequestBody StateTypeDto stateTypeDto
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createStateType(
+                        stateTypeDto.getId(),
+                        stateTypeDto.getName()
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "맛 종류 저장",
+            notes = "맛 종류를 생성하거나 수정합니다."
+    )
+    @PostMapping(value = "/taste-type")
+    public ApiDataResponse<Boolean> createStateType (
+            @RequestBody TasteTypeDto tasteTypeDto
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createTasteType(
+                        tasteTypeDto.getId(),
+                        tasteTypeDto.getName()
                 )
         );
     }
