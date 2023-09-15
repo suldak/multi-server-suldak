@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.bridge.*;
+import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,10 +40,9 @@ public class Liquor extends BaseEntity {
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
     private Set<DkToLi> dkToLis = new LinkedHashSet<>();
 
-    @ToString.Exclude
-    @OrderBy("id")
-    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private Set<AbvToLi> abvToLis = new LinkedHashSet<>();
+    @Setter
+    @ManyToOne
+    private LiquorAbv liquorAbv;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -89,25 +89,29 @@ public class Liquor extends BaseEntity {
             Long id,
             String name,
             String summaryExplanation,
-            String detailExplanation
+            String detailExplanation,
+            LiquorAbv liquorAbv
     ) {
         this.id = id;
         this.name = name;
         this.summaryExplanation = summaryExplanation;
         this.detailExplanation = detailExplanation;
+        this.liquorAbv = liquorAbv;
     }
 
     public static Liquor of (
             Long id,
             String name,
             String summaryExplanation,
-            String detailExplanation
+            String detailExplanation,
+            LiquorAbv liquorAbv
     ) {
         return new Liquor(
                 id,
                 name,
                 summaryExplanation,
-                detailExplanation
+                detailExplanation,
+                liquorAbv
         );
     }
 }

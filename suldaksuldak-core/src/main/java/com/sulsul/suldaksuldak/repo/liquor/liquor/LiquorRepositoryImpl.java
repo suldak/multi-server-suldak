@@ -35,6 +35,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.name,
                                 liquor.summaryExplanation,
                                 liquor.detailExplanation,
+                                liquor.liquorAbv.id,
                                 liquor.createdAt,
                                 liquor.modifiedAt
                         )

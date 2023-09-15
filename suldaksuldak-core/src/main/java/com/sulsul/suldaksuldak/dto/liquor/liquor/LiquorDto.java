@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
+import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import lombok.Value;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ public class LiquorDto {
     String name;
     String summaryExplanation;
     String detailExplanation;
+    Long liquorAbvId;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -18,33 +20,38 @@ public class LiquorDto {
             Long id,
             String name,
             String summaryExplanation,
-            String detailExplanation
+            String detailExplanation,
+            Long liquorAbvId
     ) {
         return new LiquorDto(
                 id,
                 name,
                 summaryExplanation,
                 detailExplanation,
+                liquorAbvId,
                 null,
                 null
         );
     }
 
-    public Liquor toEntity() {
+    public Liquor toEntity(LiquorAbv liquorAbv) {
         return Liquor.of(
                 id,
                 name,
                 summaryExplanation,
-                detailExplanation
+                detailExplanation,
+                liquorAbv
         );
     }
 
     public Liquor updateEntity(
-            Liquor liquor
+            Liquor liquor,
+            LiquorAbv liquorAbv
     ) {
         if (name != null) liquor.setName(name);
         if (summaryExplanation != null) liquor.setSummaryExplanation(summaryExplanation);
         if (detailExplanation != null) liquor.setDetailExplanation(detailExplanation);
+        if (liquorAbv != null) liquor.setLiquorAbv(liquorAbv);
 
         return liquor;
     }

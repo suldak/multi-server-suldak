@@ -20,13 +20,16 @@ public class LiquorReq {
     String summaryExplanation;
     @ApiModelProperty(value = "술의 자세한 설명", required = true)
     String detailExplanation;
+    @ApiModelProperty(value = "술의 도수 기본키")
+    Long liquorAbvId;
 
     public LiquorDto toDto() {
         return LiquorDto.of(
                 id,
                 name,
                 summaryExplanation,
-                detailExplanation
+                detailExplanation,
+                liquorAbvId
         );
     }
 }

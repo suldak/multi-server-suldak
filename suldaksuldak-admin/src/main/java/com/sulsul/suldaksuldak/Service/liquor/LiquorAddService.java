@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.Service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
+import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
@@ -9,6 +10,7 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
+import com.sulsul.suldaksuldak.repo.tag.abv.LiquorAbvRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class LiquorAddService {
     private final LiquorRepository liquorRepository;
     private final LiquorRecipeRepository liquorRecipeRepository;
     private final LiquorSnackRepository liquorSnackRepository;
+    private final LiquorAbvRepository liquorAbvRepository;
 
     /**
      * 술 생성 및 수정
@@ -30,13 +33,21 @@ public class LiquorAddService {
             LiquorDto liquorDto
     ) {
         try {
+            LiquorAbv liquorAbv;
+            if (liquorDto.getLiquorAbvId() != null) {
+                liquorAbv = liquorAbvRepository.findById(liquorDto.getLiquorAbvId())
+                        .orElse(null);
+            } else {
+                liquorAbv = null;
+            }
+
             if (liquorDto.getId() == null) {
-                liquorRepository.save(liquorDto.toEntity());
+                liquorRepository.save(liquorDto.toEntity(liquorAbv));
             } else {
                 liquorRepository.findById(liquorDto.getId())
                         .ifPresentOrElse(
                                 findEntity -> {
-                                    liquorRepository.save(liquorDto.updateEntity(findEntity));
+                                    liquorRepository.save(liquorDto.updateEntity(findEntity, liquorAbv));
                                 },
                                 () -> {
                                     throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND Liquor DATA");
