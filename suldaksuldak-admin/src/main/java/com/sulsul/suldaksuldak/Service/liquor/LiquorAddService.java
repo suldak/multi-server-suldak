@@ -7,6 +7,7 @@ import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
@@ -25,6 +26,7 @@ public class LiquorAddService {
     private final LiquorRecipeRepository liquorRecipeRepository;
     private final LiquorSnackRepository liquorSnackRepository;
     private final LiquorAbvRepository liquorAbvRepository;
+    private final SnToLiRepository snToLiRepository;
 
     /**
      * 술 생성 및 수정
@@ -126,5 +128,10 @@ public class LiquorAddService {
         }
         return true;
     }
+
+    /**
+     * 추천 안주와 술 연결
+     */
+//    public Boolean create
 
 }
