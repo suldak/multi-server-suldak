@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.tag;
 
+import com.sulsul.suldaksuldak.domain.tag.LiquorMaterial;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -16,4 +17,8 @@ public class LiquorMaterialDto {
     Long id;
     @ApiModelProperty(value = "재료 이름", required = true)
     String name;
+
+    public static LiquorMaterialDto of (LiquorMaterial liquorMaterial) {
+        return new LiquorMaterialDto(liquorMaterial.getId(),liquorMaterial.getName());
+    }
 }

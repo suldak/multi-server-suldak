@@ -16,7 +16,7 @@ import java.util.Set;
 )
 @EntityListeners(AutoCloseable.class)
 @Entity(name = "liquorAbv")
-public class LiquorAbv {
+public class LiquorAbv implements TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

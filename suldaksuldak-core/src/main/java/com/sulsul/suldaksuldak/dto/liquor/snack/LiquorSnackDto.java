@@ -18,6 +18,10 @@ public class LiquorSnackDto {
         );
     }
 
+    public static LiquorSnackDto of (LiquorSnack liquorSnack) {
+        return new LiquorSnackDto(liquorSnack.getId(), liquorSnack.getName());
+    }
+
     public LiquorSnack toEntity() {
         return LiquorSnack.of(
                 id,

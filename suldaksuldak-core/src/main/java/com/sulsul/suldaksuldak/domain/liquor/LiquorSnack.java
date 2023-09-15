@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.sulsul.suldaksuldak.domain.bridge.SnToLi;
+import com.sulsul.suldaksuldak.domain.tag.TagEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +17,7 @@ import java.util.Set;
 )
 @EntityListeners(AutoCloseable.class)
 @Entity(name = "liquorSnack")
-public class LiquorSnack {
+public class LiquorSnack implements TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

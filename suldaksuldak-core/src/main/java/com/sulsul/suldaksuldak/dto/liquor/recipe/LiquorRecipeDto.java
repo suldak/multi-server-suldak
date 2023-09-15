@@ -22,6 +22,10 @@ public class LiquorRecipeDto {
         );
     }
 
+    public static LiquorRecipeDto of (LiquorRecipe liquorRecipe) {
+        return new LiquorRecipeDto(liquorRecipe.getId(), liquorRecipe.getContent(), liquorRecipe.getLiquor().getId());
+    }
+
     public LiquorRecipe toEntity(
             Liquor liquor
     ) {

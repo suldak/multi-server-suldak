@@ -16,14 +16,14 @@ import java.util.Set;
 )
 @EntityListeners(AutoCloseable.class)
 @Entity(name = "drinkingCapacity")
-public class DrinkingCapacity {
+public class DrinkingCapacity implements TagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Setter
     @Column(nullable = false, unique = true, length = 10)
-    private String level;
+    private String name;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -34,10 +34,10 @@ public class DrinkingCapacity {
 
     protected DrinkingCapacity(
             Long id,
-            String level
+            String name
     ) {
         this.id = id;
-        this.level = level;
+        this.name = name;
     }
 
     public static DrinkingCapacity of (

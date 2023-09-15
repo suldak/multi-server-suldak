@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.tag;
 
+import com.sulsul.suldaksuldak.domain.tag.StateType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -16,4 +17,8 @@ public class StateTypeDto {
     Long id;
     @ApiModelProperty(value = "상태 이름", required = true, example = "기분 전환, 피곤할 때, ...")
     String name;
+
+    public static StateTypeDto of (StateType stateType) {
+        return new StateTypeDto(stateType.getId(), stateType.getName());
+    }
 }

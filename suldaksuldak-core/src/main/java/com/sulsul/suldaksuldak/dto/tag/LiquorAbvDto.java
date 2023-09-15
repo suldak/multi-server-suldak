@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.tag;
 
+import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -16,4 +17,8 @@ public class LiquorAbvDto {
     Long id;
     @ApiModelProperty(value = "도수 정도", required = true, example = "~5% / 6 ~ 10% ...")
     String name;
+
+    public static LiquorAbvDto of (LiquorAbv liquorAbv) {
+        return new LiquorAbvDto(liquorAbv.getId(), liquorAbv.getName());
+    }
 }

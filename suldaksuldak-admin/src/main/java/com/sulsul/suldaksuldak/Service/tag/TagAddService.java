@@ -44,7 +44,7 @@ public class TagAddService {
                 drinkingCapacityRepository.findById(id)
                         .ifPresentOrElse(
                                 entity -> {
-                                    entity.setLevel(level);
+                                    entity.setName(level);
                                     drinkingCapacityRepository.save(entity);
                                 },
                                 () -> {

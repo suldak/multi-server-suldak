@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.tag;
 
+import com.sulsul.suldaksuldak.domain.tag.TasteType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -16,4 +17,8 @@ public class TasteTypeDto {
     Long id;
     @ApiModelProperty(value = "맛 종류 이름", required = true)
     String name;
+
+    public static TasteTypeDto of (TasteType tasteType) {
+        return new TasteTypeDto(tasteType.getId(), tasteType.getName());
+    }
 }

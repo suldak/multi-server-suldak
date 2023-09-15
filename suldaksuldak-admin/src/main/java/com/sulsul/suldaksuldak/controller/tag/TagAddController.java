@@ -1,7 +1,6 @@
 package com.sulsul.suldaksuldak.controller.tag;
 
 import com.sulsul.suldaksuldak.Service.tag.TagAddService;
-import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import io.swagger.annotations.Api;
@@ -32,7 +31,7 @@ public class TagAddController {
         return ApiDataResponse.of(
                 tagAddService.createDrinkingCapacity(
                         drinkingCapacityDto.getId(),
-                        drinkingCapacityDto.getLevel()
+                        drinkingCapacityDto.getName()
                 )
         );
     }
