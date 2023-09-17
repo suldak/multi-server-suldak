@@ -53,7 +53,7 @@ public class LiquorViewController {
     )
     @GetMapping(value = "/liquor-snack")
     public ApiDataResponse<List<LiquorSnackRes>> getLiquorSnack(
-            @RequestBody(description = "술 기본키 (없으면 모두 조회)") Long liquorPriKey
+            @RequestBody(required = true, description = "술 기본키") Long liquorPriKey
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLiquorSnackList(liquorPriKey)

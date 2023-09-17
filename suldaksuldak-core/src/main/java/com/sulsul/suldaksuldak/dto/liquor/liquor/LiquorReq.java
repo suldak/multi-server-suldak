@@ -22,6 +22,8 @@ public class LiquorReq {
     String detailExplanation;
     @ApiModelProperty(value = "술의 도수 기본키")
     Long liquorAbvId;
+    @ApiModelProperty(value = "2차 분류 기본키")
+    Long liquorDetailId;
 
     public LiquorDto toDto() {
         return LiquorDto.of(
@@ -29,7 +31,8 @@ public class LiquorReq {
                 name,
                 summaryExplanation,
                 detailExplanation,
-                liquorAbvId
+                liquorAbvId,
+                liquorDetailId
         );
     }
 }

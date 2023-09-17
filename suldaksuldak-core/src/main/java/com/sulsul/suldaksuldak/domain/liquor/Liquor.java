@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.domain.liquor;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.bridge.*;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
+import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,10 +45,9 @@ public class Liquor extends BaseEntity {
     @ManyToOne
     private LiquorAbv liquorAbv;
 
-    @ToString.Exclude
-    @OrderBy("id")
-    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private Set<DtToLi> dtToLis = new LinkedHashSet<>();
+    @Setter
+    @ManyToOne
+    private LiquorDetail liquorDetail;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -90,13 +90,15 @@ public class Liquor extends BaseEntity {
             String name,
             String summaryExplanation,
             String detailExplanation,
-            LiquorAbv liquorAbv
+            LiquorAbv liquorAbv,
+            LiquorDetail liquorDetail
     ) {
         this.id = id;
         this.name = name;
         this.summaryExplanation = summaryExplanation;
         this.detailExplanation = detailExplanation;
         this.liquorAbv = liquorAbv;
+        this.liquorDetail = liquorDetail;
     }
 
     public static Liquor of (
@@ -104,14 +106,16 @@ public class Liquor extends BaseEntity {
             String name,
             String summaryExplanation,
             String detailExplanation,
-            LiquorAbv liquorAbv
+            LiquorAbv liquorAbv,
+            LiquorDetail liquorDetail
     ) {
         return new Liquor(
                 id,
                 name,
                 summaryExplanation,
                 detailExplanation,
-                liquorAbv
+                liquorAbv,
+                liquorDetail
         );
     }
 }

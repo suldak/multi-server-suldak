@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
+import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import lombok.Value;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class LiquorDto {
     String summaryExplanation;
     String detailExplanation;
     Long liquorAbvId;
+    Long liquorDetailId;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -21,7 +23,8 @@ public class LiquorDto {
             String name,
             String summaryExplanation,
             String detailExplanation,
-            Long liquorAbvId
+            Long liquorAbvId,
+            Long liquorDetailId
     ) {
         return new LiquorDto(
                 id,
@@ -29,29 +32,36 @@ public class LiquorDto {
                 summaryExplanation,
                 detailExplanation,
                 liquorAbvId,
+                liquorDetailId,
                 null,
                 null
         );
     }
 
-    public Liquor toEntity(LiquorAbv liquorAbv) {
+    public Liquor toEntity(
+            LiquorAbv liquorAbv,
+            LiquorDetail liquorDetail
+    ) {
         return Liquor.of(
                 id,
                 name,
                 summaryExplanation,
                 detailExplanation,
-                liquorAbv
+                liquorAbv,
+                liquorDetail
         );
     }
 
     public Liquor updateEntity(
             Liquor liquor,
-            LiquorAbv liquorAbv
+            LiquorAbv liquorAbv,
+            LiquorDetail liquorDetail
     ) {
         if (name != null) liquor.setName(name);
         if (summaryExplanation != null) liquor.setSummaryExplanation(summaryExplanation);
         if (detailExplanation != null) liquor.setDetailExplanation(detailExplanation);
         if (liquorAbv != null) liquor.setLiquorAbv(liquorAbv);
+        if (liquorDetail != null) liquor.setLiquorDetail(liquorDetail);
 
         return liquor;
     }

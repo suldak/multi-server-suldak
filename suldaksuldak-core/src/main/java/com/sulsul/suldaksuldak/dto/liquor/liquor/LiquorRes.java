@@ -10,6 +10,8 @@ public class LiquorRes {
     String name;
     String summaryExplanation;
     String detailExplanation;
+    Long liquorAbvId;
+    Long liquorDetailId;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -19,6 +21,8 @@ public class LiquorRes {
                 liquorDto.getName(),
                 liquorDto.getSummaryExplanation(),
                 liquorDto.getDetailExplanation(),
+                liquorDto.getLiquorAbvId(),
+                liquorDto.getLiquorDetailId(),
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );
