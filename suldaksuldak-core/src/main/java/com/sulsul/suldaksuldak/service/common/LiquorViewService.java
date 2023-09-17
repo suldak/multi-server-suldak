@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.Service.liquor;
+package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
@@ -22,18 +22,17 @@ public class LiquorViewService {
     private final LiquorSnackRepository liquorSnackRepository;
     private final LiquorRecipeRepository liquorRecipeRepository;
 
-
     /**
      * 술 레시피의 기본키로 조회
      */
     public Optional<LiquorRecipeDto> getLiquorRecipe(
-            Long priKey
+            Long liquorPriKey
     ) {
         try {
-            if (priKey == null) {
+            if (liquorPriKey == null) {
                 throw new GeneralException(ErrorCode.NOT_FOUND, "PriKey is Null");
             }
-            return liquorRecipeRepository.findByPriKey(priKey);
+            return liquorRecipeRepository.findByLiquorPriKey(liquorPriKey);
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -41,36 +40,15 @@ public class LiquorViewService {
         }
     }
 
-    /**
-     * 술에 해당하는 레시피 조회
-     */
-    public List<LiquorRecipeDto> getLiquorRecipeList (
-            Long liquorId
+    public List<LiquorSnackDto> getLiquorSnackList(
+            Long liquorPriKey
     ) {
         try {
-            if (liquorId == null) {
-                throw new GeneralException(ErrorCode.NOT_FOUND, "Liquor PriKey is Null");
-            }
-            return liquorRecipeRepository.findByLiquorPriKey(liquorId);
+            return liquorSnackRepository.findByLiquorPriKey(liquorPriKey);
         } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getMessage());
+            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
     }
-
-    /**
-     * 술로 추천 안주 조회
-     */
-//    public List<LiquorSnackDto> getLiquorSnack(
-//            Long liquorPriKey
-//    ) {
-//        try {
-//            return liquorSnackRepository.findby
-//        } catch (GeneralException e) {
-//            throw new GeneralException(e.getErrorCode(), e.getMessage());
-//        } catch (Exception e) {
-//            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-//        }
-//    }
 }

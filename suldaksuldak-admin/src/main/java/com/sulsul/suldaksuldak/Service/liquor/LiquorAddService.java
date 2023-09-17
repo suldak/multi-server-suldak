@@ -1,13 +1,13 @@
 package com.sulsul.suldaksuldak.Service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
@@ -26,7 +26,6 @@ public class LiquorAddService {
     private final LiquorRecipeRepository liquorRecipeRepository;
     private final LiquorSnackRepository liquorSnackRepository;
     private final LiquorAbvRepository liquorAbvRepository;
-    private final SnToLiRepository snToLiRepository;
 
     /**
      * 술 생성 및 수정
@@ -52,7 +51,10 @@ public class LiquorAddService {
                                     liquorRepository.save(liquorDto.updateEntity(findEntity, liquorAbv));
                                 },
                                 () -> {
-                                    throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND Liquor DATA");
+                                    throw new GeneralException(
+                                            ErrorCode.NOT_FOUND,
+                                            ErrorMessage.NOT_FOUND_LIQUOR_DATA
+                                    );
                                 }
                         );
             }
@@ -76,7 +78,10 @@ public class LiquorAddService {
             }
             Optional<Liquor> liquorOptional = liquorRepository.findById(liquorRecipeDto.getLiquorId());
             if (liquorOptional.isEmpty()) {
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND Liquor DATA");
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        ErrorMessage.NOT_FOUND_LIQUOR_DATA
+                );
             }
             if (liquorRecipeDto.getId() == null) {
                 liquorRecipeRepository.save(liquorRecipeDto.toEntity(liquorOptional.get()));
@@ -96,6 +101,7 @@ public class LiquorAddService {
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
         return true;
@@ -117,7 +123,10 @@ public class LiquorAddService {
                                     liquorSnackRepository.save(liquorSnackDto.updateEntity(findEntity));
                                 },
                                 () -> {
-                                    throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND Liquor DATA");
+                                    throw new GeneralException(
+                                            ErrorCode.NOT_FOUND,
+                                            ErrorMessage.NOT_FOUND_LIQUOR_DATA
+                                    );
                                 }
                         );
             }
@@ -128,10 +137,4 @@ public class LiquorAddService {
         }
         return true;
     }
-
-    /**
-     * 추천 안주와 술 연결
-     */
-//    public Boolean create
-
 }

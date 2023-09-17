@@ -1,9 +1,13 @@
 package com.sulsul.suldaksuldak.controller.liquor;
 
 
+import com.sulsul.suldaksuldak.Service.liquor.LiquorTagService;
+import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,5 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/liquor/tag")
 @Api(tags = "[ADMIN] 술 태그 관리")
 public class LiquorTagController {
+    private final LiquorTagService liquorTagService;
 
+    @ApiOperation(
+            value = "술과 추천 안주 연결",
+            notes = "술과 추천 안주를 연결합니다."
+    )
+    @PostMapping(value = "/liquor-snack")
+    public ApiDataResponse<Boolean> createLiquorToSnack(
+            Long liquorPriKey,
+            Long liquorSnackPriKey
+    ) {
+        return ApiDataResponse.of(
+                liquorTagService.createLiquorToSnack(
+                        liquorPriKey,
+                        liquorSnackPriKey
+                )
+        );
+    }
 }

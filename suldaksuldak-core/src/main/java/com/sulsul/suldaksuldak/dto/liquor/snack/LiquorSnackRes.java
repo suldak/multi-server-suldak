@@ -8,12 +8,11 @@ public class LiquorSnackRes {
     String name;
 
     public static LiquorSnackRes from (
-            Long id,
-            String name
+            LiquorSnackDto liquorSnackDto
     ) {
         return new LiquorSnackRes(
-                id,
-                name
+                liquorSnackDto.getId(),
+                liquorSnackDto.getName()
         );
     }
 }
