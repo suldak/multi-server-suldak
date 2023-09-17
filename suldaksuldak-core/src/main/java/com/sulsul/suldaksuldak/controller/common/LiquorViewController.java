@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeReq;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
+import com.sulsul.suldaksuldak.dto.tag.LiquorSellDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import io.swagger.annotations.Api;
@@ -60,6 +61,19 @@ public class LiquorViewController {
                         .stream()
                         .map(LiquorSnackRes::from)
                         .toList()
+        );
+    }
+
+    @ApiOperation(
+            value = "판매처 조회",
+            notes = "술에 해당하는 판매처를 조회합니다."
+    )
+    @GetMapping(value = "/liquor-sell")
+    public ApiDataResponse<List<LiquorSellDto>> getLiquorSell(
+            @RequestBody(required = true, description = "술 기본키") Long liquorPriKey
+    ) {
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorSellList(liquorPriKey)
         );
     }
 }

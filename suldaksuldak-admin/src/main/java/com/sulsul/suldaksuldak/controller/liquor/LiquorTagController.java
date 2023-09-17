@@ -35,4 +35,21 @@ public class LiquorTagController {
                 )
         );
     }
+
+    @ApiOperation(
+            value = "술과 판매처 안주 연결",
+            notes = "술과 판매처를 연결합니다."
+    )
+    @PostMapping(value = "/liquor-sell")
+    public ApiDataResponse<Boolean> createLiquorToSell(
+            Long liquorPriKey,
+            Long liquorSellPriKey
+    ) {
+        return ApiDataResponse.of(
+                liquorTagService.createLiquorToSell(
+                        liquorPriKey,
+                        liquorSellPriKey
+                )
+        );
+    }
 }

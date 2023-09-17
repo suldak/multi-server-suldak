@@ -1,19 +1,19 @@
 package com.sulsul.suldaksuldak.repo.bridge.snack;
 
-import com.sulsul.suldaksuldak.dto.bridge.SnToLiDto;
+import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SnToLiRepositoryCustom {
-    Optional<SnToLiDto> findByLiquorPriKeyAndLiquorSnackPriKey(
+    Optional<BridgeDto> findByLiquorPriKeyAndLiquorSnackPriKey(
             Long liquorPriKey,
             Long liquorSnackPriKey
     );
-    List<SnToLiDto> findByLiquorSnackPriKey(
+    List<BridgeDto> findByLiquorSnackPriKey(
             Long liquorSnackPriKey
     );
-    List<SnToLiDto> findByLiquorPriKey(
+    List<BridgeDto> findByLiquorPriKey(
             Long liquorPriKey
     );
 }
