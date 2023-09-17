@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/tag/view")
-@Api(tags = "[ADMIN] 태그 조회")
+@Api(tags = "[COMMON] 태그 조회")
 public class TagViewController {
     private final TagViewService tagViewService;
 

@@ -27,7 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/liquor/view")
-@Api(tags = "[ADMIN] 술 관련 정보 조회")
+@Api(tags = "[COMMON] 술 관련 정보 조회")
 public class LiquorViewController {
     private final LiquorViewService liquorViewService;
 
