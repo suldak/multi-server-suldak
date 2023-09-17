@@ -17,6 +17,15 @@ import static com.sulsul.suldaksuldak.domain.liquor.QLiquorSnack.liquorSnack;
 @RequiredArgsConstructor
 public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public List<LiquorSnackDto> findAllLiquorSnack() {
+        return getLiquorSnackDtoQuery()
+                .from(liquorSnack)
+                .orderBy(liquorSnack.name.asc())
+                .fetch();
+    }
+
     @Override
     public List<LiquorSnackDto> findByLiquorPriKey(Long liquorPriKey) {
         return getLiquorSnackDtoQuery()

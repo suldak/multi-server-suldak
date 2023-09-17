@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.controller.common;
 
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.service.common.TagViewService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
@@ -54,7 +55,7 @@ public class TagViewController {
     )
     @GetMapping(value = "/liquor-material")
     public ApiDataResponse<List<LiquorMaterialDto>> getLiquorMaterial() {
-        return ApiDataResponse.of(tagViewService.getLiquorMaterialDtoDtoList());
+        return ApiDataResponse.of(tagViewService.getLiquorMaterialDtoList());
     }
 
     @ApiOperation(
@@ -63,7 +64,7 @@ public class TagViewController {
     )
     @GetMapping(value = "/liquor-name")
     public ApiDataResponse<List<LiquorNameDto>> getLiquorName() {
-        return ApiDataResponse.of(tagViewService.getLiquorNameDtoDtoList());
+        return ApiDataResponse.of(tagViewService.getLiquorNameDtoList());
     }
 
     @ApiOperation(
@@ -72,7 +73,7 @@ public class TagViewController {
     )
     @GetMapping(value = "/liquor-sell")
     public ApiDataResponse<List<LiquorSellDto>> getLiquorSell() {
-        return ApiDataResponse.of(tagViewService.getLiquorSellDtoDtoList());
+        return ApiDataResponse.of(tagViewService.getLiquorSellDtoList());
     }
 
     @ApiOperation(
@@ -81,7 +82,7 @@ public class TagViewController {
     )
     @GetMapping(value = "/state-type")
     public ApiDataResponse<List<StateTypeDto>> getStateType() {
-        return ApiDataResponse.of(tagViewService.getStateTypeDtoDtoList());
+        return ApiDataResponse.of(tagViewService.getStateTypeDtoList());
     }
 
     @ApiOperation(
@@ -90,6 +91,20 @@ public class TagViewController {
     )
     @GetMapping(value = "/taste-type")
     public ApiDataResponse<List<TasteTypeDto>> getTasteType() {
-        return ApiDataResponse.of(tagViewService.getTasteTypeDtoDtoList());
+        return ApiDataResponse.of(tagViewService.getTasteTypeDtoList());
+    }
+
+    @ApiOperation(
+            value = "모든 안주 조회",
+            notes = "모든 안주을 조회 합니다."
+    )
+    @GetMapping(value = "/liquor-snack")
+    public ApiDataResponse<List<LiquorSnackRes>> getLiquorSnack() {
+        return ApiDataResponse.of(
+                tagViewService.getLiquorSnackDtoList()
+                        .stream()
+                        .map(LiquorSnackRes::from)
+                        .toList()
+        );
     }
 }

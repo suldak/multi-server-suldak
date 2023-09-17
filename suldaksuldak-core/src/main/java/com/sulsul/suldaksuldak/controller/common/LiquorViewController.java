@@ -49,7 +49,7 @@ public class LiquorViewController {
 
     @ApiOperation(
             value = "추천 안주 조회",
-            notes = "추천 안주를 조회합니다."
+            notes = "술에 해당하는 추천 안주를 조회합니다."
     )
     @GetMapping(value = "/liquor-snack")
     public ApiDataResponse<List<LiquorSnackRes>> getLiquorSnack(

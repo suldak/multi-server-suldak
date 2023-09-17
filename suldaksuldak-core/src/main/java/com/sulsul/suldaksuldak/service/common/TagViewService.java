@@ -1,8 +1,10 @@
 package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
 import com.sulsul.suldaksuldak.repo.tag.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.tag.detail.LiquorDetailRepository;
@@ -30,6 +32,7 @@ public class TagViewService {
     private final LiquorSellRepository liquorSellRepository;
     private final StateTypeRepository stateTypeRepository;
     private final TasteTypeRepository tasteTypeRepository;
+    private final LiquorSnackRepository liquorSnackRepository;
 
     /**
      * 모든 주량 조회
@@ -76,7 +79,7 @@ public class TagViewService {
     /**
      * 모든 재료 조회
      */
-    public List<LiquorMaterialDto> getLiquorMaterialDtoDtoList() {
+    public List<LiquorMaterialDto> getLiquorMaterialDtoList() {
         try {
             return liquorMaterialRepository.findAll()
                     .stream()
@@ -90,7 +93,7 @@ public class TagViewService {
     /**
      * 모든 1차 분류 조회
      */
-    public List<LiquorNameDto> getLiquorNameDtoDtoList() {
+    public List<LiquorNameDto> getLiquorNameDtoList() {
         try {
             return liquorNameRepository.findAll()
                     .stream()
@@ -104,7 +107,7 @@ public class TagViewService {
     /**
      * 모든 판매처 조회
      */
-    public List<LiquorSellDto> getLiquorSellDtoDtoList() {
+    public List<LiquorSellDto> getLiquorSellDtoList() {
         try {
             return liquorSellRepository.findAll()
                     .stream()
@@ -118,7 +121,7 @@ public class TagViewService {
     /**
      * 모든 상태 조회
      */
-    public List<StateTypeDto> getStateTypeDtoDtoList() {
+    public List<StateTypeDto> getStateTypeDtoList() {
         try {
             return stateTypeRepository.findAll()
                     .stream()
@@ -132,12 +135,25 @@ public class TagViewService {
     /**
      * 모든 맛 조회
      */
-    public List<TasteTypeDto> getTasteTypeDtoDtoList() {
+    public List<TasteTypeDto> getTasteTypeDtoList() {
         try {
             return tasteTypeRepository.findAll()
                     .stream()
                     .map(TasteTypeDto::of)
                     .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    /**
+     * 모든 추천 안주 조회
+     */
+    public List<LiquorSnackDto> getLiquorSnackDtoList() {
+        try {
+            return liquorSnackRepository.findAllLiquorSnack();
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }

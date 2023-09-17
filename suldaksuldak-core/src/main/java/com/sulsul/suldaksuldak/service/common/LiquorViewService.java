@@ -40,6 +40,9 @@ public class LiquorViewService {
         }
     }
 
+    /**
+     * 해당 술의 추천 안주 조회
+     */
     public List<LiquorSnackDto> getLiquorSnackList(
             Long liquorPriKey
     ) {
