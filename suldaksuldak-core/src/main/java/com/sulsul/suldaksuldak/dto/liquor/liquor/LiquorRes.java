@@ -12,6 +12,7 @@ public class LiquorRes {
     String detailExplanation;
     Long liquorAbvId;
     Long liquorDetailId;
+    Long drinkingCapacityId;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -23,6 +24,7 @@ public class LiquorRes {
                 liquorDto.getDetailExplanation(),
                 liquorDto.getLiquorAbvId(),
                 liquorDto.getLiquorDetailId(),
+                liquorDto.getDrinkingCapacityId(),
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );

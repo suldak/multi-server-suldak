@@ -2,8 +2,10 @@ package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.bridge.*;
+import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
+import com.sulsul.suldaksuldak.domain.tag.LiquorName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,10 +38,9 @@ public class Liquor extends BaseEntity {
     @Column(nullable = false)
     private String detailExplanation;
 
-    @ToString.Exclude
-    @OrderBy("id")
-    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private Set<DkToLi> dkToLis = new LinkedHashSet<>();
+    @Setter
+    @ManyToOne
+    private DrinkingCapacity drinkingCapacity;
 
     @Setter
     @ManyToOne
@@ -49,10 +50,9 @@ public class Liquor extends BaseEntity {
     @ManyToOne
     private LiquorDetail liquorDetail;
 
-    @ToString.Exclude
-    @OrderBy("id")
-    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private Set<NmToLi> nmToLis = new LinkedHashSet<>();
+    @Setter
+    @ManyToOne
+    private LiquorName liquorName;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -91,7 +91,9 @@ public class Liquor extends BaseEntity {
             String summaryExplanation,
             String detailExplanation,
             LiquorAbv liquorAbv,
-            LiquorDetail liquorDetail
+            LiquorDetail liquorDetail,
+            DrinkingCapacity drinkingCapacity,
+            LiquorName liquorName
     ) {
         this.id = id;
         this.name = name;
@@ -99,6 +101,8 @@ public class Liquor extends BaseEntity {
         this.detailExplanation = detailExplanation;
         this.liquorAbv = liquorAbv;
         this.liquorDetail = liquorDetail;
+        this.drinkingCapacity = drinkingCapacity;
+        this.liquorName = liquorName;
     }
 
     public static Liquor of (
@@ -107,7 +111,9 @@ public class Liquor extends BaseEntity {
             String summaryExplanation,
             String detailExplanation,
             LiquorAbv liquorAbv,
-            LiquorDetail liquorDetail
+            LiquorDetail liquorDetail,
+            DrinkingCapacity drinkingCapacity,
+            LiquorName liquorName
     ) {
         return new Liquor(
                 id,
@@ -115,7 +121,9 @@ public class Liquor extends BaseEntity {
                 summaryExplanation,
                 detailExplanation,
                 liquorAbv,
-                liquorDetail
+                liquorDetail,
+                drinkingCapacity,
+                liquorName
         );
     }
 }

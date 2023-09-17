@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.domain.tag;
 
-import com.sulsul.suldaksuldak.domain.bridge.DkToLi;
+import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,8 +27,8 @@ public class DrinkingCapacity implements TagEntity {
 
     @ToString.Exclude
     @OrderBy("id")
-    @OneToMany(mappedBy = "drinkingCapacity", cascade = CascadeType.REMOVE)
-    private Set<DkToLi> dkToLis = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "drinkingCapacity")
+    private final Set<Liquor> liquors = new LinkedHashSet<>();
 
     protected DrinkingCapacity() {}
 
