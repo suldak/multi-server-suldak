@@ -76,7 +76,7 @@ public class TagAddController {
     @PostMapping(value = "/liquor-material")
     public ApiDataResponse<Boolean> createLiquorMaterial (
             @RequestBody LiquorMaterialDto liquorMaterialDto
-            ) {
+    ) {
         return ApiDataResponse.of(
                 tagAddService.createLiquorMaterial(
                         liquorMaterialDto.getId(),
