@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.tag.detail;
+package com.sulsul.suldaksuldak.repo.liquor.detail;
 
 import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import com.sulsul.suldaksuldak.domain.tag.QLiquorDetail;

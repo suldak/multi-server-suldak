@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.tag.name;
+package com.sulsul.suldaksuldak.repo.liquor.name;
 
 import com.sulsul.suldaksuldak.dto.tag.LiquorNameDto;
 

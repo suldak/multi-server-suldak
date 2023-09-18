@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.tag.abv;
+package com.sulsul.suldaksuldak.repo.liquor.abv;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
