@@ -46,6 +46,23 @@ public class LiquorDto {
         );
     }
 
+    public static LiquorDto of (
+            Liquor liquor
+    ) {
+        return new LiquorDto(
+                liquor.getId(),
+                liquor.getName(),
+                liquor.getSummaryExplanation(),
+                liquor.getDetailExplanation(),
+                liquor.getLiquorAbv() != null ? liquor.getLiquorAbv().getId() : null,
+                liquor.getLiquorDetail() != null ? liquor.getLiquorDetail().getId() : null,
+                liquor.getDrinkingCapacity() != null ? liquor.getDrinkingCapacity().getId() : null,
+                liquor.getLiquorName() != null ? liquor.getLiquorName().getId(): null,
+                liquor.getCreatedAt(),
+                liquor.getModifiedAt()
+        );
+    }
+
     public Liquor toEntity(
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,

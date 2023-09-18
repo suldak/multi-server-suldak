@@ -5,11 +5,9 @@ import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.bridge.*;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.liquor.LiquorSnack;
-import com.sulsul.suldaksuldak.domain.tag.LiquorMaterial;
-import com.sulsul.suldaksuldak.domain.tag.LiquorSell;
-import com.sulsul.suldaksuldak.domain.tag.StateType;
-import com.sulsul.suldaksuldak.domain.tag.TasteType;
+import com.sulsul.suldaksuldak.domain.tag.*;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.bridge.mt.MtToLiRepository;
@@ -92,7 +90,8 @@ public class LiquorTagService {
         try {
             Optional<LiquorSnack> liquorSnack = liquorSnackRepository.findById(liquorSnackPriKey);
             if (liquorSnack.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR SNACK DATA");
+//                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR SNACK DATA");
+                return;
 
             Optional<BridgeDto> snToLiDto =
                     snToLiRepository
@@ -123,7 +122,8 @@ public class LiquorTagService {
         try {
             Optional<LiquorSell> liquorSell = liquorSellRepository.findById(liquorSellPriKey);
             if (liquorSell.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR SELL DATA");
+//                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR SELL DATA");
+                return;
 
             Optional<BridgeDto> slToLiDto =
                     slToLiRepository
@@ -154,7 +154,8 @@ public class LiquorTagService {
         try {
             Optional<LiquorMaterial> liquorMaterial = liquorMaterialRepository.findById(liquorMaterialPriKey);
             if (liquorMaterial.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR MATERIAL DATA");
+//                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND LIQUOR MATERIAL DATA");
+                return;
 
             Optional<BridgeDto> mtToLi =
                     mtToLiRepository.findByLiquorPriKeyAndLiquorMaterialPriKey(
@@ -184,7 +185,8 @@ public class LiquorTagService {
         try {
             Optional<StateType> stateType = stateTypeRepository.findById(statePriKey);
             if (stateType.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND STATE TYPE DATA");
+//                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND STATE TYPE DATA");
+                return;
 
             Optional<BridgeDto> stToLi =
                     stToLiRepository.findByLiquorPriKeyAndStatePriKey(
@@ -214,7 +216,8 @@ public class LiquorTagService {
         try {
             Optional<TasteType> tasteType = tasteTypeRepository.findById(tastePriKey);
             if (tasteType.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND TASTE TYPE DATA");
+//                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND TASTE TYPE DATA");
+                return;
 
             Optional<BridgeDto> ttToLi =
                     ttToLiRepository.findByLiquorPriKeyAndTastePriKey(
@@ -270,6 +273,32 @@ public class LiquorTagService {
                     createLiquorToTaste(liquor, tastePriKey);
                 }
             }
+            Optional<LiquorAbv> liquorAbv = Optional.empty();
+            Optional<LiquorDetail> liquorDetail = Optional.empty();
+            Optional<DrinkingCapacity> drinkingCapacity = Optional.empty();
+            Optional<LiquorName> liquorName = Optional.empty();
+            if (liquorTotalReq.getLiquorAbvId() != null) {
+                liquorAbv = liquorAbvRepository.findById(liquorTotalReq.getLiquorAbvId());
+            }
+            if (liquorTotalReq.getLiquorDetailId() != null) {
+                liquorDetail = liquorDetailRepository.findById(liquorTotalReq.getLiquorDetailId());
+            }
+            if (liquorTotalReq.getDrinkingCapacityId() != null) {
+                drinkingCapacity = drinkingCapacityRepository.findById(liquorTotalReq.getDrinkingCapacityId());
+            }
+            if (liquorTotalReq.getLiquorNameId() != null) {
+                liquorName = liquorNameRepository.findById(liquorTotalReq.getLiquorNameId());
+            }
+            liquorRepository.save(
+                    LiquorDto.of(liquor)
+                            .updateEntity(
+                                    liquor,
+                                    liquorAbv.orElse(null),
+                                    liquorDetail.orElse(null),
+                                    drinkingCapacity.orElse(null),
+                                    liquorName.orElse(null)
+                            )
+            );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
