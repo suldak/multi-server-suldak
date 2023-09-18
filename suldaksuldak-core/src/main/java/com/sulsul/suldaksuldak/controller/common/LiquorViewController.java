@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.controller.common;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorRes;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,11 +62,14 @@ public class LiquorViewController {
             notes = "태그에 해당되는 술 목록을 조회합니다. (Body가 복잡해서 POST로 수정)"
     )
     @PostMapping(value = "/liquor")
-    public ApiDataResponse<List<LiquorDto>> getLiquorByTags(
+    public ApiDataResponse<List<LiquorRes>> getLiquorByTags(
             @RequestBody LiquorTotalReq liquorTotalReq
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(liquorTotalReq)
+                        .stream()
+                        .map(LiquorRes::from)
+                        .collect(Collectors.toList())
         );
     }
 }
