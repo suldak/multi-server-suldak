@@ -4,13 +4,13 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.sulsul.suldaksuldak.domain.bridge.QSnToLi.snToLi;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.sulsul.suldaksuldak.domain.bridge.QSnToLi.snToLi;
 import static com.sulsul.suldaksuldak.domain.liquor.QLiquorSnack.liquorSnack;
 
 @Repository

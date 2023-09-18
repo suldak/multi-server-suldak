@@ -22,8 +22,8 @@ public class LiquorTagController {
     private final LiquorTagService liquorTagService;
 
     @ApiOperation(
-            value = "술과 추천 안주 연결",
-            notes = "술과 추천 안주를 연결합니다."
+            value = "술과 모든 Tag 연결",
+            notes = "술과 모든 Tag들을 연결합니다."
     )
     @PostMapping(value = "/liquor")
     public ApiDataResponse<Boolean> createLiquorTag(

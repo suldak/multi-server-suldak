@@ -3,16 +3,15 @@ package com.sulsul.suldaksuldak.repo.bridge.tt;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.sulsul.suldaksuldak.domain.bridge.QTtToLi.ttToLi;
-
-import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
-
-import static com.sulsul.suldaksuldak.domain.tag.QTasteType.tasteType;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
+import static com.sulsul.suldaksuldak.domain.bridge.QTtToLi.ttToLi;
+import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
+import static com.sulsul.suldaksuldak.domain.tag.QTasteType.tasteType;
 
 @Repository
 @RequiredArgsConstructor

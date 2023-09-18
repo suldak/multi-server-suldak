@@ -1,12 +1,15 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
+import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeRes;
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Value
 public class LiquorTotalRes {
@@ -14,7 +17,6 @@ public class LiquorTotalRes {
     String name;
     String summaryExplanation;
     String detailExplanation;
-    Long liquorAbvId;
     // 레시피
     LiquorRecipeRes liquorRecipeRes;
     // 도수
@@ -39,4 +41,37 @@ public class LiquorTotalRes {
 
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
+
+    public static LiquorTotalRes of (
+            LiquorDto liquorDto,
+            LiquorRecipeDto liquorRecipeDto,
+            LiquorAbvDto liquorAbvDto,
+            LiquorDetailDto liquorDetailDto,
+            DrinkingCapacityDto drinkingCapacityDto,
+            LiquorNameDto liquorNameDto,
+            List<LiquorSnackDto> liquorSnackDtos,
+            List<LiquorSellDto> liquorSellDtos,
+            List<LiquorMaterialDto> liquorMaterialDtos,
+            List<StateTypeDto> stateTypeDtos,
+            List<TasteTypeDto> tasteTypeDtos
+    ) {
+        return new LiquorTotalRes(
+                liquorDto.getId(),
+                liquorDto.getName(),
+                liquorDto.getSummaryExplanation(),
+                liquorDto.getDetailExplanation(),
+                LiquorRecipeRes.from(liquorRecipeDto),
+                liquorAbvDto,
+                liquorDetailDto,
+                drinkingCapacityDto,
+                liquorNameDto,
+                liquorSnackDtos.stream().map(LiquorSnackRes::from).collect(Collectors.toList()),
+                liquorSellDtos,
+                liquorMaterialDtos,
+                stateTypeDtos,
+                tasteTypeDtos,
+                liquorDto.getCreatedAt(),
+                liquorDto.getModifiedAt()
+        );
+    }
 }

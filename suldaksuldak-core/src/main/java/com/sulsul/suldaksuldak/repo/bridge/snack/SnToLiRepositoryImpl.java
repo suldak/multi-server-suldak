@@ -7,7 +7,6 @@ import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.bridge.QSnToLi.snToLi;
@@ -33,24 +32,6 @@ public class SnToLiRepositoryImpl implements SnToLiRepositoryCustom {
                         .on(snToLi.liquorSnack.id.eq(liquorSnackPriKey))
                         .fetchFirst()
         );
-    }
-
-    @Override
-    public List<BridgeDto> findByLiquorSnackPriKey(Long liquorSnackPriKey) {
-        return getBridgeDtoQuery()
-                .from(snToLi)
-                .innerJoin(snToLi.liquorSnack, liquorSnack)
-                .on(snToLi.liquorSnack.id.eq(liquorSnackPriKey))
-                .fetch();
-    }
-
-    @Override
-    public List<BridgeDto> findByLiquorPriKey(Long liquorPriKey) {
-        return getBridgeDtoQuery()
-                .from(snToLi)
-                .innerJoin(snToLi.liquor, liquor)
-                .on(snToLi.liquor.id.eq(liquorPriKey))
-                .fetch();
     }
 
     private JPAQuery<BridgeDto> getBridgeDtoQuery() {

@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeReq;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeRes;
@@ -49,31 +50,15 @@ public class LiquorViewController {
     }
 
     @ApiOperation(
-            value = "추천 안주 조회",
-            notes = "술에 해당하는 추천 안주를 조회합니다."
+            value = "술에 관한 모든 정보 조회",
+            notes = "술에 관한 모든 태그와 정보를 조회합니다."
     )
-    @GetMapping(value = "/liquor-snack")
-    public ApiDataResponse<List<LiquorSnackRes>> getLiquorSnack(
-            @RequestBody(required = true, description = "술 기본키") Long liquorPriKey
+    @GetMapping(value = "/liquor")
+    public ApiDataResponse<LiquorTotalRes> getLiquorTotalData (
+            Long liquorPriKey
     ) {
         return ApiDataResponse.of(
-                liquorViewService.getLiquorSnackList(liquorPriKey)
-                        .stream()
-                        .map(LiquorSnackRes::from)
-                        .toList()
-        );
-    }
-
-    @ApiOperation(
-            value = "판매처 조회",
-            notes = "술에 해당하는 판매처를 조회합니다."
-    )
-    @GetMapping(value = "/liquor-sell")
-    public ApiDataResponse<List<LiquorSellDto>> getLiquorSell(
-            @RequestBody(required = true, description = "술 기본키") Long liquorPriKey
-    ) {
-        return ApiDataResponse.of(
-                liquorViewService.getLiquorSellList(liquorPriKey)
+                liquorViewService.getLiquorTotalData(liquorPriKey)
         );
     }
 }
