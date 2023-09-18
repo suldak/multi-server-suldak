@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "종합 술 Request")
 public class LiquorTotalReq {
-    @ApiModelProperty(value = "술 기본키", required = true)
+    @ApiModelProperty(value = "술 기본키, 저장 시 필수 / 태그 별 조회 시 필요 없음")
     Long id;
     @ApiModelProperty(value = "추천 안주 기본키 리스트")
     List<Long> snackPriKeys;
@@ -26,4 +26,13 @@ public class LiquorTotalReq {
     List<Long> statePriKeys;
     @ApiModelProperty(value = "맛 기본키 리스트")
     List<Long> tastePriKeys;
+
+    @ApiModelProperty(value = "도수 기본키")
+    Long liquorAbvId;
+    @ApiModelProperty(value = "2차 분류 기본키")
+    Long liquorDetailId;
+    @ApiModelProperty(value = "주량 기본키")
+    Long drinkingCapacityId;
+    @ApiModelProperty(value = "1차 분류 기본키")
+    Long liquorNameId;
 }

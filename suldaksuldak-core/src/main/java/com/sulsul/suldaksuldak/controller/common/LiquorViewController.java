@@ -2,25 +2,18 @@ package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeReq;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeRes;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
-import com.sulsul.suldaksuldak.dto.tag.LiquorSellDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +32,7 @@ public class LiquorViewController {
     )
     @GetMapping(value = "/liquor-recipe")
     public ApiDataResponse<LiquorRecipeRes> getLiquorRecipe(
-            @RequestBody(required = true, description = "술 기본키") Long liquorPriKey
+            Long liquorPriKey
     ) {
         Optional<LiquorRecipeDto> liquorRecipeDto = liquorViewService.getLiquorRecipe(liquorPriKey);
         if (liquorRecipeDto.isEmpty()) {
@@ -59,6 +52,19 @@ public class LiquorViewController {
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLiquorTotalData(liquorPriKey)
+        );
+    }
+
+    @ApiOperation(
+            value = "태그 기준 술 조회",
+            notes = "태그에 해당되는 술 목록을 조회합니다. (Body가 복잡해서 POST로 수정)"
+    )
+    @PostMapping(value = "/liquor")
+    public ApiDataResponse<List<LiquorDto>> getLiquorByTags(
+            @RequestBody LiquorTotalReq liquorTotalReq
+    ) {
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorByTag(liquorTotalReq)
         );
     }
 }
