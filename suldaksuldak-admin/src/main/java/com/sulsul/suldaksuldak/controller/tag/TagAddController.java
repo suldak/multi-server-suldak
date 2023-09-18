@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.tag;
 
 import com.sulsul.suldaksuldak.Service.tag.TagAddService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackReq;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -144,6 +145,19 @@ public class TagAddController {
                         tasteTypeDto.getId(),
                         tasteTypeDto.getName()
                 )
+        );
+    }
+
+    @ApiOperation(
+            value = "추천 안주 저장",
+            notes = "추천 안주를 생성하거나 수정합니다."
+    )
+    @PostMapping(value = "/liquor-snack")
+    public ApiDataResponse<Boolean> createLiquorSnackRecipe(
+            @RequestBody LiquorSnackReq liquorSnackReq
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createLiquorSnack(liquorSnackReq.toDto())
         );
     }
 }

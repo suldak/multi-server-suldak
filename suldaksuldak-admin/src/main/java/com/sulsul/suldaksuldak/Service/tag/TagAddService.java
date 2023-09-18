@@ -1,8 +1,11 @@
 package com.sulsul.suldaksuldak.Service.tag;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.tag.*;
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
 import com.sulsul.suldaksuldak.repo.tag.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.tag.detail.LiquorDetailRepository;
@@ -27,6 +30,7 @@ public class TagAddService {
     private final LiquorSellRepository liquorSellRepository;
     private final StateTypeRepository stateTypeRepository;
     private final TasteTypeRepository tasteTypeRepository;
+    private final LiquorSnackRepository liquorSnackRepository;
 
     /**
      * 주량 저장
@@ -278,6 +282,37 @@ public class TagAddService {
             }
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * 추천 안주 생성 및 수정
+     */
+    public Boolean createLiquorSnack(
+            LiquorSnackDto liquorSnackDto
+    ) {
+        try {
+            if (liquorSnackDto.getId() == null) {
+                liquorSnackRepository.save(liquorSnackDto.toEntity());
+            } else {
+                liquorSnackRepository.findById(liquorSnackDto.getId())
+                        .ifPresentOrElse(
+                                findEntity -> {
+                                    liquorSnackRepository.save(liquorSnackDto.updateEntity(findEntity));
+                                },
+                                () -> {
+                                    throw new GeneralException(
+                                            ErrorCode.NOT_FOUND,
+                                            ErrorMessage.NOT_FOUND_LIQUOR_DATA
+                                    );
+                                }
+                        );
+            }
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }

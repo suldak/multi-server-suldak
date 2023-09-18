@@ -4,7 +4,6 @@ import com.sulsul.suldaksuldak.Service.liquor.LiquorAddService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorReq;
 import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeReq;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -45,19 +44,6 @@ public class LiquorAddController {
     ) {
         return ApiDataResponse.of(
                 liquorAddService.createLiquorRecipe(liquorRecipeReq.toDto())
-        );
-    }
-
-    @ApiOperation(
-            value = "추천 안주 저장",
-            notes = "추천 안주를 생성하거나 수정합니다."
-    )
-    @PostMapping(value = "/liquor-snack")
-    public ApiDataResponse<Boolean> createLiquorSnackRecipe(
-            @RequestBody LiquorSnackReq liquorSnackReq
-    ) {
-        return ApiDataResponse.of(
-                liquorAddService.createLiquorSnack(liquorSnackReq.toDto())
         );
     }
 }
