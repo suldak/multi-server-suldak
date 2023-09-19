@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
+import com.sulsul.suldaksuldak.repo.bridge.BridgeInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,11 +17,11 @@ import static com.sulsul.suldaksuldak.domain.tag.QTasteType.tasteType;
 
 @Repository
 @RequiredArgsConstructor
-public class TtToLiRepositoryImpl implements TtToLiRepositoryCustom {
+public class TtToLiRepositoryImpl implements TtToLiRepositoryCustom, BridgeInterface {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Optional<BridgeDto> findByLiquorPriKeyAndTastePriKey(
+    public Optional<BridgeDto> findByLiquorPriKeyAndTagPriKey(
             Long liquorPriKey,
             Long tastePriKey
     ) {

@@ -15,14 +15,14 @@ import com.sulsul.suldaksuldak.repo.bridge.sell.SlToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.st.StToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.tt.TtToLiRepository;
+import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
+import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
+import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
 import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
-import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
-import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
 import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
-import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
 import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
@@ -95,7 +95,7 @@ public class LiquorTagService {
 
             Optional<BridgeDto> snToLiDto =
                     snToLiRepository
-                            .findByLiquorPriKeyAndLiquorSnackPriKey(
+                            .findByLiquorPriKeyAndTagPriKey(
                                     liquor.getId(),
                                     liquorSnackPriKey
                             );
@@ -127,7 +127,7 @@ public class LiquorTagService {
 
             Optional<BridgeDto> slToLiDto =
                     slToLiRepository
-                            .findByLiquorPriKeyAndLiquorSellPriKey(
+                            .findByLiquorPriKeyAndTagPriKey(
                                     liquor.getId(),
                                     liquorSellPriKey
                             );
@@ -158,7 +158,7 @@ public class LiquorTagService {
                 return;
 
             Optional<BridgeDto> mtToLi =
-                    mtToLiRepository.findByLiquorPriKeyAndLiquorMaterialPriKey(
+                    mtToLiRepository.findByLiquorPriKeyAndTagPriKey(
                             liquor.getId(),
                             liquorMaterialPriKey
                     );
@@ -189,7 +189,7 @@ public class LiquorTagService {
                 return;
 
             Optional<BridgeDto> stToLi =
-                    stToLiRepository.findByLiquorPriKeyAndStatePriKey(
+                    stToLiRepository.findByLiquorPriKeyAndTagPriKey(
                             liquor.getId(),
                             statePriKey
                     );
@@ -220,7 +220,7 @@ public class LiquorTagService {
                 return;
 
             Optional<BridgeDto> ttToLi =
-                    ttToLiRepository.findByLiquorPriKeyAndTastePriKey(
+                    ttToLiRepository.findByLiquorPriKeyAndTagPriKey(
                             liquor.getId(),
                             tastePriKey
                     );
