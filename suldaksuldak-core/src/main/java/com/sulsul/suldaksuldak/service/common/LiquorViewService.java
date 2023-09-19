@@ -80,6 +80,9 @@ public class LiquorViewService {
             Long liquorPriKey
     ) {
         try {
+            if (liquorPriKey == null) {
+                throw new GeneralException(ErrorCode.BAD_REQUEST, "NOT FOUND LIQUOR PRI KEY");
+            }
             // 술
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
