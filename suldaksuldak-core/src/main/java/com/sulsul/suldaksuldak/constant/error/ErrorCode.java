@@ -17,6 +17,10 @@ public enum ErrorCode {
     NOT_FOUND(10003, HttpStatus.NOT_FOUND, "요청을 찾지 못했습니다."),
     INTERNAL_ERROR(20000, HttpStatus.INTERNAL_SERVER_ERROR, "서버측 오류"),
     DATA_ACCESS_ERROR(20002, HttpStatus.INTERNAL_SERVER_ERROR, "데이터 조회에 실패했습니다."),
+    BUSINESS_EXCEPTION_ERROR(406, HttpStatus.BAD_REQUEST,"TOKEN ERROR"),
+    ACCESS_TOKEN_EXPIRATION(9999, HttpStatus.BAD_REQUEST, "Access Token Expiration"),
+    REFRESH_TOKEN_EXPIRATION(9999, HttpStatus.BAD_REQUEST, "Refresh Token Expiration"),
+    ERROR_AUTH(403, HttpStatus.BAD_REQUEST, "인증되지 않은 사용자 입니다.")
     ;
 
     private final Integer code;

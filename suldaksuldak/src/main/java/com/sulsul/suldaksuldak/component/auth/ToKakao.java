@@ -4,7 +4,7 @@ import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.tool.AuthTool;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,7 @@ public class ToKakao {
             return UserDto.of(
                     null,
                     jsonObject.getJSONObject("kakao_account").getString("email"),
-                    AuthTool.encryptPassword(
+                    UtilTool.encryptPassword(
                             jsonObject.getJSONObject("kakao_account").getString("email"),
                             Integer.toString(jsonObject.getInt("id"))
                     ),

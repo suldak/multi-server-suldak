@@ -39,6 +39,16 @@ subprojects {
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
 
+		// Spring Security
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'org.springframework.security:spring-security-test'
+
+		// JWT
+		implementation "io.jsonwebtoken:jjwt:0.9.1"
+		// json
+		implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
 		// hasText
 		implementation 'org.apache.commons:commons-lang3:3.12.0' // util 을 사용 하기 위해
 

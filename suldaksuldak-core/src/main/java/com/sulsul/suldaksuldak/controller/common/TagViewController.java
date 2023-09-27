@@ -1,9 +1,9 @@
 package com.sulsul.suldaksuldak.controller.common;
 
+import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.service.common.TagViewService;
-import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

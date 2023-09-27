@@ -6,7 +6,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -106,7 +108,6 @@ public class TagDelController {
                 tagDelService.deleteStateType(priKey)
         );
     }
-
     @ApiOperation(
             value = "맛 정보 삭제",
             notes = "맛 정보를 삭제합니다."

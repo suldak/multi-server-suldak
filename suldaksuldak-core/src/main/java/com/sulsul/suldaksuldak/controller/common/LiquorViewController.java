@@ -2,7 +2,6 @@ package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorRes;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
