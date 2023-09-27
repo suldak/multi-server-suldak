@@ -9,8 +9,11 @@ spring:
     password: 1234
   main:
     allow-bean-definition-overriding: 'true'
-  profiles:
-    include: oauth
+#  profiles:
+#    include: oauth
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   security:
     oauth2:
