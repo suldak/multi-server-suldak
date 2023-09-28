@@ -3,15 +3,19 @@ package com.sulsul.suldaksuldak.dto.auth;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.user.User;
-import lombok.Value;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Value
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
 public class UserDto {
     Long id;
-    String email;
-    String password;
+    String userEmail;
+    String userPw;
     String nickname;
     Gender gender;
     Integer birthdayYear;
@@ -21,8 +25,8 @@ public class UserDto {
 
     public static UserDto of (
             Long id,
-            String email,
-            String password,
+            String userEmail,
+            String userPw,
             String nickname,
             Gender gender,
             Integer birthdayYear,
@@ -30,8 +34,8 @@ public class UserDto {
     ) {
         return new UserDto(
                 id,
-                email,
-                password,
+                userEmail,
+                userPw,
                 nickname,
                 gender,
                 birthdayYear,
@@ -44,8 +48,8 @@ public class UserDto {
     public User toEntity() {
         return User.of(
                 id,
-                email,
-                password,
+                userEmail,
+                userPw,
                 nickname,
                 gender,
                 birthdayYear,
@@ -56,7 +60,7 @@ public class UserDto {
     public User updateEntity(
             User user
     ) {
-        // setter
+        if (nickname != null) user.setNickname(nickname);
         return user;
     }
 }

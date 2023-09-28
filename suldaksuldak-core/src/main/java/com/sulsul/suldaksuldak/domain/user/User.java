@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -21,12 +22,13 @@ public class User extends BaseEntity {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String userEmail;
 
     @Column(nullable = false)
-    private String password;
+    private String userPw;
 
     @Column(unique = true, nullable = false)
+    @Setter
     private String nickname;
 
     @Column(nullable = false)
@@ -44,16 +46,16 @@ public class User extends BaseEntity {
 
     protected User (
             Long id,
-            String email,
-            String password,
+            String userEmail,
+            String userPw,
             String nickname,
             Gender gender,
             Integer birthdayYear,
             Registration registration
     ) {
         this.id = id;
-        this.email = email;
-        this.password = password;
+        this.userEmail = userEmail;
+        this.userPw = userPw;
         this.nickname = nickname;
         this.gender = gender;
         this.birthdayYear = birthdayYear;
@@ -62,8 +64,8 @@ public class User extends BaseEntity {
 
     public static User of (
             Long id,
-            String email,
-            String password,
+            String userEmail,
+            String userPw,
             String nickName,
             Gender gender,
             Integer birthdayYear,
@@ -71,8 +73,8 @@ public class User extends BaseEntity {
     ) {
         return new User(
                 id,
-                email,
-                password,
+                userEmail,
+                userPw,
                 nickName,
                 gender,
                 birthdayYear,

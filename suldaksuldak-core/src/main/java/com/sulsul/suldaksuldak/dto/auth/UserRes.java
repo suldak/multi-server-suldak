@@ -1,27 +1,42 @@
 package com.sulsul.suldaksuldak.dto.auth;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
 import java.time.LocalDateTime;
 
 @Value
+@ApiModel(value = "User Response")
 public class UserRes {
+    @ApiModelProperty(value = "유저 기본키")
     Long id;
-    String email;
+    @ApiModelProperty(value = "Email")
+    String userEmail;
+    @ApiModelProperty(value = "닉네임")
     String nickname;
+    @ApiModelProperty(value = "성별")
     Gender gender;
+    @ApiModelProperty(value = "출생 년도")
     Integer birthdayYear;
+    @ApiModelProperty(value = "가입 방법")
     Registration registration;
+    @ApiModelProperty(value = "생성 일시")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
+    @ApiModelProperty(value = "수정 일시")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime modifiedAt;
+    @ApiModelProperty(value = "Refresh Token")
     String refreshToken;
 
     public static UserRes from (UserDto userDto) {
         return new UserRes(
                 userDto.getId(),
-                userDto.getEmail(),
+                userDto.getUserEmail(),
                 userDto.getNickname(),
                 userDto.getGender(),
                 userDto.getBirthdayYear(),
@@ -38,7 +53,7 @@ public class UserRes {
     ) {
         return new UserRes(
                 userDto.getId(),
-                userDto.getEmail(),
+                userDto.getUserEmail(),
                 userDto.getNickname(),
                 userDto.getGender(),
                 userDto.getBirthdayYear(),

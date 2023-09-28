@@ -102,7 +102,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
             UserDto user = objectMapper.readValue(request.getInputStream(), UserDto.class);
             // ID와 패스워드를 기반으로 토큰 발급
-            return new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+            return new UsernamePasswordAuthenticationToken(user.getUserEmail(), user.getUserPw());
         } catch (UsernameNotFoundException ae) {
             ae.printStackTrace();
 //            throw new UsernameNotFoundException(ae.getMessage());

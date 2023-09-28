@@ -9,5 +9,6 @@ public enum Registration {
     KAKAO,
     NAVER,
     GOOGLE,
+    APPLE,
     SULDAKSULDAK
 }

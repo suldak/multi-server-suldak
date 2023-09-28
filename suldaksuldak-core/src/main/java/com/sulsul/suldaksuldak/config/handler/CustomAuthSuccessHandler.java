@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.config.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.auth.TokenMap;
 import com.sulsul.suldaksuldak.dto.auth.TokenRes;
@@ -40,7 +41,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
 
         String userId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
-        Optional<UserDto> optionalUserDTO = userRepository.findByEmail(userId);
+        Optional<UserDto> optionalUserDTO = userRepository.findByUserEmail(userId);
 
         if (optionalUserDTO.isPresent()) {
             TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDTO.get());
@@ -54,6 +55,7 @@ public class CustomAuthSuccessHandler extends SavedRequestAwareAuthenticationSuc
                     );
 
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
             Map result = objectMapper.convertValue(userResApiDataResponse, Map.class);
 
             jsonObject = new JSONObject(result);

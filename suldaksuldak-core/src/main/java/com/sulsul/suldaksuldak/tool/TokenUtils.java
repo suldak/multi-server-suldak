@@ -25,9 +25,9 @@ public class TokenUtils {
     public static TokenMap getTokenMap(UserDto userDTO) {
         // 유효하지 않은 토큰 삭제
         checkRefreshToken();
-        Claims claims = Jwts.claims().setSubject(userDTO.getEmail()); // JWT payload 에 저장되는 정보단위
+        Claims claims = Jwts.claims().setSubject(userDTO.getUserEmail()); // JWT payload 에 저장되는 정보단위
         claims.put("priId", userDTO.getId());
-        claims.put("email", userDTO.getEmail()); // 정보는 key / value 쌍으로 저장된다.
+        claims.put("email", userDTO.getUserEmail()); // 정보는 key / value 쌍으로 저장된다.
         claims.put("nickname", userDTO.getNickname());
         Date now = new Date();
 

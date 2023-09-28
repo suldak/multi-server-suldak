@@ -2,15 +2,13 @@ package com.sulsul.suldaksuldak.repo.auth;
 
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserRepositoryCustom {
-    Optional<UserDto> findByEmail(
-            String email
+    Optional<UserDto> findByUserEmail(
+            String userId
     );
-    List<UserDto> findByEmailOrNickname(
-            String email,
+    Optional<UserDto> findByNickname(
             String nickname
     );
     Optional<UserDto> loginUser(

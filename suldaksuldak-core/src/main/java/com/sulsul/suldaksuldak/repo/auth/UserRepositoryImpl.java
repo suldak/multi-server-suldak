@@ -9,7 +9,6 @@ import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,38 +17,39 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Optional<UserDto> findByEmail(
-            String email
+    public Optional<UserDto> findByUserEmail(
+            String userEmail
     ) {
         return Optional.ofNullable(
                 getUserDtoQuery()
                         .from(user)
                         .where(
-                                emailEq(email)
+                                userEmailEq(userEmail)
                         )
                         .fetchFirst()
         );
     }
 
     @Override
-    public List<UserDto> findByEmailOrNickname(String email, String nickname) {
-        return getUserDtoQuery()
-                .from(user)
-                .where(
-                        user.email.eq(email)
-                                .or(user.nickname.eq(nickname))
-                )
-                .fetch();
-    }
-
-    @Override
-    public Optional<UserDto> loginUser(String email, String password) {
+    public Optional<UserDto> findByNickname(String nickname) {
         return Optional.ofNullable(
                 getUserDtoQuery()
                         .from(user)
                         .where(
-                                emailEq(email),
-                                passwordEq(password)
+                                nicknameEq(nickname)
+                        )
+                        .fetchFirst()
+        );
+    }
+
+    @Override
+    public Optional<UserDto> loginUser(String userEmail, String userPw) {
+        return Optional.ofNullable(
+                getUserDtoQuery()
+                        .from(user)
+                        .where(
+                                userEmailEq(userEmail),
+                                userPwEq(userPw)
                         )
                         .fetchFirst()
         );
@@ -61,8 +61,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         Projections.constructor(
                                 UserDto.class,
                                 user.id,
-                                user.email,
-                                user.password,
+                                user.userEmail,
+                                user.userPw,
                                 user.nickname,
                                 user.gender,
                                 user.birthdayYear,
@@ -73,10 +73,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 );
     }
 
-    private BooleanExpression emailEq(
-            String email
+    private BooleanExpression userEmailEq(
+            String userEmail
     ) {
-        return user.email.eq(email);
+        return user.userEmail.eq(userEmail);
     }
 
     private BooleanExpression nicknameEq(
@@ -85,9 +85,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return user.nickname.eq(nickname);
     }
 
-    private BooleanExpression passwordEq(
-            String password
+    private BooleanExpression userPwEq(
+            String userPw
     ) {
-        return user.password.eq(password);
+        return user.userPw.eq(userPw);
     }
 }
