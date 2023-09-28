@@ -1,23 +1,20 @@
 package com.sulsul.suldaksuldak.controller.auth;
 
+import com.sulsul.suldaksuldak.component.auth.ToGoogle;
 import com.sulsul.suldaksuldak.component.auth.ToKakao;
 import com.sulsul.suldaksuldak.component.auth.ToNaver;
-import com.sulsul.suldaksuldak.constant.auth.Registration;
-import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.auth.*;
-import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
@@ -29,36 +26,72 @@ public class UserController {
     private final UserService userService;
     private final ToKakao toKakao;
     private final ToNaver toNaver;
+    private final ToGoogle toGoogle;
+
+    @GetMapping(value = "/kakao")
+    public ApiDataResponse<UserRes> loginKakao(
+            @RequestParam String code,
+            @RequestParam String state
+    ) {
+        String accessToken = toKakao.getAccessToken(code);
+        SocialUserDto socialUserDto = toKakao.getUserInfo(accessToken);
+        Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
+        if (optionalUserDto.isPresent()) {
+            // 해당 이메일 있음
+            TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
+            return ApiDataResponse.of(UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap)));
+        } else {
+            // 해당 이메일 없음
+            return ApiDataResponse.of(UserRes.from(socialUserDto));
+        }
+    }
+
+    @GetMapping(value = "/naver")
+    public ApiDataResponse<UserRes> loginNaver(
+            @RequestParam String code,
+            @RequestParam String state
+    ) {
+        String accessToken = toNaver.getAccessToken(code, state);
+        SocialUserDto socialUserDto = toNaver.getUserInfo(accessToken);
+        Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
+        if (optionalUserDto.isPresent()) {
+            // 해당 이메일 있음
+            TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
+            return ApiDataResponse.of(UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap)));
+        } else {
+            // 해당 이메일 없음
+            return ApiDataResponse.of(UserRes.from(socialUserDto));
+        }
+    }
+
+    @GetMapping(value = "/google")
+    public ApiDataResponse<UserRes> loginGoogle(
+            @RequestParam String code,
+            @RequestParam String state
+    ) {
+        String accessToken = toGoogle.getAccessToken(code);
+        SocialUserDto socialUserDto = toGoogle.getUserInfo(accessToken);
+        Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
+        if (optionalUserDto.isPresent()) {
+            // 해당 이메일 있음
+            TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
+            return ApiDataResponse.of(UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap)));
+        } else {
+            // 해당 이메일 없음
+            return ApiDataResponse.of(UserRes.from(socialUserDto));
+        }
+    }
 
     @ApiOperation(
             value = "회원가입",
-            notes = "소셜 회원가입 및 차제 회원가입 (카카오 / 네이버)"
+            notes = "소셜 회원가입 및 자체 회원가입"
     )
     @PostMapping(value = "/signup")
     public ApiDataResponse<Boolean> signup(
             @RequestBody UserReq userReq
     ) {
-        Boolean result = false;
-        if (userReq.getRegistration().equals(Registration.KAKAO)) {
-            String accessToken = toKakao.getAccessToken(userReq.getCode());
-            UserDto userDto = toKakao.getUserInfo(accessToken);
-            log.info(userDto.toString());
-            result = userService.createUser(userDto);
-        } else if (userReq.getRegistration().equals(Registration.GOOGLE)) {
-            // TODO GOOGLE
-        } else if (userReq.getRegistration().equals(Registration.NAVER)) {
-            String accessToken = toNaver.getAccessToken(userReq.getCode(), userReq.getState());
-            UserDto userDto = toNaver.getUserInfo(accessToken);
-            log.info(userDto.toString());
-            result = userService.createUser(userDto);
-        } else if (userReq.getRegistration().equals(Registration.APPLE)) {
-            // TODO APPLE
-        } else {
-            result = userService.createUser(userReq.toDto());
-        }
-
         return ApiDataResponse.of(
-                result
+                userService.createUser(userReq.toDto())
         );
     }
 
@@ -72,38 +105,51 @@ public class UserController {
     }
 
     @ApiOperation(
-            value = "소셜 로그인",
-            notes = "소셜 로그인 (카카오 / 네이버)"
+            value = "로그아웃",
+            notes = "Refresh Token을 이용한 로그아웃"
     )
-    @PostMapping(value = "/login-social")
-    public ApiDataResponse<UserRes> loginKaKao(
-            @RequestBody UserReq userReq
+    @PostMapping(value = "/logout")
+    public ApiDataResponse<Boolean> logout(
+            HttpServletRequest request
     ) {
-        Optional<UserDto> optionalUserDto = Optional.empty();
-        if (userReq.getRegistration().equals(Registration.KAKAO)) {
-            String accessToken = toKakao.getAccessToken(userReq.getCode());
-            UserDto userDto = toKakao.getUserInfo(accessToken);
-            optionalUserDto = userService.getUserBySocial(userDto);
-        } else if (userReq.getRegistration().equals(Registration.GOOGLE)) {
-            // TODO GOOGLE
-        } else if (userReq.getRegistration().equals(Registration.NAVER)) {
-            String accessToken = toNaver.getAccessToken(userReq.getCode(), userReq.getState());
-            UserDto userDto = toNaver.getUserInfo(accessToken);
-            optionalUserDto = userService.getUserBySocial(userDto);
-        } else if (userReq.getRegistration().equals(Registration.APPLE)) {
-            // TODO APPLE
-        } else {
-            throw new GeneralException(ErrorCode.BAD_REQUEST, "일반 로그인 API를 사용해주세요.");
-        }
-
-        if (optionalUserDto.isEmpty())
-            throw new GeneralException(ErrorCode.BAD_REQUEST, "해당 소셜로 회원가입한 유저가 없습니다.");
-
-        TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
-        return ApiDataResponse.of(
-                UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap))
-        );
+        String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        TokenUtils.removeRefreshToken(refreshHeader);
+        return ApiDataResponse.of(true);
     }
+
+//    @ApiOperation(
+//            value = "소셜 로그인",
+//            notes = "소셜 로그인 (카카오 / 네이버)"
+//    )
+//    @PostMapping(value = "/login-social")
+//    public ApiDataResponse<UserRes> loginKaKao(
+//            @RequestBody UserReq userReq
+//    ) {
+//        Optional<UserDto> optionalUserDto = Optional.empty();
+//        if (userReq.getRegistration().equals(Registration.KAKAO)) {
+//            String accessToken = toKakao.getAccessToken(userReq.getCode());
+//            UserDto userDto = toKakao.getUserInfo(accessToken);
+//            optionalUserDto = userService.getUserBySocial(userDto);
+//        } else if (userReq.getRegistration().equals(Registration.GOOGLE)) {
+//            // TODO GOOGLE
+//        } else if (userReq.getRegistration().equals(Registration.NAVER)) {
+//            String accessToken = toNaver.getAccessToken(userReq.getCode(), userReq.getState());
+//            UserDto userDto = toNaver.getUserInfo(accessToken);
+//            optionalUserDto = userService.getUserBySocial(userDto);
+//        } else if (userReq.getRegistration().equals(Registration.APPLE)) {
+//            // TODO APPLE
+//        } else {
+//            throw new GeneralException(ErrorCode.BAD_REQUEST, "일반 로그인 API를 사용해주세요.");
+//        }
+//
+//        if (optionalUserDto.isEmpty())
+//            throw new GeneralException(ErrorCode.BAD_REQUEST, "해당 소셜로 회원가입한 유저가 없습니다.");
+//
+//        TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
+//        return ApiDataResponse.of(
+//                UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap))
+//        );
+//    }
 
 
 

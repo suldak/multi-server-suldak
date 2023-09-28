@@ -75,7 +75,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         List<String> list = Arrays.asList(
                 "/api/auth/login",
                 "/api/auth/signup",
-                "/api/auth/login-social"
+                "/api/auth/kakao",
+                "/api/auth/naver",
+                "/api/auth/google"
 //                "/api/auth/reissue-token"
     //            "/api/auth/soojibee-access"
         );

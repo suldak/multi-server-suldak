@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface UserRepositoryCustom {
     Optional<UserDto> findByUserEmail(
-            String userId
+            String userEmail
     );
     Optional<UserDto> findByNickname(
             String nickname
     );
     Optional<UserDto> findUserBySocial(
-            String email,
+            String userEmail,
             String password,
             Registration registration
     );

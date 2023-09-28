@@ -30,6 +30,8 @@ public class UserRes {
     @ApiModelProperty(value = "수정 일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime modifiedAt;
+    @ApiModelProperty(value = "소셜 로그인 비밀번호 생성을 위한 identity 값")
+    String identity;
     @ApiModelProperty(value = "Refresh Token")
     String refreshToken;
 
@@ -43,6 +45,7 @@ public class UserRes {
                 userDto.getRegistration(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
+                null,
                 null
         );
     }
@@ -60,7 +63,25 @@ public class UserRes {
                 userDto.getRegistration(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
+                null,
                 tokenRes.getRefreshToken()
+        );
+    }
+
+    public static UserRes from(
+            SocialUserDto socialUserDto
+    ) {
+        return new UserRes(
+                null,
+                socialUserDto.getUserEmail(),
+                socialUserDto.getNickname(),
+                null,
+                null,
+                socialUserDto.getRegistration(),
+                null,
+                null,
+                socialUserDto.getIdentity(),
+                null
         );
     }
 }

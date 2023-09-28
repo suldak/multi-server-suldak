@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.component.auth;
 
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.dto.auth.SocialUserDto;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -47,8 +48,8 @@ public class ToNaver {
     public ToNaver() {
         HttpComponentsClientHttpRequestFactory factory
                 = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(5000);
-        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(10000);
+        factory.setReadTimeout(10000);
         factory.setBufferRequestBody(false);
 
         restTemplate = new RestTemplate(factory);
@@ -70,7 +71,7 @@ public class ToNaver {
                     String.class
             );
             String tokenJson = response.getBody();
-            log.info(tokenJson);
+//            log.info(tokenJson);
             JSONObject jsonObject = new JSONObject(tokenJson);
             return jsonObject.getString("access_token");
         } catch (Exception e) {
@@ -78,7 +79,7 @@ public class ToNaver {
         }
     }
 
-    public UserDto getUserInfo(
+    public SocialUserDto getUserInfo(
             String accessToken
     ) {
         try {
@@ -92,17 +93,11 @@ public class ToNaver {
             );
             String tokenJson = response.getBody();
             JSONObject jsonObject = new JSONObject(tokenJson);
-            log.info(tokenJson);
-            return UserDto.of(
-                    null,
+//            log.info(tokenJson);
+            return SocialUserDto.of(
                     jsonObject.getJSONObject("response").getString("email"),
-                    UtilTool.encryptPassword(
-                            jsonObject.getJSONObject("response").getString("email"),
-                            jsonObject.getJSONObject("response").getString("id")
-                    ),
+                    jsonObject.getJSONObject("response").getString("id"),
                     jsonObject.getJSONObject("response").getString("nickname"),
-                    null,
-                    null,
                     Registration.NAVER
             );
         } catch (Exception e) {

@@ -22,7 +22,7 @@ public class UserReq {
     Long id;
     @ApiModelProperty(value = "이메일 (Id)")
     String userEmail;
-    @ApiModelProperty(value = "비밀번호")
+    @ApiModelProperty(value = "비밀번호 (소셜 회원가입일 경우 identity 값을 넣어야 함")
     String userPw;
     @ApiModelProperty(value = "닉네임")
     String nickname;
@@ -32,10 +32,10 @@ public class UserReq {
     Integer birthdayYear;
     @ApiModelProperty(value = "가입 방법")
     Registration registration;
-    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 code")
-    String code;
-    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 state")
-    String state;
+//    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 code")
+//    String code;
+//    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 state")
+//    String state;
 
     public UserDto toDto() {
         try {
