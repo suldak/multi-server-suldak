@@ -5,6 +5,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import static com.sulsul.suldaksuldak.domain.user.QUser.user;
+
+import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -43,13 +45,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserDto> loginUser(String userEmail, String userPw) {
+    public Optional<UserDto> findUserBySocial(
+            String email,
+            String password,
+            Registration registration
+    ) {
         return Optional.ofNullable(
                 getUserDtoQuery()
                         .from(user)
                         .where(
-                                userEmailEq(userEmail),
-                                userPwEq(userPw)
+                                userEmailEq(email),
+                                userPwEq(password),
+                                userRegistrationEq(registration)
                         )
                         .fetchFirst()
         );
@@ -89,5 +96,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             String userPw
     ) {
         return user.userPw.eq(userPw);
+    }
+
+    private BooleanExpression userRegistrationEq(
+            Registration registration
+    ) {
+        return user.registration.eq(registration);
     }
 }

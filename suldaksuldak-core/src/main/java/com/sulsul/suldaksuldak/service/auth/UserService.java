@@ -77,4 +77,20 @@ public class UserService implements UserDetailsService {
         }
         return true;
     }
+
+    public Optional<UserDto> getUserBySocial(
+            UserDto userDto
+    ) {
+        try {
+            return userRepository.findUserBySocial(
+                    userDto.getUserEmail(),
+                    userDto.getUserPw(),
+                    userDto.getRegistration()
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
 }

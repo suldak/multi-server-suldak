@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.repo.auth;
 
+import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 
 import java.util.Optional;
@@ -11,8 +12,9 @@ public interface UserRepositoryCustom {
     Optional<UserDto> findByNickname(
             String nickname
     );
-    Optional<UserDto> loginUser(
+    Optional<UserDto> findUserBySocial(
             String email,
-            String password
+            String password,
+            Registration registration
     );
 }
