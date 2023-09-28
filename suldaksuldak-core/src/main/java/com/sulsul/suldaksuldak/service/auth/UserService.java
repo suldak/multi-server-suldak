@@ -1,11 +1,13 @@
 package com.sulsul.suldaksuldak.service.auth;
 
+import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
@@ -71,7 +73,7 @@ public class UserService implements UserDetailsService {
             if (checkNickname.isPresent()) throw new GeneralException(ErrorCode.BAD_REQUEST, "닉네임이 중복됩니다.");
             userRepository.save(userDto.toEntity());
         } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
@@ -83,6 +85,29 @@ public class UserService implements UserDetailsService {
     ) {
         try {
             return userRepository.findByUserEmail(userEmail);
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public Boolean login(
+            String userEmail,
+            String userPw
+    ) {
+        try {
+            Optional<UserDto> optionalUserDto = userRepository.findUserBySocial(
+                    userEmail,
+                    UtilTool.encryptPassword(userPw, userEmail),
+                    Registration.KAKAO
+            );
+            if (optionalUserDto.isPresent()) {
+                log.info(optionalUserDto.get().toString());
+                return true;
+            } else {
+                return false;
+            }
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getErrorCode());
         } catch (Exception e) {

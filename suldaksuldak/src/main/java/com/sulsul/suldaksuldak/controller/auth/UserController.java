@@ -38,6 +38,7 @@ public class UserController {
         Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
         if (optionalUserDto.isPresent()) {
             // 해당 이메일 있음
+//            userService.login(socialUserDto.getUserEmail(), socialUserDto.getIdentity());
             TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
             return ApiDataResponse.of(UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap)));
         } else {
