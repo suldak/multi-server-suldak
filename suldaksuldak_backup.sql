@@ -58,6 +58,8 @@ CREATE TABLE `tb_liquor` (
   `liquor_detail_id` bigint unsigned DEFAULT NULL,
   `drinking_capacity_id` bigint unsigned DEFAULT NULL,
   `liquor_name_id` bigint unsigned DEFAULT NULL,
+  `search_tag` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `liquor_recipe` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   PRIMARY KEY (`id`),
   KEY `tb_liquor_FK` (`liquor_abv_id`),
   KEY `tb_liquor_FK_1` (`liquor_detail_id`),
@@ -76,7 +78,7 @@ CREATE TABLE `tb_liquor` (
 
 LOCK TABLES `tb_liquor` WRITE;
 /*!40000 ALTER TABLE `tb_liquor` DISABLE KEYS */;
-INSERT INTO `tb_liquor` VALUES (2,'CASS','한국의 맥주','한국의 대표 맥주입니다.','2023-09-17 07:05:06','2023-09-18 08:55:55',1,1,4,2),(3,'Kelly','한국의 맥주','손석구가 광고하는 맥주','2023-09-17 09:22:00','2023-09-17 09:22:00',1,1,NULL,NULL);
+INSERT INTO `tb_liquor` VALUES (2,'CASS','한국의 맥주','한국의 대표 맥주입니다.','2023-09-17 07:05:06','2023-09-18 08:55:55',1,1,4,2,'맥주 카스',NULL),(3,'Kelly','한국의 맥주','손석구가 광고하는 맥주','2023-09-17 09:22:00','2023-09-17 09:22:00',1,1,NULL,NULL,'맥주 켈리',NULL);
 /*!40000 ALTER TABLE `tb_liquor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,33 +180,6 @@ LOCK TABLES `tb_liquor_name` WRITE;
 /*!40000 ALTER TABLE `tb_liquor_name` DISABLE KEYS */;
 INSERT INTO `tb_liquor_name` VALUES (2,'맥주'),(1,'소주');
 /*!40000 ALTER TABLE `tb_liquor_name` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tb_liquor_recipe`
---
-
-DROP TABLE IF EXISTS `tb_liquor_recipe`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tb_liquor_recipe` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `liquor_id` bigint unsigned NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `tb_liquor_recipe_FK` (`liquor_id`),
-  CONSTRAINT `tb_liquor_recipe_FK` FOREIGN KEY (`liquor_id`) REFERENCES `tb_liquor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='레시피';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tb_liquor_recipe`
---
-
-LOCK TABLES `tb_liquor_recipe` WRITE;
-/*!40000 ALTER TABLE `tb_liquor_recipe` DISABLE KEYS */;
-INSERT INTO `tb_liquor_recipe` VALUES (1,'최대한 시원하게!!',2);
-/*!40000 ALTER TABLE `tb_liquor_recipe` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -497,7 +472,7 @@ CREATE TABLE `tb_user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tb_user_un_email` (`user_email`),
   UNIQUE KEY `tb_user_un_nickname` (`nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -506,7 +481,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (1,'swdfrgt3701@naver.com','2023-09-28 03:10:08','2023-09-28 03:10:08','MiSo','M',2000,'SULDAKSULDAK','Y9dKI76CGoHu+IzHeTeOUHC+IIU16UyIm32bHigOWrc=');
+INSERT INTO `tb_user` VALUES (4,'swdfrgt3701@naver.com','2023-09-28 07:33:37','2023-09-28 07:33:37','MiSo','M',2000,'KAKAO','OHpbsiogAy8CBiRj8PQ6JxPqs0jNTk4PclDEP4DkBd4=');
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -519,4 +494,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-28 13:25:46
+-- Dump completed on 2023-09-30 14:34:32
