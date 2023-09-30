@@ -17,6 +17,10 @@ public class LiquorRes {
     String summaryExplanation;
     @ApiModelProperty(value = "술 상세 설명")
     String detailExplanation;
+    @ApiModelProperty(value = "술 검색을 위한 문구들")
+    String searchTag;
+    @ApiModelProperty(value = "술의 레시피")
+    String liquorRecipe;
     @ApiModelProperty(value = "도수 기본키")
     Long liquorAbvId;
     @ApiModelProperty(value = "2차 분류 기본키")
@@ -34,6 +38,8 @@ public class LiquorRes {
                 liquorDto.getName(),
                 liquorDto.getSummaryExplanation(),
                 liquorDto.getDetailExplanation(),
+                liquorDto.getSearchTag(),
+                liquorDto.getLiquorRecipe(),
                 liquorDto.getLiquorAbvId(),
                 liquorDto.getLiquorDetailId(),
                 liquorDto.getDrinkingCapacityId(),

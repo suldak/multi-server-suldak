@@ -59,6 +59,24 @@ public class MtToLiRepositoryImpl implements MtToLiRepositoryCustom, BridgeInter
                 .fetch();
     }
 
+    @Override
+    public List<Long> findLiquorPriKeyByTagPriKey(
+            List<Long> tagPriKeys
+    ) {
+        return jpaQueryFactory
+                .select(mtToLi.liquor.id)
+                .from(mtToLi)
+                .innerJoin(mtToLi.liquor, liquor)
+                .on(mtToLi.liquor.id.eq(liquor.id))
+                .innerJoin(mtToLi.liquorMaterial, liquorMaterial)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                mtToLi.liquorMaterial.id.eq(liquorMaterial.id) :
+                                mtToLi.liquorMaterial.id.in(tagPriKeys)
+                )
+                .fetch();
+    }
+
     private JPAQuery<BridgeDto> getBridgeDtoQuery() {
         return jpaQueryFactory
                 .select(

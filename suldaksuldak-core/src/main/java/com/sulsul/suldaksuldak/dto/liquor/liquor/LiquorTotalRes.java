@@ -1,7 +1,5 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
@@ -24,8 +22,6 @@ public class LiquorTotalRes {
     String summaryExplanation;
     @ApiModelProperty(value = "술 상세 설명")
     String detailExplanation;
-    // 레시피
-    LiquorRecipeRes liquorRecipeRes;
     // 도수
     LiquorAbvDto liquorAbvDto;
     // 2차 분류
@@ -53,7 +49,6 @@ public class LiquorTotalRes {
 
     public static LiquorTotalRes of (
             LiquorDto liquorDto,
-            LiquorRecipeDto liquorRecipeDto,
             LiquorAbvDto liquorAbvDto,
             LiquorDetailDto liquorDetailDto,
             DrinkingCapacityDto drinkingCapacityDto,
@@ -69,7 +64,6 @@ public class LiquorTotalRes {
                 liquorDto.getName(),
                 liquorDto.getSummaryExplanation(),
                 liquorDto.getDetailExplanation(),
-                LiquorRecipeRes.from(liquorRecipeDto),
                 liquorAbvDto,
                 liquorDetailDto,
                 drinkingCapacityDto,

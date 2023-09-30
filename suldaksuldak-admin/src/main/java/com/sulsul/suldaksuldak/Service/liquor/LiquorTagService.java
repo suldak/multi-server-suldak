@@ -19,7 +19,6 @@ import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
-import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
@@ -37,8 +36,6 @@ import java.util.Optional;
 @Slf4j
 public class LiquorTagService {
     private final LiquorRepository liquorRepository;
-    // 레시피
-    private final LiquorRecipeRepository liquorRecipeRepository;
     // 도수
     private final LiquorAbvRepository liquorAbvRepository;
     // 2차 분류

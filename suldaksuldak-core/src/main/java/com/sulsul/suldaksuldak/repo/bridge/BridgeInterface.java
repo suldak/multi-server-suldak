@@ -15,4 +15,9 @@ public interface BridgeInterface {
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys
     );
+
+    List<Long> findLiquorPriKeyByTagPriKey(
+//            List<Long> liquorPriKeys,
+            List<Long> tagPriKeys
+    );
 }

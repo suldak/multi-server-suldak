@@ -3,7 +3,6 @@ package com.sulsul.suldaksuldak.controller.liquor;
 import com.sulsul.suldaksuldak.Service.liquor.LiquorAddService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorReq;
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +30,6 @@ public class LiquorAddController {
     ) {
         return ApiDataResponse.of(
                 liquorAddService.createLiquor(liquorReq.toDto())
-        );
-    }
-
-    @ApiOperation(
-            value = "술의 레시피 저장",
-            notes = "술의 레시피를 생성하거나 수정합니다."
-    )
-    @PostMapping(value = "/liquor-recipe")
-    public ApiDataResponse<Boolean> createLiquorRecipe(
-            @RequestBody LiquorRecipeReq liquorRecipeReq
-    ) {
-        return ApiDataResponse.of(
-                liquorAddService.createLiquorRecipe(liquorRecipeReq.toDto())
         );
     }
 }

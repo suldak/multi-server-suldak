@@ -2,32 +2,26 @@ package com.sulsul.suldaksuldak.Service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
-import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import com.sulsul.suldaksuldak.domain.tag.LiquorName;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
-import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
-import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
+import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
+import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorAddService {
     private final LiquorRepository liquorRepository;
-    private final LiquorRecipeRepository liquorRecipeRepository;
     private final LiquorAbvRepository liquorAbvRepository;
     private final LiquorDetailRepository liquorDetailRepository;
     private final DrinkingCapacityRepository drinkingCapacityRepository;
@@ -89,47 +83,6 @@ public class LiquorAddService {
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-        }
-        return true;
-    }
-
-    /**
-     * 술의 레피시 저장
-     */
-    public Boolean createLiquorRecipe(
-            LiquorRecipeDto liquorRecipeDto
-    ) {
-        try {
-            if (liquorRecipeDto.getLiquorId() == null) {
-                throw new GeneralException(ErrorCode.BAD_REQUEST, "NOT FOUND Liquor PRI KEY");
-            }
-            Optional<Liquor> liquorOptional = liquorRepository.findById(liquorRecipeDto.getLiquorId());
-            if (liquorOptional.isEmpty()) {
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        ErrorMessage.NOT_FOUND_LIQUOR_DATA
-                );
-            }
-            if (liquorRecipeDto.getId() == null) {
-                liquorRecipeRepository.save(liquorRecipeDto.toEntity(liquorOptional.get()));
-            } else {
-                liquorRecipeRepository.findById(liquorRecipeDto.getId())
-                        .ifPresentOrElse(
-                                findEntity -> {
-                                    liquorRecipeRepository.save(
-                                            liquorRecipeDto.updateEntity(findEntity)
-                                    );
-                                },
-                                () -> {
-                                    throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND RECIPE DATA");
-                                }
-                        );
-            }
-        } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
         return true;

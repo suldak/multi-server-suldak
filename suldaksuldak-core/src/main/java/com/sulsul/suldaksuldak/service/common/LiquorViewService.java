@@ -5,7 +5,6 @@ import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
-import com.sulsul.suldaksuldak.dto.liquor.recipe.LiquorRecipeDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -14,14 +13,13 @@ import com.sulsul.suldaksuldak.repo.bridge.sell.SlToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.st.StToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.tt.TtToLiRepository;
-import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
-import com.sulsul.suldaksuldak.repo.liquor.recipe.LiquorRecipeRepository;
-import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
-import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
-import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
+import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
+import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
+import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
+import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
 import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
@@ -29,16 +27,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorViewService {
     private final LiquorRepository liquorRepository;
-    private final LiquorRecipeRepository liquorRecipeRepository;
     private final LiquorAbvRepository liquorAbvRepository;
     private final LiquorDetailRepository liquorDetailRepository;
     private final DrinkingCapacityRepository drinkingCapacityRepository;
@@ -56,24 +51,6 @@ public class LiquorViewService {
     private final MtToLiRepository mtToLiRepository;
 
     /**
-     * 술 레시피의 기본키로 조회
-     */
-    public Optional<LiquorRecipeDto> getLiquorRecipe(
-            Long liquorPriKey
-    ) {
-        try {
-            if (liquorPriKey == null) {
-                throw new GeneralException(ErrorCode.NOT_FOUND, "PriKey is Null");
-            }
-            return liquorRecipeRepository.findByLiquorPriKey(liquorPriKey);
-        } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getMessage());
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-        }
-    }
-
-    /**
      * 술에 관련된 모든 데이터 조회
      */
     public LiquorTotalRes getLiquorTotalData(
@@ -87,8 +64,6 @@ public class LiquorViewService {
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
-            // 레시피
-            Optional<LiquorRecipeDto> liquorRecipeDto = liquorRecipeRepository.findByLiquorPriKey(liquorPriKey);
             // 도수
             Optional<LiquorAbvDto> liquorAbvDto = Optional.empty();
             if (liquorDto.get().getLiquorAbvId() != null) {
@@ -122,7 +97,6 @@ public class LiquorViewService {
 
             return LiquorTotalRes.of(
                     liquorDto.get(),
-                    liquorRecipeDto.orElse(null),
                     liquorAbvDto.orElse(null),
                     liquorDetailDto.orElse(null),
                     drinkingCapacityDto.orElse(null),
@@ -145,59 +119,99 @@ public class LiquorViewService {
     ) {
         try {
             List<Long> resultLiquorPriKey = new ArrayList<>();
+            if (liquorTotalReq.getSearchTag() != null && !liquorTotalReq.getSearchTag().isBlank()) {
+//                resultLiquorPriKey = liquorRepository.findBySearchTag(liquorTotalReq.getSearchTag());
+                resultLiquorPriKey.addAll(liquorRepository.findBySearchTag(liquorTotalReq.getSearchTag()));
+            }
             if (checkLongList(liquorTotalReq.getSnackPriKeys())) {
-                resultLiquorPriKey = snToLiRepository.findLiquorPriKeyByTagPriKey(
+//                resultLiquorPriKey = snToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getSnackPriKeys()
+//                );
+                resultLiquorPriKey.addAll(snToLiRepository.findLiquorPriKeyByTagPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getSnackPriKeys()
-                );
+                ));
             }
             if (checkLongList(liquorTotalReq.getSellPriKeys())) {
-                resultLiquorPriKey = slToLiRepository.findLiquorPriKeyByTagPriKey(
+//                resultLiquorPriKey = slToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getSellPriKeys()
+//                );
+                resultLiquorPriKey.addAll(slToLiRepository.findLiquorPriKeyByTagPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getSellPriKeys()
-                );
+                ));
             }
             if (checkLongList(liquorTotalReq.getStatePriKeys())) {
-                resultLiquorPriKey = stToLiRepository.findLiquorPriKeyByTagPriKey(
+//                resultLiquorPriKey = stToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getStatePriKeys()
+//                );
+                resultLiquorPriKey.addAll(stToLiRepository.findLiquorPriKeyByTagPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getStatePriKeys()
-                );
+                ));
             }
             if (checkLongList(liquorTotalReq.getTastePriKeys())) {
-                resultLiquorPriKey = ttToLiRepository.findLiquorPriKeyByTagPriKey(
+//                resultLiquorPriKey = ttToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getTastePriKeys()
+//                );
+                resultLiquorPriKey.addAll(ttToLiRepository.findLiquorPriKeyByTagPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getTastePriKeys()
-                );
+                ));
             }
             if (checkLongList(liquorTotalReq.getMaterialPriKeys())) {
-                resultLiquorPriKey = mtToLiRepository.findLiquorPriKeyByTagPriKey(
+//                resultLiquorPriKey = mtToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getMaterialPriKeys()
+//                );
+                resultLiquorPriKey.addAll(mtToLiRepository.findLiquorPriKeyByTagPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getMaterialPriKeys()
-                );
+                ));
             }
             if (liquorTotalReq.getLiquorAbvId() != null) {
-                resultLiquorPriKey = liquorRepository.findByLiquorAbvPriKey(
+//                resultLiquorPriKey = liquorRepository.findByLiquorAbvPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getLiquorAbvId()
+//                );
+                resultLiquorPriKey.addAll(liquorRepository.findByLiquorAbvPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getLiquorAbvId()
-                );
+                ));
             }
             if (liquorTotalReq.getLiquorDetailId() != null) {
-                resultLiquorPriKey = liquorRepository.findByLiquorDetailPriKey(
+//                resultLiquorPriKey = liquorRepository.findByLiquorDetailPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getLiquorDetailId()
+//                );
+                resultLiquorPriKey.addAll(liquorRepository.findByLiquorDetailPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getLiquorDetailId()
-                );
+                ));
             }
             if (liquorTotalReq.getDrinkingCapacityId() != null) {
-                resultLiquorPriKey = liquorRepository.findByDrinkingCapacityPriKey(
+//                resultLiquorPriKey = liquorRepository.findByDrinkingCapacityPriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getDrinkingCapacityId()
+//                );
+                resultLiquorPriKey.addAll(liquorRepository.findByDrinkingCapacityPriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getDrinkingCapacityId()
-                );
+                ));
             }
             if (liquorTotalReq.getLiquorNameId() != null) {
-                resultLiquorPriKey = liquorRepository.findByLiquorNamePriKey(
+//                resultLiquorPriKey = liquorRepository.findByLiquorNamePriKey(
+//                        resultLiquorPriKey,
+//                        liquorTotalReq.getLiquorNameId()
+//                );
+                resultLiquorPriKey.addAll(liquorRepository.findByLiquorNamePriKey(
                         resultLiquorPriKey,
                         liquorTotalReq.getLiquorNameId()
-                );
+                ));
             }
 
             List<LiquorDto> resultLiquorDto = new ArrayList<>();
@@ -215,5 +229,24 @@ public class LiquorViewService {
 
     private Boolean checkLongList(List<Long> longList) {
         return longList != null && !longList.isEmpty();
+    }
+
+    private List<Long> unionLists(List<Long> list1, List<Long> list2) {
+        // Create a Set to store unique elements from both lists
+        Set<Long> uniqueSet = new HashSet<>();
+
+        // Add elements from the first list to the set
+        uniqueSet.addAll(list1);
+
+        // Add elements from the second list to the set
+        uniqueSet.addAll(list2);
+
+        // Create a new ArrayList for the result
+        return new ArrayList<>(uniqueSet);
+    }
+
+    private List<Long> removeDuplicates(List<Long> inputList) {
+        HashSet<Long> uniqueSet = new HashSet<>(inputList);
+        return new ArrayList<>(uniqueSet);
     }
 }

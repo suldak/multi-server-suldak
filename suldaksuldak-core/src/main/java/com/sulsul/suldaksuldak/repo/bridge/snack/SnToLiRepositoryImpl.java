@@ -59,6 +59,22 @@ public class SnToLiRepositoryImpl implements SnToLiRepositoryCustom, BridgeInter
                 .fetch();
     }
 
+    @Override
+    public List<Long> findLiquorPriKeyByTagPriKey(List<Long> tagPriKeys) {
+        return jpaQueryFactory
+                .select(snToLi.liquor.id)
+                .from(snToLi)
+                .innerJoin(snToLi.liquor, liquor)
+                .on(snToLi.liquor.id.eq(liquor.id))
+                .innerJoin(snToLi.liquorSnack, liquorSnack)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                snToLi.liquorSnack.id.eq(liquorSnack.id) :
+                                snToLi.liquorSnack.id.in(tagPriKeys)
+                )
+                .fetch();
+    }
+
     private JPAQuery<BridgeDto> getBridgeDtoQuery() {
         return jpaQueryFactory
                 .select(

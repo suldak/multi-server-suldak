@@ -23,4 +23,7 @@ public interface LiquorRepositoryCustom {
             List<Long> liquorPriKeys,
             Long priKey
     );
+    List<Long> findBySearchTag(
+            String searchTag
+    );
 }

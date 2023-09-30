@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import static org.springframework.util.StringUtils.hasText;
 
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,16 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Long> findBySearchTag(String searchTag) {
+        return jpaQueryFactory
+                .select(liquor.id)
+                .from(liquor)
+                .where(searchTagLike(searchTag))
+                .orderBy(liquor.name.asc())
+                .fetch();
+    }
+
     private JPAQuery<LiquorDto> getLiquorDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -105,6 +116,8 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.name,
                                 liquor.summaryExplanation,
                                 liquor.detailExplanation,
+                                liquor.searchTag,
+                                liquor.liquorRecipe,
                                 liquor.liquorAbv.id,
                                 liquor.liquorDetail.id,
                                 liquor.drinkingCapacity.id,
@@ -124,5 +137,12 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     ) {
         return liquorPriKeys == null || liquorPriKeys.isEmpty() ? null :
                 liquor.id.in(liquorPriKeys);
+    }
+
+    private BooleanExpression searchTagLike(
+            String searchTag
+    ) {
+        return hasText(searchTag) ?
+                liquor.searchTag.contains(searchTag) : null;
     }
 }

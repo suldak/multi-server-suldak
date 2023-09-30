@@ -39,6 +39,14 @@ public class Liquor extends BaseEntity {
     private String detailExplanation;
 
     @Setter
+    @Column(nullable = false)
+    private String searchTag;
+
+    @Setter
+    @Column
+    private String liquorRecipe;
+
+    @Setter
     @ManyToOne
     private DrinkingCapacity drinkingCapacity;
 
@@ -59,9 +67,9 @@ public class Liquor extends BaseEntity {
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
     private Set<SlToLi> slToLis = new LinkedHashSet<>();
 
-    @ToString.Exclude
-    @OneToOne(mappedBy = "liquor", cascade = CascadeType.REMOVE)
-    private LiquorRecipe liquorRecipe;
+//    @ToString.Exclude
+//    @OneToOne(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+//    private LiquorRecipe liquorRecipe;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -90,6 +98,8 @@ public class Liquor extends BaseEntity {
             String name,
             String summaryExplanation,
             String detailExplanation,
+            String searchTag,
+            String liquorRecipe,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -99,6 +109,8 @@ public class Liquor extends BaseEntity {
         this.name = name;
         this.summaryExplanation = summaryExplanation;
         this.detailExplanation = detailExplanation;
+        this.searchTag = searchTag;
+        this.liquorRecipe = liquorRecipe;
         this.liquorAbv = liquorAbv;
         this.liquorDetail = liquorDetail;
         this.drinkingCapacity = drinkingCapacity;
@@ -110,6 +122,8 @@ public class Liquor extends BaseEntity {
             String name,
             String summaryExplanation,
             String detailExplanation,
+            String searchTag,
+            String liquorRecipe,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -120,6 +134,8 @@ public class Liquor extends BaseEntity {
                 name,
                 summaryExplanation,
                 detailExplanation,
+                searchTag,
+                liquorRecipe,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,

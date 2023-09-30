@@ -16,6 +16,8 @@ import java.util.List;
 public class LiquorTotalReq {
     @ApiModelProperty(value = "술 기본키, 저장 시 필수 / 태그 별 조회 시 필요 없음")
     Long id;
+    @ApiModelProperty(value = "술 검색을 위한 문구")
+    String searchTag;
     @ApiModelProperty(value = "추천 안주 기본키 리스트")
     List<Long> snackPriKeys;
     @ApiModelProperty(value = "판매처 기본키 리스트")

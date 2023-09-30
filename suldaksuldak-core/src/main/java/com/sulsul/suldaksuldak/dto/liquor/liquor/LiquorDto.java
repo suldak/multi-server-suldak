@@ -15,6 +15,8 @@ public class LiquorDto {
     String name;
     String summaryExplanation;
     String detailExplanation;
+    String searchTag;
+    String liquorRecipe;
     Long liquorAbvId;
     Long liquorDetailId;
     Long drinkingCapacityId;
@@ -27,6 +29,8 @@ public class LiquorDto {
             String name,
             String summaryExplanation,
             String detailExplanation,
+            String searchTag,
+            String liquorRecipe,
             Long liquorAbvId,
             Long liquorDetailId,
             Long drinkingCapacityId,
@@ -37,6 +41,8 @@ public class LiquorDto {
                 name,
                 summaryExplanation,
                 detailExplanation,
+                searchTag,
+                liquorRecipe,
                 liquorAbvId,
                 liquorDetailId,
                 drinkingCapacityId,
@@ -54,6 +60,8 @@ public class LiquorDto {
                 liquor.getName(),
                 liquor.getSummaryExplanation(),
                 liquor.getDetailExplanation(),
+                liquor.getSearchTag(),
+                liquor.getLiquorRecipe(),
                 liquor.getLiquorAbv() != null ? liquor.getLiquorAbv().getId() : null,
                 liquor.getLiquorDetail() != null ? liquor.getLiquorDetail().getId() : null,
                 liquor.getDrinkingCapacity() != null ? liquor.getDrinkingCapacity().getId() : null,
@@ -74,6 +82,8 @@ public class LiquorDto {
                 name,
                 summaryExplanation,
                 detailExplanation,
+                searchTag,
+                liquorRecipe,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,
@@ -91,6 +101,8 @@ public class LiquorDto {
         if (name != null) liquor.setName(name);
         if (summaryExplanation != null) liquor.setSummaryExplanation(summaryExplanation);
         if (detailExplanation != null) liquor.setDetailExplanation(detailExplanation);
+        if (searchTag != null) liquor.setSearchTag(searchTag);
+        if (liquorRecipe != null) liquor.setLiquorRecipe(liquorRecipe);
         if (liquorAbv != null) liquor.setLiquorAbv(liquorAbv);
         if (liquorDetail != null) liquor.setLiquorDetail(liquorDetail);
         if (drinkingCapacity != null) liquor.setDrinkingCapacity(drinkingCapacity);
