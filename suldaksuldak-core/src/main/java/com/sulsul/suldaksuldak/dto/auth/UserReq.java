@@ -20,9 +20,9 @@ import lombok.*;
 public class UserReq {
     @ApiModelProperty(value = "유저 기본키 (생략하면 생성)")
     Long id;
-    @ApiModelProperty(value = "이메일 (Id)")
+    @ApiModelProperty(value = "이메일 (Id)", required = true)
     String userEmail;
-    @ApiModelProperty(value = "비밀번호 (소셜 회원가입일 경우 identity 값을 넣어야 함")
+    @ApiModelProperty(value = "비밀번호 (소셜 회원가입일 경우 identity 값을 넣어야 함", required = true)
     String userPw;
     @ApiModelProperty(value = "닉네임")
     String nickname;

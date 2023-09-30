@@ -153,8 +153,7 @@ public class UserController {
     })
     @PostMapping(value = "/login")
     public void login(
-            @RequestBody String userEmail,
-            @RequestBody String userPw
+            @RequestBody UserReq userReq
     ) {
 
     }
