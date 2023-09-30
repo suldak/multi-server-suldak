@@ -22,6 +22,7 @@ spring:
           kakao:
             client-id: c14c29936ab91bf8d5ff8ccf7ab0c06f
             #          redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+#            redirect-uri: "http://122.45.203.134:8080/api/auth/kakao"
             redirect-uri: "http://localhost:8080/api/auth/kakao"
             client-authentication-method: POST
             authorization-grant-type: authorization_code
@@ -29,6 +30,7 @@ spring:
             client-name: Kakao
           naver:
 #            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+#            redirect-uri: 'http://122.45.203.134:8080/api/auth/naver'
             redirect-uri: 'http://localhost:8080/api/auth/naver'
             authorization-grant-type: authorization_code
             client-secret: dGE2n3Mrej
@@ -38,6 +40,7 @@ spring:
           google:
             client-id: 1040088201011-1bc8jvilpj041bo9f8e1s7t3u93f1pgv.apps.googleusercontent.com
             client-secret: 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
+#            redirect-uri: "http://122.45.203.134:8080/api/auth/google"
             redirect-uri: "http://localhost:8080/api/auth/google"
             scope:
               - email
