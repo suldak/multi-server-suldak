@@ -147,10 +147,6 @@ public class UserController {
             value = "자체 로그인",
             notes = "술닥술닥 자체 로그인"
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userEmail", value = "Id", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(name = "userPw", value = "Password", required = true, dataTypeClass = String.class)
-    })
     @PostMapping(value = "/login")
     public void login(
             @RequestBody UserReq userReq
