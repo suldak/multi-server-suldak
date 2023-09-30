@@ -9,6 +9,7 @@ import com.sulsul.suldaksuldak.dto.auth.*;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +29,45 @@ public class UserController {
     private final ToNaver toNaver;
     private final ToGoogle toGoogle;
 
+//    @ApiOperation(
+//            value = "[소셜] 카카오 로그인",
+//            notes = "카카오톡 로그인"
+//    )
+//    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class, paramType = "path")
+//    @GetMapping(value = "/kakao")
+//    public ApiDataResponse<UserRes> loginKakao(
+//            @RequestParam String code,
+//            @RequestParam String state
+////            @RequestParam String accessToken
+//    ) {
+//        String accessToken = toKakao.getAccessToken(code);
+//        log.info(accessToken);
+//        SocialUserDto socialUserDto = toKakao.getUserInfo(accessToken);
+//        Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
+//        if (optionalUserDto.isPresent()) {
+//            // 해당 이메일 있음
+////            userService.login(socialUserDto.getUserEmail(), socialUserDto.getIdentity());
+//            TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
+//            return ApiDataResponse.of(UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap)));
+//        } else {
+//            // 해당 이메일 없음
+//            return ApiDataResponse.of(UserRes.from(socialUserDto));
+//        }
+//    }
+
+    @ApiOperation(
+            value = "[소셜] 카카오 로그인",
+            notes = "카카오톡 로그인"
+    )
+    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class)
     @GetMapping(value = "/kakao")
     public ApiDataResponse<UserRes> loginKakao(
-            @RequestParam String code,
-            @RequestParam String state
+//            @RequestParam String code,
+//            @RequestParam String state
+            @RequestParam String accessToken
     ) {
-        String accessToken = toKakao.getAccessToken(code);
+//        String accessToken = toKakao.getAccessToken(code);
+//        log.info(accessToken);
         SocialUserDto socialUserDto = toKakao.getUserInfo(accessToken);
         Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
         if (optionalUserDto.isPresent()) {
@@ -47,12 +81,18 @@ public class UserController {
         }
     }
 
+    @ApiOperation(
+            value = "[소셜] 네이버 로그인",
+            notes = "네이버 로그인"
+    )
+    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class, paramType = "path")
     @GetMapping(value = "/naver")
     public ApiDataResponse<UserRes> loginNaver(
-            @RequestParam String code,
-            @RequestParam String state
+//            @RequestParam String code,
+//            @RequestParam String state
+            @RequestParam String accessToken
     ) {
-        String accessToken = toNaver.getAccessToken(code, state);
+//        String accessToken = toNaver.getAccessToken(code, state);
         SocialUserDto socialUserDto = toNaver.getUserInfo(accessToken);
         Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
         if (optionalUserDto.isPresent()) {
@@ -65,12 +105,18 @@ public class UserController {
         }
     }
 
+    @ApiOperation(
+            value = "[소셜] 구글 로그인",
+            notes = "구글 로그인"
+    )
+    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class, paramType = "path")
     @GetMapping(value = "/google")
     public ApiDataResponse<UserRes> loginGoogle(
-            @RequestParam String code,
-            @RequestParam String state
+//            @RequestParam String code,
+//            @RequestParam String state
+            @RequestParam String accessToken
     ) {
-        String accessToken = toGoogle.getAccessToken(code);
+//        String accessToken = toGoogle.getAccessToken(code);
         SocialUserDto socialUserDto = toGoogle.getUserInfo(accessToken);
         Optional<UserDto> optionalUserDto = userService.getUserEmail(socialUserDto.getUserEmail());
         if (optionalUserDto.isPresent()) {
