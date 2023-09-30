@@ -16,6 +16,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `tb_consent_item`
+--
+
+DROP TABLE IF EXISTS `tb_consent_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_consent_item` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `item_type` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `item_seq` int unsigned NOT NULL,
+  `item_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_consent_item`
+--
+
+LOCK TABLES `tb_consent_item` WRITE;
+/*!40000 ALTER TABLE `tb_consent_item` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tb_consent_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tb_drinking_capacity`
 --
 
@@ -494,4 +519,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-30 14:34:32
+-- Dump completed on 2023-09-30 15:30:29
