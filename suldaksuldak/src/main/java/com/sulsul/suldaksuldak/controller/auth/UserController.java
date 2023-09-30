@@ -10,6 +10,7 @@ import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +86,7 @@ public class UserController {
             value = "[소셜] 네이버 로그인",
             notes = "네이버 로그인"
     )
-    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class, paramType = "path")
+    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class)
     @GetMapping(value = "/naver")
     public ApiDataResponse<UserRes> loginNaver(
 //            @RequestParam String code,
@@ -109,7 +110,7 @@ public class UserController {
             value = "[소셜] 구글 로그인",
             notes = "구글 로그인"
     )
-    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class, paramType = "path")
+    @ApiImplicitParam(name = "accessToken", value = "엑세스 토큰", required = true, dataTypeClass = String.class)
     @GetMapping(value = "/google")
     public ApiDataResponse<UserRes> loginGoogle(
 //            @RequestParam String code,
@@ -146,8 +147,15 @@ public class UserController {
             value = "자체 로그인",
             notes = "술닥술닥 자체 로그인"
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userEmail", value = "Id", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(name = "userPw", value = "Password", required = true, dataTypeClass = String.class)
+    })
     @PostMapping(value = "/login")
-    public void login(@RequestBody UserReq userReq) {
+    public void login(
+            @RequestBody String userEmail,
+            @RequestBody String userPw
+    ) {
 
     }
 
