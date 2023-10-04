@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.dto.auth;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
@@ -32,6 +33,8 @@ public class UserRes {
     Boolean isActive;
     @ApiModelProperty(value = "자기소개")
     String selfIntroduction;
+    @ApiModelProperty(value = "유저 사진 URL")
+    String pictureUrl;
     @ApiModelProperty(value = "생성 일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
@@ -56,6 +59,8 @@ public class UserRes {
                 userDto.getWarningCnt(),
                 userDto.getIsActive(),
                 userDto.getSelfIntroduction(),
+                userDto.getFileBaseNm() == null || userDto.getFileBaseNm().isBlank() ?
+                        null : FileUrl.FILE_DOWN_URL.getUrl() + userDto.getFileBaseNm(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -78,6 +83,8 @@ public class UserRes {
                 userDto.getWarningCnt(),
                 userDto.getIsActive(),
                 userDto.getSelfIntroduction(),
+                userDto.getFileBaseNm() == null || userDto.getFileBaseNm().isBlank() ?
+                        null : FileUrl.FILE_DOWN_URL.getUrl() + userDto.getFileBaseNm(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -95,6 +102,7 @@ public class UserRes {
                 null,
                 null,
                 socialUserDto.getRegistration(),
+                null,
                 null,
                 null,
                 null,

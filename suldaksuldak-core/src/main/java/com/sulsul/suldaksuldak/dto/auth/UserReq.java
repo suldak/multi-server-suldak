@@ -54,7 +54,8 @@ public class UserReq {
                     level,
                     warningCnt,
                     isActive,
-                    selfIntroduction
+                    selfIntroduction,
+                    null
             );
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());
@@ -74,7 +75,8 @@ public class UserReq {
                     0,
                     0,
                     true,
-                    selfIntroduction
+                    selfIntroduction,
+                    null
             );
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());

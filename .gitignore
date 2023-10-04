@@ -147,4 +147,6 @@ suldaksuldak-core/src/main/generated
 suldaksuldak/src/main/generated
 **/generated
 
+**/temp/
+
 # End of https://www.toptal.com/developers/gitignore/api/gradle,java,intellij+all

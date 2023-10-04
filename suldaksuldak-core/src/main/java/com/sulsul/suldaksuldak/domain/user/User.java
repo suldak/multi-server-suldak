@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.domain.user;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,6 +59,12 @@ public class User extends BaseEntity {
     @Setter
     private String selfIntroduction;
 
+    @OneToOne
+    @Setter
+    @JoinColumn(name = "file_base_nm")
+    private FileBase fileBase;
+
+
     protected User () {}
 
     protected User (
@@ -71,7 +78,8 @@ public class User extends BaseEntity {
             Integer level,
             Integer warningCnt,
             Boolean isActive,
-            String selfIntroduction
+            String selfIntroduction,
+            FileBase fileBase
     ) {
         this.id = id;
         this.userEmail = userEmail;
@@ -84,6 +92,7 @@ public class User extends BaseEntity {
         this.warningCnt = warningCnt;
         this.isActive = isActive;
         this.selfIntroduction = selfIntroduction;
+        this.fileBase = fileBase;
     }
 
     public static User of (
@@ -97,7 +106,8 @@ public class User extends BaseEntity {
             Integer level,
             Integer warningCnt,
             Boolean isActive,
-            String selfIntroduction
+            String selfIntroduction,
+            FileBase picture
     ) {
         return new User(
                 id,
@@ -110,7 +120,8 @@ public class User extends BaseEntity {
                 level,
                 warningCnt,
                 isActive,
-                selfIntroduction
+                selfIntroduction,
+                picture
         );
     }
 }

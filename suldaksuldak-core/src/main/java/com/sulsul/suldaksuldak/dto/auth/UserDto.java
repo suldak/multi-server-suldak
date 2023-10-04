@@ -2,7 +2,10 @@ package com.sulsul.suldaksuldak.dto.auth;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.file.FileDto;
+import com.sulsul.suldaksuldak.tool.FileTool;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +27,7 @@ public class UserDto {
     Integer warningCnt;
     Boolean isActive;
     String selfIntroduction;
+    String fileBaseNm;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -38,7 +42,8 @@ public class UserDto {
             Integer level,
             Integer warningCnt,
             Boolean isActive,
-            String selfIntroduction
+            String selfIntroduction,
+            String fileBaseNm
     ) {
         return new UserDto(
                 id,
@@ -52,12 +57,15 @@ public class UserDto {
                 warningCnt,
                 isActive,
                 selfIntroduction,
+                fileBaseNm,
                 null,
                 null
         );
     }
 
-    public User toEntity() {
+    public User toEntity(
+            FileBase fileBase
+    ) {
         return User.of(
                 id,
                 userEmail,
@@ -69,7 +77,8 @@ public class UserDto {
                 level,
                 warningCnt,
                 isActive,
-                selfIntroduction
+                selfIntroduction,
+                fileBase
         );
     }
 
@@ -113,6 +122,20 @@ public class UserDto {
             Boolean isActive
     ) {
         user.setIsActive(isActive);
+        return user;
+    }
+
+    /**
+     * 유저의 사진 수정
+     */
+    public static User updatePicture(
+            User user,
+            FileBase fileBase
+    ) {
+        if (user.getFileBase() != null) {
+            FileTool.deleteFile(FileDto.of(fileBase));
+        }
+        user.setFileBase(fileBase);
         return user;
     }
 
