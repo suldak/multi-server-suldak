@@ -35,6 +35,16 @@ public class UserRes {
     String selfIntroduction;
     @ApiModelProperty(value = "유저 사진 URL")
     String pictureUrl;
+    @ApiModelProperty(value = "알림 여부")
+    Boolean alarmActive;
+    @ApiModelProperty(value = "소리 알림 여부")
+    Boolean soundActive;
+    @ApiModelProperty(value = "진동 알림 여부")
+    Boolean vibrationActive;
+    @ApiModelProperty(value = "앱 푸시 알림 여부")
+    Boolean pushActive;
+    @ApiModelProperty(value = "마케팅 정보 알림 여부")
+    Boolean marketingActive;
     @ApiModelProperty(value = "생성 일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
@@ -61,6 +71,11 @@ public class UserRes {
                 userDto.getSelfIntroduction(),
                 userDto.getFileBaseNm() == null || userDto.getFileBaseNm().isBlank() ?
                         null : FileUrl.FILE_DOWN_URL.getUrl() + userDto.getFileBaseNm(),
+                userDto.getAlarmActive(),
+                userDto.getSoundActive(),
+                userDto.getVibrationActive(),
+                userDto.getPushActive(),
+                userDto.getMarketingActive(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -85,6 +100,11 @@ public class UserRes {
                 userDto.getSelfIntroduction(),
                 userDto.getFileBaseNm() == null || userDto.getFileBaseNm().isBlank() ?
                         null : FileUrl.FILE_DOWN_URL.getUrl() + userDto.getFileBaseNm(),
+                userDto.getAlarmActive(),
+                userDto.getSoundActive(),
+                userDto.getVibrationActive(),
+                userDto.getPushActive(),
+                userDto.getMarketingActive(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -102,6 +122,11 @@ public class UserRes {
                 null,
                 null,
                 socialUserDto.getRegistration(),
+                null,
+                null,
+                null,
+                null,
+                null,
                 null,
                 null,
                 null,

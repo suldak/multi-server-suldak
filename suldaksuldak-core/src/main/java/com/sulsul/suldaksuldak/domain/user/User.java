@@ -59,11 +59,30 @@ public class User extends BaseEntity {
     @Setter
     private String selfIntroduction;
 
+    @Column(nullable = false)
+    @Setter
+    private Boolean alarmActive;
+
+    @Column(nullable = false)
+    @Setter
+    private Boolean soundActive;
+
+    @Column(nullable = false)
+    @Setter
+    private Boolean vibrationActive;
+
+    @Column(nullable = false)
+    @Setter
+    private Boolean pushActive;
+
+    @Column(nullable = false)
+    @Setter
+    private Boolean marketingActive;
+
     @OneToOne
     @Setter
     @JoinColumn(name = "file_base_nm")
     private FileBase fileBase;
-
 
     protected User () {}
 
@@ -79,6 +98,11 @@ public class User extends BaseEntity {
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
+            Boolean alarmActive,
+            Boolean soundActive,
+            Boolean vibrationActive,
+            Boolean pushActive,
+            Boolean marketingActive,
             FileBase fileBase
     ) {
         this.id = id;
@@ -92,6 +116,11 @@ public class User extends BaseEntity {
         this.warningCnt = warningCnt;
         this.isActive = isActive;
         this.selfIntroduction = selfIntroduction;
+        this.alarmActive = alarmActive;
+        this.soundActive = soundActive;
+        this.vibrationActive = vibrationActive;
+        this.pushActive = pushActive;
+        this.marketingActive = marketingActive;
         this.fileBase = fileBase;
     }
 
@@ -107,6 +136,11 @@ public class User extends BaseEntity {
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
+            Boolean alarmActive,
+            Boolean soundActive,
+            Boolean vibrationActive,
+            Boolean pushActive,
+            Boolean marketingActive,
             FileBase picture
     ) {
         return new User(
@@ -121,6 +155,11 @@ public class User extends BaseEntity {
                 warningCnt,
                 isActive,
                 selfIntroduction,
+                alarmActive,
+                soundActive,
+                vibrationActive,
+                pushActive,
+                marketingActive,
                 picture
         );
     }

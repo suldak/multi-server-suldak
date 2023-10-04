@@ -73,4 +73,18 @@ public class UserDataController {
                 userDataService.withdrawalUser(id)
         );
     }
+
+    @ApiOperation(
+            value = "알람 동의 여부 수정",
+            notes = "유저의 알람 항목을 수정합니다."
+    )
+    @PutMapping("/user-alarm")
+    public ApiDataResponse<Boolean> updateAlarm(
+            @RequestBody UserReq userReq
+    ) {
+        return ApiDataResponse.of(
+                userDataService.updateUserAlarm(userReq.toDto())
+        );
+    }
+
 }

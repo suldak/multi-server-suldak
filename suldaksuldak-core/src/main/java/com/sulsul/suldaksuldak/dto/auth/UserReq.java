@@ -40,6 +40,16 @@ public class UserReq {
     Boolean isActive;
     @ApiModelProperty(value = "자기소개")
     String selfIntroduction;
+    @ApiModelProperty(value = "알림 여부")
+    Boolean alarmActive;
+    @ApiModelProperty(value = "소리 알림 여부")
+    Boolean soundActive;
+    @ApiModelProperty(value = "진동 알림 여부")
+    Boolean vibrationActive;
+    @ApiModelProperty(value = "앱 푸시 알림 여부")
+    Boolean pushActive;
+    @ApiModelProperty(value = "마케팅 정보 알림 여부")
+    Boolean marketingActive;
 
     public UserDto toDto() {
         try {
@@ -55,6 +65,11 @@ public class UserReq {
                     warningCnt,
                     isActive,
                     selfIntroduction,
+                    alarmActive,
+                    soundActive,
+                    vibrationActive,
+                    pushActive,
+                    marketingActive,
                     null
             );
         } catch (Exception e) {
@@ -76,6 +91,11 @@ public class UserReq {
                     0,
                     true,
                     selfIntroduction,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
                     null
             );
         } catch (Exception e) {

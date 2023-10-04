@@ -117,4 +117,25 @@ public class UserDataService {
         }
         return true;
     }
+
+    public Boolean updateUserAlarm(
+            UserDto userDto
+    ) {
+        try {
+            userRepository.findById(userDto.getId())
+                    .ifPresentOrElse(
+                            findUser -> {
+                                userRepository.save(userDto.updateAlarmActive(findUser));
+                            },
+                            () -> {
+                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
+                            }
+                    );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
 }

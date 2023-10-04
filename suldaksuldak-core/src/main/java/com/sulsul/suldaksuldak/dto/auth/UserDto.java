@@ -28,6 +28,11 @@ public class UserDto {
     Boolean isActive;
     String selfIntroduction;
     String fileBaseNm;
+    Boolean alarmActive;
+    Boolean soundActive;
+    Boolean vibrationActive;
+    Boolean pushActive;
+    Boolean marketingActive;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -43,6 +48,11 @@ public class UserDto {
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
+            Boolean alarmActive,
+            Boolean soundActive,
+            Boolean vibrationActive,
+            Boolean pushActive,
+            Boolean marketingActive,
             String fileBaseNm
     ) {
         return new UserDto(
@@ -58,6 +68,11 @@ public class UserDto {
                 isActive,
                 selfIntroduction,
                 fileBaseNm,
+                alarmActive,
+                soundActive,
+                vibrationActive,
+                pushActive,
+                marketingActive,
                 null,
                 null
         );
@@ -78,6 +93,11 @@ public class UserDto {
                 warningCnt,
                 isActive,
                 selfIntroduction,
+                alarmActive,
+                soundActive,
+                vibrationActive,
+                pushActive,
+                marketingActive,
                 fileBase
         );
     }
@@ -136,6 +156,17 @@ public class UserDto {
             FileTool.deleteFile(FileDto.of(fileBase));
         }
         user.setFileBase(fileBase);
+        return user;
+    }
+
+    public User updateAlarmActive(
+            User user
+    ) {
+        user.setAlarmActive(alarmActive);
+        user.setSoundActive(soundActive);
+        user.setVibrationActive(vibrationActive);
+        user.setPushActive(pushActive);
+        user.setMarketingActive(marketingActive);
         return user;
     }
 
