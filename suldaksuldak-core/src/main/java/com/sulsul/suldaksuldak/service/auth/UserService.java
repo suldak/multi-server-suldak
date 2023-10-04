@@ -3,11 +3,9 @@ package com.sulsul.suldaksuldak.service.auth;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
-import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
-import com.sulsul.suldaksuldak.service.file.FileService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -26,7 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
-    private final FileService fileService;
     private final UserRepository userRepository;
 
     @Override
@@ -48,6 +44,9 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * 토큰 재발급
+     */
     public UserDto checkAccess(String refreshToken) {
         try {
             Optional<UserDto> optionalUserDTO =
@@ -79,68 +78,6 @@ public class UserService implements UserDetailsService {
             Optional<UserDto> checkNickname = userRepository.findByNickname(userDto.getNickname());
             if (checkNickname.isPresent()) throw new GeneralException(ErrorCode.BAD_REQUEST, "닉네임이 중복됩니다.");
             userRepository.save(userDto.toEntity(null));
-        } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getMessage());
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-        }
-        return true;
-    }
-
-    /**
-     * 회원 정보 수정
-     */
-    public Boolean modifiedUserSimple(
-            Long id,
-            String nickname,
-            String selfIntroduction
-    ) {
-        try {
-            if (id == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Pri KEY is null");
-            userRepository.findById(id)
-                    .ifPresentOrElse(
-                            user -> {
-                                userRepository.save(
-                                        UserDto.updateUserSimple(user, nickname, selfIntroduction)
-                                );
-                            },
-                            () -> {
-                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
-                            }
-                    );
-        } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getMessage());
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-        }
-        return true;
-    }
-
-    /**
-     * 우저 사진 수정
-     */
-    public Boolean changeUserPicture(
-            MultipartFile file,
-            Long id
-    ) {
-        try {
-            userRepository.findById(id)
-                    .ifPresentOrElse(
-                            findUser -> {
-                                FileBase fileBase = fileService.saveFile(file);
-                                if (fileBase == null) {
-                                    throw new GeneralException(ErrorCode.INTERNAL_ERROR, "파일 저장에 문제가 있습니다.");
-                                }
-                                if (findUser.getFileBase() != null) {
-                                    fileService.deleteFile(findUser.getFileBase());
-                                }
-                                findUser.setFileBase(fileBase);
-                                userRepository.save(findUser);
-                            },
-                            () -> {
-                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
-                            }
-                    );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

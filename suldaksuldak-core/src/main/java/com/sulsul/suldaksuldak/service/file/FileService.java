@@ -51,10 +51,11 @@ public class FileService {
         }
     }
 
-    public Boolean deleteFile(FileBase fileBase) {
+    public Boolean deleteFile(String fileNm) {
         try {
-            fileBaseRepository.deleteById(fileBase.getFileNm());
-            FileTool.deleteFile(FileDto.of(fileBase));
+            Optional<FileBaseDto> deleteFile = fileBaseRepository.findByPriKey(fileNm);
+            fileBaseRepository.deleteById(fileNm);
+            deleteFile.ifPresent(fileBaseDto -> FileTool.deleteFile(FileDto.of(fileBaseDto)));
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

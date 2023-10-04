@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -149,7 +148,7 @@ public class UserController {
     )
     @PostMapping(value = "/login")
     public void login(
-            @RequestBody UserReq userReq
+            @RequestBody LoginReq userReq
     ) {
 
     }
@@ -165,37 +164,5 @@ public class UserController {
         String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
         TokenUtils.removeRefreshToken(refreshHeader);
         return ApiDataResponse.of(true);
-    }
-
-    @ApiOperation(
-            value = "회원 정보 수정",
-            notes = "유저의 Nickname, 자기소개 수정"
-    )
-    @PutMapping("/user")
-    public ApiDataResponse<Boolean> modifiedUser(
-            @RequestBody UserReq userReq
-    ) {
-        return ApiDataResponse.of(
-                userService
-                        .modifiedUserSimple(
-                                userReq.getId(),
-                                userReq.getNickname(),
-                                userReq.getSelfIntroduction()
-                        )
-        );
-    }
-
-    @ApiOperation(
-            value = "유저 프로필 사진 등록 및 수정",
-            notes = "유저의 프로필 사진을 등록 및 수정합니다."
-    )
-    @PostMapping(value = "/user-picture")
-    public ApiDataResponse<Boolean> changeUserPicture(
-            @RequestParam("file") MultipartFile file,
-            Long id
-    ) {
-        return ApiDataResponse.of(
-                userService.changeUserPicture(file, id)
-        );
     }
 }
