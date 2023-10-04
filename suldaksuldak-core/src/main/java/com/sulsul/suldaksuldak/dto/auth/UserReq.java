@@ -60,4 +60,24 @@ public class UserReq {
             throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());
         }
     }
+
+    public UserDto createUser() {
+        try {
+            return UserDto.of(
+                    id,
+                    userEmail,
+                    UtilTool.encryptPassword(userPw, userEmail),
+                    nickname,
+                    gender,
+                    birthdayYear,
+                    registration,
+                    0,
+                    0,
+                    true,
+                    selfIntroduction
+            );
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());
+        }
+    }
 }

@@ -31,6 +31,9 @@ public class UserService implements UserDetailsService {
                 userRepository.findByUserEmail(userId);
 
         if (optionalUserDto.isPresent()) {
+            // 탈퇴한 유저 로그인 방지
+            if (!optionalUserDto.get().getIsActive())
+                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_USER);
             return User.builder()
                     .username(optionalUserDto.get().getUserEmail())
                     .password(optionalUserDto.get().getUserPw())
@@ -72,6 +75,35 @@ public class UserService implements UserDetailsService {
             Optional<UserDto> checkNickname = userRepository.findByNickname(userDto.getNickname());
             if (checkNickname.isPresent()) throw new GeneralException(ErrorCode.BAD_REQUEST, "닉네임이 중복됩니다.");
             userRepository.save(userDto.toEntity());
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * 회원 정보 수정
+     */
+    public Boolean modifiedUserSimple(
+            Long id,
+            String nickname,
+            String selfIntroduction
+    ) {
+        try {
+            if (id == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Pri KEY is null");
+            userRepository.findById(id)
+                    .ifPresentOrElse(
+                            user -> {
+                                userRepository.save(
+                                        UserDto.updateUserSimple(user, nickname, selfIntroduction)
+                                );
+                            },
+                            () -> {
+                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
+                            }
+                    );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

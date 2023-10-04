@@ -73,10 +73,13 @@ public class UserDto {
         );
     }
 
-    public User updateEntity(
-            User user
+    public static User updateUserSimple(
+            User user,
+            String nickname,
+            String selfIntroduction
     ) {
         if (nickname != null) user.setNickname(nickname);
+        if (selfIntroduction != null && !selfIntroduction.isBlank()) user.setSelfIntroduction(selfIntroduction);
         return user;
     }
 }

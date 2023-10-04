@@ -10,7 +10,6 @@ import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -139,7 +138,7 @@ public class UserController {
             @RequestBody UserReq userReq
     ) {
         return ApiDataResponse.of(
-                userService.createUser(userReq.toDto())
+                userService.createUser(userReq.createUser())
         );
     }
 
@@ -167,61 +166,21 @@ public class UserController {
         return ApiDataResponse.of(true);
     }
 
-//    @ApiOperation(
-//            value = "소셜 로그인",
-//            notes = "소셜 로그인 (카카오 / 네이버)"
-//    )
-//    @PostMapping(value = "/login-social")
-//    public ApiDataResponse<UserRes> loginKaKao(
-//            @RequestBody UserReq userReq
-//    ) {
-//        Optional<UserDto> optionalUserDto = Optional.empty();
-//        if (userReq.getRegistration().equals(Registration.KAKAO)) {
-//            String accessToken = toKakao.getAccessToken(userReq.getCode());
-//            UserDto userDto = toKakao.getUserInfo(accessToken);
-//            optionalUserDto = userService.getUserBySocial(userDto);
-//        } else if (userReq.getRegistration().equals(Registration.GOOGLE)) {
-//            // TODO GOOGLE
-//        } else if (userReq.getRegistration().equals(Registration.NAVER)) {
-//            String accessToken = toNaver.getAccessToken(userReq.getCode(), userReq.getState());
-//            UserDto userDto = toNaver.getUserInfo(accessToken);
-//            optionalUserDto = userService.getUserBySocial(userDto);
-//        } else if (userReq.getRegistration().equals(Registration.APPLE)) {
-//            // TODO APPLE
-//        } else {
-//            throw new GeneralException(ErrorCode.BAD_REQUEST, "일반 로그인 API를 사용해주세요.");
-//        }
-//
-//        if (optionalUserDto.isEmpty())
-//            throw new GeneralException(ErrorCode.BAD_REQUEST, "해당 소셜로 회원가입한 유저가 없습니다.");
-//
-//        TokenMap tokenMap = TokenUtils.getTokenMap(optionalUserDto.get());
-//        return ApiDataResponse.of(
-//                UserRes.from(optionalUserDto.get(), TokenRes.from(tokenMap))
-//        );
-//    }
-
-
-
-//    @GetMapping(value = "/kakao")
-//    public ApiDataResponse<Boolean> kakaoAuth(
-//            @RequestParam String code,
-//            @RequestParam String state
-//    ) {
-//        String accessToken = toKakao.getAccessToken(code);
-//        UserDto userDto = toKakao.getUserInfo(accessToken);
-//        return ApiDataResponse.of(
-//                true
-//        );
-//    }
-//
-//    @GetMapping(value = "/naver")
-//    public ApiDataResponse<Boolean> naverAuth(
-//            @RequestParam String code,
-//            @RequestParam String state
-//    ) {
-//        String accessToken = toNaver.getAccessToken(code, state);
-//        UserDto userDto = toNaver.getUserInfo(accessToken);
-//        return ApiDataResponse.of(true);
-//    }
+    @ApiOperation(
+            value = "회원 정보 수정",
+            notes = "유저의 Nickname, 자기소개 수정"
+    )
+    @PutMapping("/user")
+    public ApiDataResponse<Boolean> modifiedUser(
+            @RequestBody UserReq userReq
+    ) {
+        return ApiDataResponse.of(
+                userService
+                        .modifiedUserSimple(
+                                userReq.getId(),
+                                userReq.getNickname(),
+                                userReq.getSelfIntroduction()
+                        )
+        );
+    }
 }
