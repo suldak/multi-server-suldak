@@ -78,6 +78,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 user.warningCnt,
                                 user.isActive,
                                 user.selfIntroduction,
+                                user.fileBase.fileNm,
                                 user.createdAt,
                                 user.modifiedAt
                         )

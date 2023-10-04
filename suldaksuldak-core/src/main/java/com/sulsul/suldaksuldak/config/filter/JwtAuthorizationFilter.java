@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.config.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.ApiErrorResponse;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
@@ -84,6 +85,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
         if (list.contains(request.getRequestURI())) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        if (request.getRequestURI().startsWith(FileUrl.FILE_DOWN_URL.getUrl())) {
             chain.doFilter(request, response);
             return;
         }

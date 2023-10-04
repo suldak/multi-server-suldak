@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
@@ -181,6 +182,20 @@ public class UserController {
                                 userReq.getNickname(),
                                 userReq.getSelfIntroduction()
                         )
+        );
+    }
+
+    @ApiOperation(
+            value = "유저 프로필 사진 등록 및 수정",
+            notes = "유저의 프로필 사진을 등록 및 수정합니다."
+    )
+    @PostMapping(value = "/user-picture")
+    public ApiDataResponse<Boolean> changeUserPicture(
+            @RequestParam("file") MultipartFile file,
+            Long id
+    ) {
+        return ApiDataResponse.of(
+                userService.changeUserPicture(file, id)
         );
     }
 }

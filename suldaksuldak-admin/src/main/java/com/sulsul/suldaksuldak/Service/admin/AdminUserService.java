@@ -37,5 +37,6 @@ public class AdminUserService {
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
+        return true;
     }
 }
