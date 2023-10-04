@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
 --
 -- Host: localhost    Database: suldaksuldak
 -- ------------------------------------------------------
--- Server version	8.0.31
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -63,6 +63,34 @@ LOCK TABLES `tb_drinking_capacity` WRITE;
 /*!40000 ALTER TABLE `tb_drinking_capacity` DISABLE KEYS */;
 INSERT INTO `tb_drinking_capacity` VALUES (4,'입문자'),(3,'전문가'),(2,'평군');
 /*!40000 ALTER TABLE `tb_drinking_capacity` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_file_base`
+--
+
+DROP TABLE IF EXISTS `tb_file_base`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_file_base` (
+  `file_nm` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `file_location` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `ori_file_nm` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `file_ext` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `modified_at` timestamp NOT NULL,
+  PRIMARY KEY (`file_nm`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_file_base`
+--
+
+LOCK TABLES `tb_file_base` WRITE;
+/*!40000 ALTER TABLE `tb_file_base` DISABLE KEYS */;
+INSERT INTO `tb_file_base` VALUES ('10c2b6de2d9d4ec9be73dd7c35298837_1696402175140','C:\\Jh\\work\\study_workspace\\multi-server-suldak\\temp','infoWarningDark','.png','2023-10-04 06:49:35','2023-10-04 06:49:35');
+/*!40000 ALTER TABLE `tb_file_base` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -494,10 +522,22 @@ CREATE TABLE `tb_user` (
   `birthday_year` int unsigned NOT NULL,
   `registration` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `user_pw` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `level` int unsigned NOT NULL DEFAULT '0',
+  `warning_cnt` int unsigned NOT NULL DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `self_introduction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `file_base_nm` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `alarm_active` tinyint(1) NOT NULL DEFAULT '1',
+  `sound_active` tinyint(1) NOT NULL DEFAULT '1',
+  `vibration_active` tinyint(1) NOT NULL DEFAULT '1',
+  `push_active` tinyint(1) NOT NULL DEFAULT '1',
+  `marketing_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `tb_user_un_email` (`user_email`),
-  UNIQUE KEY `tb_user_un_nickname` (`nickname`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
+  UNIQUE KEY `tb_user_un_nickname` (`nickname`),
+  KEY `tb_user_FK` (`file_base_nm`),
+  CONSTRAINT `tb_user_FK` FOREIGN KEY (`file_base_nm`) REFERENCES `tb_file_base` (`file_nm`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -506,7 +546,7 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (4,'swdfrgt3701@naver.com','2023-09-28 07:33:37','2023-09-28 07:33:37','MiSo','M',2000,'KAKAO','OHpbsiogAy8CBiRj8PQ6JxPqs0jNTk4PclDEP4DkBd4=');
+INSERT INTO `tb_user` VALUES (6,'admin','2023-10-04 04:24:37','2023-10-04 07:52:09','ADMIN','M',2000,'SULDAKSULDAK','2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI=',0,0,1,'안녕하세요','10c2b6de2d9d4ec9be73dd7c35298837_1696402175140',1,0,1,1,1);
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -519,4 +559,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-30 15:30:29
+-- Dump completed on 2023-10-04 17:37:32
