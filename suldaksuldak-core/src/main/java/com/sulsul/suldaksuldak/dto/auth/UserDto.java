@@ -20,6 +20,10 @@ public class UserDto {
     Gender gender;
     Integer birthdayYear;
     Registration registration;
+    Integer level;
+    Integer warningCnt;
+    Boolean isActive;
+    String selfIntroduction;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -30,7 +34,11 @@ public class UserDto {
             String nickname,
             Gender gender,
             Integer birthdayYear,
-            Registration registration
+            Registration registration,
+            Integer level,
+            Integer warningCnt,
+            Boolean isActive,
+            String selfIntroduction
     ) {
         return new UserDto(
                 id,
@@ -40,6 +48,10 @@ public class UserDto {
                 gender,
                 birthdayYear,
                 registration,
+                level,
+                warningCnt,
+                isActive,
+                selfIntroduction,
                 null,
                 null
         );
@@ -53,7 +65,11 @@ public class UserDto {
                 nickname,
                 gender,
                 birthdayYear,
-                registration
+                registration,
+                level,
+                warningCnt,
+                isActive,
+                selfIntroduction
         );
     }
 

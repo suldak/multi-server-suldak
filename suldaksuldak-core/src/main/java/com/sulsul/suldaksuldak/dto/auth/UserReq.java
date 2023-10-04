@@ -32,10 +32,14 @@ public class UserReq {
     Integer birthdayYear;
     @ApiModelProperty(value = "가입 방법")
     Registration registration;
-//    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 code")
-//    String code;
-//    @ApiModelProperty(value = "카카오 / 네이버 소셜 로그인 때 받은 state")
-//    String state;
+    @ApiModelProperty(value = "유저 레빌")
+    Integer level;
+    @ApiModelProperty(value = "유저 신고 누적")
+    Integer warningCnt;
+    @ApiModelProperty(value = "유저 활성화 여부")
+    Boolean isActive;
+    @ApiModelProperty(value = "자기소개")
+    String selfIntroduction;
 
     public UserDto toDto() {
         try {
@@ -46,7 +50,11 @@ public class UserReq {
                     nickname,
                     gender,
                     birthdayYear,
-                    registration
+                    registration,
+                    level,
+                    warningCnt,
+                    isActive,
+                    selfIntroduction
             );
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());

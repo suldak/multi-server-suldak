@@ -42,6 +42,22 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Registration registration;
 
+    @Column(nullable = false)
+    @Setter
+    private Integer level;
+
+    @Column(nullable = false)
+    @Setter
+    private Integer warningCnt;
+
+    @Column(nullable = false)
+    @Setter
+    private Boolean isActive;
+
+    @Column(nullable = false)
+    @Setter
+    private String selfIntroduction;
+
     protected User () {}
 
     protected User (
@@ -51,7 +67,11 @@ public class User extends BaseEntity {
             String nickname,
             Gender gender,
             Integer birthdayYear,
-            Registration registration
+            Registration registration,
+            Integer level,
+            Integer warningCnt,
+            Boolean isActive,
+            String selfIntroduction
     ) {
         this.id = id;
         this.userEmail = userEmail;
@@ -60,6 +80,10 @@ public class User extends BaseEntity {
         this.gender = gender;
         this.birthdayYear = birthdayYear;
         this.registration = registration;
+        this.level = level;
+        this.warningCnt = warningCnt;
+        this.isActive = isActive;
+        this.selfIntroduction = selfIntroduction;
     }
 
     public static User of (
@@ -69,7 +93,11 @@ public class User extends BaseEntity {
             String nickName,
             Gender gender,
             Integer birthdayYear,
-            Registration registration
+            Registration registration,
+            Integer level,
+            Integer warningCnt,
+            Boolean isActive,
+            String selfIntroduction
     ) {
         return new User(
                 id,
@@ -78,7 +106,11 @@ public class User extends BaseEntity {
                 nickName,
                 gender,
                 birthdayYear,
-                registration
+                registration,
+                level,
+                warningCnt,
+                isActive,
+                selfIntroduction
         );
     }
 }

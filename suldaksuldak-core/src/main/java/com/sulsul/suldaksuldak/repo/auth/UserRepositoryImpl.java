@@ -74,6 +74,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 user.gender,
                                 user.birthdayYear,
                                 user.registration,
+                                user.level,
+                                user.warningCnt,
+                                user.isActive,
+                                user.selfIntroduction,
                                 user.createdAt,
                                 user.modifiedAt
                         )
