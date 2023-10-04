@@ -82,4 +82,51 @@ public class UserDto {
         if (selfIntroduction != null && !selfIntroduction.isBlank()) user.setSelfIntroduction(selfIntroduction);
         return user;
     }
+
+    /**
+     * 유저 레벨 수정
+     */
+    public static User updateUserLevel(
+            User user,
+            Integer level
+    ) {
+        user.setLevel(level);
+        return user;
+    }
+
+    /**
+     * 유저 신고 누적 신고
+     */
+    public static User updateUserWarningCnt(
+            User user,
+            Integer warningCnt
+    ) {
+        user.setWarningCnt(warningCnt);
+        return user;
+    }
+
+    /**
+     * 유처 탈퇴 여부 수정
+     */
+    public static User updateUserActive(
+            User user,
+            Boolean isActive
+    ) {
+        user.setIsActive(isActive);
+        return user;
+    }
+
+    /**
+     * 수정 가능한 모든 정보 수정
+     */
+    public User updateUser(
+            User user
+    ) {
+        if (nickname != null) user.setNickname(nickname);
+        if (selfIntroduction != null && !selfIntroduction.isBlank()) user.setSelfIntroduction(selfIntroduction);
+        if (level != null) user.setLevel(level);
+        if (warningCnt != null) user.setWarningCnt(warningCnt);
+        if (isActive != null) user.setIsActive(isActive);
+        return user;
+    }
 }
