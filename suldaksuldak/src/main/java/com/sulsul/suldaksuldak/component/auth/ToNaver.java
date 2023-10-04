@@ -97,7 +97,8 @@ public class ToNaver {
             return SocialUserDto.of(
                     jsonObject.getJSONObject("response").getString("email"),
                     jsonObject.getJSONObject("response").getString("id"),
-                    jsonObject.getJSONObject("response").getString("nickname"),
+                    jsonObject.getJSONObject("response").isNull("nickname") ? null :
+                            jsonObject.getJSONObject("response").getString("nickname"),
                     Registration.NAVER
             );
         } catch (Exception e) {

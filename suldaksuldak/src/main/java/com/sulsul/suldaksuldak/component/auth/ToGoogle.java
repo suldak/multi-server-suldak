@@ -91,7 +91,7 @@ public class ToGoogle {
             return SocialUserDto.of(
                     jsonObject.getString("email"),
                     jsonObject.getString("id"),
-                    jsonObject.getString("given_name"),
+                    jsonObject.isNull("given_name") ? null : jsonObject.getString("given_name"),
                     Registration.GOOGLE
             );
         } catch (Exception e) {

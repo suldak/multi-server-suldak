@@ -93,7 +93,8 @@ public class ToKakao {
             return SocialUserDto.of(
                     jsonObject.getJSONObject("kakao_account").getString("email"),
                     Long.toString(jsonObject.getLong("id")),
-                    jsonObject.getJSONObject("properties").getString("nickname"),
+                    jsonObject.getJSONObject("properties").isNull("nickname") ?
+                            null : jsonObject.getJSONObject("properties").getString("nickname"),
                     Registration.KAKAO
             );
         } catch (Exception e) {
