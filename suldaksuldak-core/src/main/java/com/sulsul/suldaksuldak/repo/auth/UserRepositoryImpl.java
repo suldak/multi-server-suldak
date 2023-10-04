@@ -79,6 +79,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 user.isActive,
                                 user.selfIntroduction,
                                 user.fileBase.fileNm,
+                                user.alarmActive,
+                                user.soundActive,
+                                user.vibrationActive,
+                                user.pushActive,
+                                user.marketingActive,
                                 user.createdAt,
                                 user.modifiedAt
                         )
