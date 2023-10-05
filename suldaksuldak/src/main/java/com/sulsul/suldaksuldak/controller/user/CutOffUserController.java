@@ -25,7 +25,7 @@ public class CutOffUserController {
             value = "유저 차단",
             notes = "유저 차단 목록에 추가합니다."
     )
-    @PutMapping("/user")
+    @PostMapping("/user")
     public ApiDataResponse<Boolean> createCutOffUser(
             @RequestBody CutOffUserReq cutOffUserReq
     ) {
