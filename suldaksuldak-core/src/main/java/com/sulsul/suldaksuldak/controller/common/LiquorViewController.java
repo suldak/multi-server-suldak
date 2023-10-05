@@ -65,7 +65,7 @@ public class LiquorViewController {
             @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
     })
     @GetMapping(value = "/liquor-latest")
-    public ApiDataResponse<Page<LiquorRes>> getLiquorListLatest(
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListLatest(
             Integer pageNum,
             Integer recordSize
     ) {

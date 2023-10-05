@@ -112,11 +112,12 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     }
 
     @Override
-    public Page<LiquorDto> findByCreatedLatest(
+    public Page<Long> findByCreatedLatest(
             Pageable pageable
     ) {
-        List<LiquorDto> liquorDtos =
-                getLiquorDtoQuery()
+        List<Long> liquorDtos =
+                jpaQueryFactory
+                        .select(liquor.id)
                         .from(liquor)
                         .orderBy(liquor.createdAt.desc())
                         .offset(pageable.getOffset())

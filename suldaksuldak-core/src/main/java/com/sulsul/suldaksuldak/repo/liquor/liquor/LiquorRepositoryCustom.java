@@ -28,5 +28,5 @@ public interface LiquorRepositoryCustom {
     List<Long> findBySearchTag(
             String searchTag
     );
-    Page<LiquorDto> findByCreatedLatest(Pageable pageable);
+    Page<Long> findByCreatedLatest(Pageable pageable);
 }

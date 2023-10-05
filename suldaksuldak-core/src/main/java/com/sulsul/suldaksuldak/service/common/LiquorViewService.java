@@ -231,16 +231,17 @@ public class LiquorViewService {
         }
     }
 
-    public Page<LiquorRes> getLatestLiquor(
+    public Page<LiquorTotalRes> getLatestLiquor(
             Pageable pageable
     ) {
         try {
-            Page<LiquorDto> liquorDtos = liquorRepository.findByCreatedLatest(pageable);
+            Page<Long> liquorDtos = liquorRepository.findByCreatedLatest(pageable);
+            List<LiquorTotalRes> resultContent = new ArrayList<>();
+            for (Long liquorPriKey: liquorDtos.getContent()) {
+                resultContent.add(getLiquorTotalData(liquorPriKey));
+            }
             return new PageImpl<>(
-                    liquorDtos.getContent()
-                            .stream()
-                            .map(LiquorRes::from)
-                            .toList(),
+                    resultContent,
                     liquorDtos.getPageable(),
                     liquorDtos.getTotalElements()
             );

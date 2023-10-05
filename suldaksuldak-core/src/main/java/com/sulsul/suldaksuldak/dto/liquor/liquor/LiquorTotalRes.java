@@ -22,6 +22,8 @@ public class LiquorTotalRes {
     String summaryExplanation;
     @ApiModelProperty(value = "술 상세 설명")
     String detailExplanation;
+    @ApiModelProperty(value = "술의 레시피")
+    String liquorRecipe;
     // 도수
     LiquorAbvDto liquorAbvDto;
     // 2차 분류
@@ -64,6 +66,7 @@ public class LiquorTotalRes {
                 liquorDto.getName(),
                 liquorDto.getSummaryExplanation(),
                 liquorDto.getDetailExplanation(),
+                liquorDto.getLiquorRecipe(),
                 liquorAbvDto,
                 liquorDetailDto,
                 drinkingCapacityDto,
