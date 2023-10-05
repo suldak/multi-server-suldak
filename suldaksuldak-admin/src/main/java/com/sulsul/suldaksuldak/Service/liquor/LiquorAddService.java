@@ -87,4 +87,32 @@ public class LiquorAddService {
         }
         return true;
     }
+
+    /**
+     * 술의 레시피 생성 또는 수젛
+     */
+    public Boolean putLiquorRecipe(
+            Long id,
+            String liquorRecipe
+    ) {
+        try {
+            if (id == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Liquor PriKey Is Null");
+            liquorRepository.findById(id)
+                    .ifPresentOrElse(
+                            findLiquor -> {
+                                liquorRepository.save(
+                                        LiquorDto.updateLiquorRecipe(findLiquor, liquorRecipe)
+                                );
+                            },
+                            () -> {
+                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
+                            }
+                    );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
 }

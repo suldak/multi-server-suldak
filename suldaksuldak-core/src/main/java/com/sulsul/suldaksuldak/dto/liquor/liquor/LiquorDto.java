@@ -110,4 +110,9 @@ public class LiquorDto {
 
         return liquor;
     }
+
+    public static Liquor updateLiquorRecipe(Liquor liquor, String liquorRecipe) {
+        liquor.setLiquorRecipe(liquorRecipe);
+        return liquor;
+    }
 }
