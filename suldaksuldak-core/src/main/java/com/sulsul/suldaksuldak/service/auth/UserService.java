@@ -45,14 +45,12 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * 토큰 재발급
+     * 토큰 조회
      */
     public UserDto checkAccess(String refreshToken) {
         try {
             Optional<UserDto> optionalUserDTO =
-                    TokenUtils.getUserDTOFromRefreshToken(
-                            TokenUtils.getTokenFromHeader(refreshToken)
-                    );
+                    TokenUtils.getUserDTOFromRefreshToken(refreshToken);
 
             if (optionalUserDTO.isEmpty()) {
                 throw new GeneralException(ErrorCode.REFRESH_TOKEN_EXPIRATION, "Refresh Token이 만료되었습니다");

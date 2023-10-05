@@ -1,7 +1,9 @@
 package com.sulsul.suldaksuldak.tool;
 
+import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.util.List;
@@ -22,14 +24,7 @@ public class UtilTool {
         return new String(Base64.encodeBase64(hashValue, false));
     }
 
-    public static List<Long> companyIdListParser(String companyIdList) {
-        if (companyIdList == null) return null;
-        return Stream.of(companyIdList.split(","))
-                .map(Long::parseLong).collect(Collectors.toList());
-    }
-
-    public static List<String> companyIdListParserToString(String companyIdList) {
-        if (companyIdList == null) return null;
-        return Stream.of(companyIdList.split(",")).collect(Collectors.toList());
+    public static Long getUserPriKeyFromHeader(HttpServletRequest request) {
+        return (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
     }
 }

@@ -12,7 +12,7 @@ public enum SDTokken {
     ACCESS_KEY_HEADER("AccessKey"),
 //    ReqUserNm("UserNm"),
 //    ReqUserPriKey("ReqUserPriKey")
-    REQ_COMPANY_ID_LIST("CompanyIdList")
+    USER_PRI_KEY("userPriKey")
     ;
     private final String text;
 }

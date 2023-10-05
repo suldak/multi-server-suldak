@@ -4,8 +4,10 @@ import com.sulsul.suldaksuldak.component.auth.ToGoogle;
 import com.sulsul.suldaksuldak.component.auth.ToKakao;
 import com.sulsul.suldaksuldak.component.auth.ToNaver;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.auth.*;
+import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.swagger.annotations.Api;
@@ -161,8 +163,27 @@ public class UserController {
     public ApiDataResponse<Boolean> logout(
             HttpServletRequest request
     ) {
-        String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
-        TokenUtils.removeRefreshToken(refreshHeader);
+        String refreshToken = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        TokenUtils.removeRefreshToken(refreshToken);
         return ApiDataResponse.of(true);
+    }
+
+    @ApiOperation(
+            value = "Refresh Token 재발급",
+            notes = "Refresh Token을 재발급 합니다."
+    )
+    @GetMapping(value = "/reissue-token")
+    public ApiDataResponse<UserRes> getRefreshToken(
+            HttpServletRequest request
+    ) {
+        String refreshToken = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        TokenMap tokenMap = TokenUtils.getAccessTokenByRefreshToken(TokenUtils.getTokenFromHeader(refreshToken));
+        if (tokenMap == null) throw new GeneralException(ErrorCode.REFRESH_TOKEN_EXPIRATION, "Refresh Token Error");
+        return ApiDataResponse.of(
+                UserRes.from(
+                        userService.checkAccess(tokenMap.getRefreshToken()),
+                        TokenRes.from(tokenMap)
+                )
+        );
     }
 }
