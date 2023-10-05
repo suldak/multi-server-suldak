@@ -4,6 +4,8 @@ import com.sulsul.suldaksuldak.Service.admin.ConsentService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.admin.consent.ConsentItemReq;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +34,13 @@ public class ConsentController {
             value = "동의 항목 삭제",
             notes = "동의 항목을 삭제합니다."
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "동의 항목 기본키", required = true, dataTypeClass = Long.class)
+    })
     @DeleteMapping(value = "/consent")
     public ApiDataResponse<Boolean> deleteConsent(
-            @RequestBody ConsentItemReq consentItemReq
+            Long priKey
     ) {
-        return ApiDataResponse.of(consentService.deleteConsentItem(consentItemReq.getId()));
+        return ApiDataResponse.of(consentService.deleteConsentItem(priKey));
     }
 }

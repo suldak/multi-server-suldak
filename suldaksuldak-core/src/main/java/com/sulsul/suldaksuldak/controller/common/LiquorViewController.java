@@ -31,6 +31,9 @@ public class LiquorViewController {
             value = "술에 관한 모든 정보 조회",
             notes = "술에 관한 모든 태그와 정보를 조회합니다."
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "liquorPriKey", value = "술의 기본키", required = true, dataTypeClass = Long.class)
+    })
     @GetMapping(value = "/liquor")
     public ApiDataResponse<LiquorTotalRes> getLiquorTotalData (
             Long liquorPriKey

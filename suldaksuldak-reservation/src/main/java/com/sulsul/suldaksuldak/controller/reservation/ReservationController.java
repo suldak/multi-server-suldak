@@ -7,10 +7,7 @@ import com.sulsul.suldaksuldak.dto.reservation.ReservationUserReq;
 import com.sulsul.suldaksuldak.dto.reservation.ReservationUserRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.reservation.ReservationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +69,9 @@ public class ReservationController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 10000, message = "이메일이 공백"),
             @ApiResponse(code = 20002, message = "시스템 Error")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userEmail", value = "찾을 유저의 Email", required = true, dataTypeClass = String.class)
     })
     @GetMapping(value = "/user-detail")
     public ApiDataResponse<ReservationUserRes> getUserDetail(

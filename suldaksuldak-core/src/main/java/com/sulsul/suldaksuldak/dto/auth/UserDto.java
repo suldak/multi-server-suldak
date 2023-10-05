@@ -102,16 +102,6 @@ public class UserDto {
         );
     }
 
-    public static User updateUserSimple(
-            User user,
-            String nickname,
-            String selfIntroduction
-    ) {
-        if (nickname != null) user.setNickname(nickname);
-        if (selfIntroduction != null && !selfIntroduction.isBlank()) user.setSelfIntroduction(selfIntroduction);
-        return user;
-    }
-
     /**
      * 유저 레벨 수정
      */
@@ -156,17 +146,6 @@ public class UserDto {
             FileTool.deleteFile(FileDto.of(fileBase));
         }
         user.setFileBase(fileBase);
-        return user;
-    }
-
-    public User updateAlarmActive(
-            User user
-    ) {
-        user.setAlarmActive(alarmActive);
-        user.setSoundActive(soundActive);
-        user.setVibrationActive(vibrationActive);
-        user.setPushActive(pushActive);
-        user.setMarketingActive(marketingActive);
         return user;
     }
 

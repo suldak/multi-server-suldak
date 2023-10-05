@@ -51,6 +51,35 @@ public class UserReq {
     @ApiModelProperty(value = "마케팅 정보 알림 여부")
     Boolean marketingActive;
 
+    public static UserDto toDto(
+            Long userPriKey,
+            String nickname,
+            String selfIntroduction,
+            Integer level,
+            Integer warningCnt,
+            Boolean isActive
+    ) {
+        return UserDto.of(
+                userPriKey,
+                null,
+                null,
+                nickname,
+                null,
+                null,
+                null,
+                level,
+                warningCnt,
+                isActive,
+                selfIntroduction,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
     public UserDto toDto() {
         try {
             return UserDto.of(

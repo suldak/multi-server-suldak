@@ -5,6 +5,8 @@ import com.sulsul.suldaksuldak.dto.cut.CutOffUserReq;
 import com.sulsul.suldaksuldak.dto.cut.CutOffUserRes;
 import com.sulsul.suldaksuldak.service.user.CutOffUserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +43,15 @@ public class CutOffUserController {
             value = "유저 차단 목록",
             notes = "유저 차단 목록을 조회 합니다."
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "유저 기본키", required = true, dataTypeClass = Long.class)
+    })
     @GetMapping("/user")
     public ApiDataResponse<List<CutOffUserRes>> getCutOffUserList(
-            CutOffUserReq cutOffUserReq
+            Long userId
     ) {
         return ApiDataResponse.of(
-                cutOffUserService.getCutOffUserList(cutOffUserReq.getUserId())
+                cutOffUserService.getCutOffUserList(userId)
                         .stream()
                         .map(CutOffUserRes::from)
                         .collect(Collectors.toList())

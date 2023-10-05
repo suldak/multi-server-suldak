@@ -37,7 +37,7 @@ public class LiquorAddController {
             notes = "술의 레시피를 저장하거나 수정합니다,"
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "liquorId", value = "술의 기본키", required = true, dataTypeClass = String.class),
+            @ApiImplicitParam(name = "liquorId", value = "술의 기본키", required = true, dataTypeClass = Long.class),
             @ApiImplicitParam(name = "liquorRecipe", value = "술 레시피", required = true, dataTypeClass = String.class)
     })
     @PutMapping(value = "/liquor-recipe")

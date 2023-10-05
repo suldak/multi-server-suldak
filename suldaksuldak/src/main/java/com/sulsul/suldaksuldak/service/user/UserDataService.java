@@ -20,11 +20,37 @@ public class UserDataService {
     private final UserRepository userRepository;
 
     /**
-     * 회원 정보 수정
+     * 회원 닉네임 수정
      */
-    public Boolean modifiedUserSimple(
+    public Boolean modifiedUserNickname(
             Long id,
-            String nickname,
+            String nickname
+    ) {
+        try {
+            if (id == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Pri KEY is null");
+            userRepository.findById(id)
+                    .ifPresentOrElse(
+                            user -> {
+                                user.setNickname(nickname);
+                                userRepository.save(user);
+                            },
+                            () -> {
+                                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
+                            }
+                    );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * 회원 자기소개 수정
+     */
+    public Boolean modifiedUserSelfIntroduction(
+            Long id,
             String selfIntroduction
     ) {
         try {
@@ -32,9 +58,8 @@ public class UserDataService {
             userRepository.findById(id)
                     .ifPresentOrElse(
                             user -> {
-                                userRepository.save(
-                                        UserDto.updateUserSimple(user, nickname, selfIntroduction)
-                                );
+                                user.setSelfIntroduction(selfIntroduction);
+                                userRepository.save(user);
                             },
                             () -> {
                                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
@@ -66,8 +91,7 @@ public class UserDataService {
                                 if (findUser.getFileBase() != null) {
                                     fileService.deleteFile(findUser.getFileBase().getFileNm());
                                 }
-                                findUser.setFileBase(fileBase);
-                                userRepository.save(findUser);
+                                userRepository.save(UserDto.updatePicture(findUser, fileBase));
                             },
                             () -> {
                                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
@@ -119,13 +143,23 @@ public class UserDataService {
     }
 
     public Boolean updateUserAlarm(
-            UserDto userDto
+            Long userPriKey,
+            Boolean alarmActive,
+            Boolean soundActive,
+            Boolean vibrationActive,
+            Boolean pushActive,
+            Boolean marketingActive
     ) {
         try {
-            userRepository.findById(userDto.getId())
+            userRepository.findById(userPriKey)
                     .ifPresentOrElse(
                             findUser -> {
-                                userRepository.save(userDto.updateAlarmActive(findUser));
+                                findUser.setAlarmActive(alarmActive);
+                                findUser.setSoundActive(soundActive);
+                                findUser.setVibrationActive(vibrationActive);
+                                findUser.setPushActive(pushActive);
+                                findUser.setMarketingActive(marketingActive);
+                                userRepository.save(findUser);
                             },
                             () -> {
                                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_USER);
