@@ -19,7 +19,7 @@ public class ConsentController {
 
     @ApiOperation(
             value = "동의 항목 저장",
-            notes = "동의 항목을 생성하거나 수정합니다."
+            notes = "동의 항목을 생성하거나 수정합니다. (HTML 문법으로 저장해야 할 듯 합니다. (줄넘김, 두꺼운 글씨 등)"
     )
     @PostMapping(value = "/consent")
     public ApiDataResponse<Boolean> createConsent(

@@ -18,9 +18,9 @@ public class ConsentItemReq {
     Long id;
     @ApiModelProperty(value = "동의 항목 종류", required = true)
     ConsentItemType itemType;
-    @ApiModelProperty(value = "동의 항목 순서", required = true)
+    @ApiModelProperty(value = "동의 항목 순서")
     Integer itemSeq;
-    @ApiModelProperty(value = "동의 항목 내용", required = true)
+    @ApiModelProperty(value = "동의 항목 내용")
     String itemText;
 
     public ConsentItemDto toDto() {
