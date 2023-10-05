@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.service.common;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorRes;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
@@ -25,6 +26,9 @@ import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -220,6 +224,26 @@ public class LiquorViewService {
                 liquorDto.ifPresent(resultLiquorDto::add);
             }
             return resultLiquorDto;
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public Page<LiquorRes> getLatestLiquor(
+            Pageable pageable
+    ) {
+        try {
+            Page<LiquorDto> liquorDtos = liquorRepository.findByCreatedLatest(pageable);
+            return new PageImpl<>(
+                    liquorDtos.getContent()
+                            .stream()
+                            .map(LiquorRes::from)
+                            .toList(),
+                    liquorDtos.getPageable(),
+                    liquorDtos.getTotalElements()
+            );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

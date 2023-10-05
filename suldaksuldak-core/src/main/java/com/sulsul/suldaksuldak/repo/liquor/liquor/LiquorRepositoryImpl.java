@@ -4,8 +4,12 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -105,6 +109,26 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 .where(searchTagLike(searchTag))
                 .orderBy(liquor.name.asc())
                 .fetch();
+    }
+
+    @Override
+    public Page<LiquorDto> findByCreatedLatest(
+            Pageable pageable
+    ) {
+        List<LiquorDto> liquorDtos =
+                getLiquorDtoQuery()
+                        .from(liquor)
+                        .orderBy(liquor.createdAt.desc())
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetch();
+
+        JPAQuery<Liquor> countQuery = jpaQueryFactory.selectFrom(liquor);
+
+        return PageableExecutionUtils.getPage(
+                liquorDtos, pageable,
+                countQuery::fetchCount
+        );
     }
 
     private JPAQuery<LiquorDto> getLiquorDtoQuery() {

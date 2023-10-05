@@ -1,6 +1,8 @@
 package com.sulsul.suldaksuldak.repo.liquor.liquor;
 
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,4 +28,5 @@ public interface LiquorRepositoryCustom {
     List<Long> findBySearchTag(
             String searchTag
     );
+    Page<LiquorDto> findByCreatedLatest(Pageable pageable);
 }

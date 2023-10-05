@@ -6,9 +6,14 @@ import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +53,30 @@ public class LiquorViewController {
                         .stream()
                         .map(LiquorRes::from)
                         .collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation(
+            value = "최신 순으로 술 정렬",
+            notes = "DB 생성일자 기준으로 최신에 등록된 술 순서대로 조회합니다. (Pageable)"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
+    })
+    @GetMapping(value = "/liquor-latest")
+    public ApiDataResponse<Page<LiquorRes>> getLiquorListLatest(
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        Pageable pageable =
+                PageRequest.of(
+                        pageNum == null || pageNum < 0 ? 0 : pageNum,
+                        recordSize == null || recordSize < 0 ? 10 : recordSize
+                );
+
+        return ApiDataResponse.of(
+                liquorViewService.getLatestLiquor(pageable)
         );
     }
 }
