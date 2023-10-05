@@ -47,6 +47,10 @@ public class Liquor extends BaseEntity {
     private String liquorRecipe;
 
     @Setter
+    @Column(nullable = false)
+    private Double detailAbv;
+
+    @Setter
     @ManyToOne
     private DrinkingCapacity drinkingCapacity;
 
@@ -100,6 +104,7 @@ public class Liquor extends BaseEntity {
             String detailExplanation,
             String searchTag,
             String liquorRecipe,
+            Double detailAbv,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -111,6 +116,7 @@ public class Liquor extends BaseEntity {
         this.detailExplanation = detailExplanation;
         this.searchTag = searchTag;
         this.liquorRecipe = liquorRecipe;
+        this.detailAbv = detailAbv;
         this.liquorAbv = liquorAbv;
         this.liquorDetail = liquorDetail;
         this.drinkingCapacity = drinkingCapacity;
@@ -124,6 +130,7 @@ public class Liquor extends BaseEntity {
             String detailExplanation,
             String searchTag,
             String liquorRecipe,
+            Double detailAbv,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -136,6 +143,7 @@ public class Liquor extends BaseEntity {
                 detailExplanation,
                 searchTag,
                 liquorRecipe,
+                detailAbv,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,

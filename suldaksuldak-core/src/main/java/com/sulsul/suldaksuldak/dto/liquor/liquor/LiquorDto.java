@@ -17,6 +17,7 @@ public class LiquorDto {
     String detailExplanation;
     String searchTag;
     String liquorRecipe;
+    Double detailAbv;
     Long liquorAbvId;
     Long liquorDetailId;
     Long drinkingCapacityId;
@@ -31,6 +32,7 @@ public class LiquorDto {
             String detailExplanation,
             String searchTag,
             String liquorRecipe,
+            Double detailAbv,
             Long liquorAbvId,
             Long liquorDetailId,
             Long drinkingCapacityId,
@@ -43,6 +45,7 @@ public class LiquorDto {
                 detailExplanation,
                 searchTag,
                 liquorRecipe,
+                detailAbv,
                 liquorAbvId,
                 liquorDetailId,
                 drinkingCapacityId,
@@ -62,6 +65,7 @@ public class LiquorDto {
                 liquor.getDetailExplanation(),
                 liquor.getSearchTag(),
                 liquor.getLiquorRecipe(),
+                liquor.getDetailAbv(),
                 liquor.getLiquorAbv() != null ? liquor.getLiquorAbv().getId() : null,
                 liquor.getLiquorDetail() != null ? liquor.getLiquorDetail().getId() : null,
                 liquor.getDrinkingCapacity() != null ? liquor.getDrinkingCapacity().getId() : null,
@@ -84,6 +88,7 @@ public class LiquorDto {
                 detailExplanation,
                 searchTag,
                 liquorRecipe,
+                detailAbv,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,
@@ -113,6 +118,14 @@ public class LiquorDto {
 
     public static Liquor updateLiquorRecipe(Liquor liquor, String liquorRecipe) {
         liquor.setLiquorRecipe(liquorRecipe);
+        return liquor;
+    }
+
+    public static Liquor updateDetailAbv(
+            Liquor liquor,
+            Double detailAbv
+    ) {
+        liquor.setDetailAbv(detailAbv);
         return liquor;
     }
 }

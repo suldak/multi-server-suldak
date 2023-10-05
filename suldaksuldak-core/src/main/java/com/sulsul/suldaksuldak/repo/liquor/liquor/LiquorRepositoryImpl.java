@@ -143,6 +143,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.detailExplanation,
                                 liquor.searchTag,
                                 liquor.liquorRecipe,
+                                liquor.detailAbv,
                                 liquor.liquorAbv.id,
                                 liquor.liquorDetail.id,
                                 liquor.drinkingCapacity.id,

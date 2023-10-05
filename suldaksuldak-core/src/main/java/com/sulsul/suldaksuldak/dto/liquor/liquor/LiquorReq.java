@@ -22,6 +22,8 @@ public class LiquorReq {
     String searchTag;
     @ApiModelProperty(value = "술의 레피시")
     String liquorRecipe;
+    @ApiModelProperty(value = "술의 정확한 도수", required = true)
+    Double detailAbv;
     @ApiModelProperty(value = "술의 자세한 설명", required = true)
     String detailExplanation;
     @ApiModelProperty(value = "술의 도수 기본키")
@@ -41,6 +43,7 @@ public class LiquorReq {
                 detailExplanation,
                 searchTag,
                 liquorRecipe,
+                detailAbv,
                 liquorAbvId,
                 liquorDetailId,
                 drinkingCapacityId,

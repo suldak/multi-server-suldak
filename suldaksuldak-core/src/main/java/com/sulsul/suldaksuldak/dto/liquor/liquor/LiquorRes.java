@@ -21,6 +21,8 @@ public class LiquorRes {
     String searchTag;
     @ApiModelProperty(value = "술의 레시피")
     String liquorRecipe;
+    @ApiModelProperty(value = "술의 정확한 도수")
+    Double detailAbv;
     @ApiModelProperty(value = "도수 기본키")
     Long liquorAbvId;
     @ApiModelProperty(value = "2차 분류 기본키")
@@ -40,6 +42,7 @@ public class LiquorRes {
                 liquorDto.getDetailExplanation(),
                 liquorDto.getSearchTag(),
                 liquorDto.getLiquorRecipe(),
+                liquorDto.getDetailAbv(),
                 liquorDto.getLiquorAbvId(),
                 liquorDto.getLiquorDetailId(),
                 liquorDto.getDrinkingCapacityId(),
