@@ -9,6 +9,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -83,6 +85,16 @@ public class User extends BaseEntity {
     @Setter
     @JoinColumn(name = "file_base_nm")
     private FileBase fileBase;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<CutOffUser> cutOffUsers = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<CutOffUser> cutOffCutUsers = new LinkedHashSet<>();
 
     protected User () {}
 

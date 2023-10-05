@@ -1,8 +1,8 @@
-package com.sulsul.suldaksuldak.controller.auth;
+package com.sulsul.suldaksuldak.controller.user;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.auth.UserReq;
-import com.sulsul.suldaksuldak.service.auth.UserDataService;
+import com.sulsul.suldaksuldak.service.user.UserDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
