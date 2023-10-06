@@ -218,6 +218,7 @@ public class LiquorViewService {
                 ));
             }
 
+            resultLiquorPriKey = removeDuplicates(resultLiquorPriKey);
             List<LiquorDto> resultLiquorDto = new ArrayList<>();
             for (Long key: resultLiquorPriKey) {
                 Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(key);
