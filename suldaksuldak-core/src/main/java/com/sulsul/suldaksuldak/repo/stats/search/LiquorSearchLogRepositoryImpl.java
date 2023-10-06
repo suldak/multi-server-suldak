@@ -37,7 +37,8 @@ public class LiquorSearchLogRepositoryImpl implements LiquorSearchLogRepositoryC
                         .innerJoin(liquorSearchLog.liquor, liquor)
                         .on(liquorSearchLog.liquor.id.eq(liquor.id))
                         .where(searchAtBetween(startAt, endAt))
-                        .orderBy(liquorSearchLog.liquor.createdAt.desc())
+                        .groupBy(liquorSearchLog.liquor.id)
+                        .orderBy(liquorSearchLog.liquor.count().desc(), liquorSearchLog.liquor.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch();

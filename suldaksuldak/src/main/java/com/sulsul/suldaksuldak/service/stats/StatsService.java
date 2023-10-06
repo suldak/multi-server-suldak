@@ -1,16 +1,21 @@
 package com.sulsul.suldaksuldak.service.stats;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
-import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
+import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
+import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 
 @Service
@@ -20,6 +25,7 @@ public class StatsService {
     private final UserRepository userRepository;
     private final LiquorRepository liquorRepository;
     private final UserLiquorRepository userLiquorRepository;
+    private final LiquorSearchLogRepository liquorSearchLogRepository;
 
     /**
      * 유저 - 술 집게 Table에 집계
@@ -65,5 +71,55 @@ public class StatsService {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
         return true;
+    }
+
+    /**
+     * 술 검색 집계 추가
+     */
+    public Boolean createLiquorSearchLog(
+            Long liquorPriKey
+    ) {
+        try {
+            if (liquorPriKey == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Liquor Key is Null");
+            String priKey = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
+                    + "_" + liquorPriKey;
+            liquorRepository.findById(liquorPriKey)
+                    .ifPresent(
+                            findLiquor -> {
+                                liquorSearchLogRepository.save(
+                                        LiquorSearchLog.of(
+                                                priKey,
+                                                findLiquor
+                                        )
+                                );
+                            }
+                    );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * 집계된 술 통계를 기준으로 기간 별 조회
+     */
+    public Page<Long> getLiquorDataByLogStats(
+            LocalDateTime startAt,
+            LocalDateTime endAt,
+            Pageable pageable
+    ) {
+        try {
+            return liquorSearchLogRepository.findLiquorPriKeyByDateRange(
+                    pageable,
+                    startAt,
+                    endAt
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
     }
 }

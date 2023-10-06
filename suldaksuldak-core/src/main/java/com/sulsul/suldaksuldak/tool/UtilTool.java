@@ -2,6 +2,8 @@ package com.sulsul.suldaksuldak.tool;
 
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -27,5 +29,15 @@ public class UtilTool {
     public static Long getUserPriKeyFromHeader(HttpServletRequest request) {
         return request.getAttribute(SDTokken.USER_PRI_KEY.getText()) == null ? null :
                 (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
+    }
+
+    public static Pageable getPageable(
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        return PageRequest.of(
+                pageNum == null || pageNum < 0 ? 0 : pageNum,
+                recordSize == null || recordSize < 0 ? 10 : recordSize
+        );
     }
 }
