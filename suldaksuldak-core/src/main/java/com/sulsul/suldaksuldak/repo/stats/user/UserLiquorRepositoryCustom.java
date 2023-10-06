@@ -10,5 +10,12 @@ public interface UserLiquorRepositoryCustom {
             Long userPriKey,
             Long liquorPriKey
     );
-    List<UserLiquorDto> findRatingByUserId(Long userPriKey);
+
+    /**
+     * 유저가 많이 조회한 상위 N개의 술 조회
+     */
+    List<Long> findRatingByUserId(
+            Long userPriKey,
+            Integer limitNum
+    );
 }

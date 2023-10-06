@@ -100,4 +100,34 @@ public class LiquorController {
                 )
         );
     }
+
+//    @ApiOperation(
+//            value = "유저 별 추천 술 목록 반환",
+//            notes = "유저의 집게 테이블을 기준으로 유저가 많이 검색한 술의 태그로 술을 검색하여 보여줍니다. (유저 인증 Token 필요)"
+//    )
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+//            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
+//    })
+//    @GetMapping(value = "/liquor-user")
+//    public ApiDataResponse<List<LiquorTotalRes>> getLiquorListFromUser(
+//            HttpServletRequest request,
+//            Integer pageNum,
+//            Integer recordSize
+//    ) {
+//        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+//        if (userPriKey == null) {
+//            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)).getContent());
+//        }
+//        List<Long> liquorPriKeyList =
+//                statsService.getLiquorPriKeyByUserStats(userPriKey, 5);
+//
+//        if (liquorPriKeyList.isEmpty()) {
+//            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)).getContent());
+//        }
+//
+//        return ApiDataResponse.of(
+//                liquorViewService.getLiquorListByLiquorPriKey(liquorPriKeyList)
+//        );
+//    }
 }

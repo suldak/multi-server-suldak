@@ -3,8 +3,7 @@ package com.sulsul.suldaksuldak.service.common;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorRes;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
@@ -24,6 +23,7 @@ import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
 import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -118,116 +120,93 @@ public class LiquorViewService {
         }
     }
 
-    public List<LiquorDto> getLiquorByTag(
-            LiquorTotalReq liquorTotalReq
+    public Page<LiquorTotalRes> getLiquorByTag(
+            LiquorTagSearchDto liquorTagSearchDto,
+            Pageable pageable
     ) {
         try {
-            List<Long> resultLiquorPriKey = new ArrayList<>();
-            if (liquorTotalReq.getSearchTag() != null && !liquorTotalReq.getSearchTag().isBlank()) {
-//                resultLiquorPriKey = liquorRepository.findBySearchTag(liquorTotalReq.getSearchTag());
-                resultLiquorPriKey.addAll(liquorRepository.findBySearchTag(liquorTotalReq.getSearchTag()));
-            }
-            if (checkLongList(liquorTotalReq.getSnackPriKeys())) {
-//                resultLiquorPriKey = snToLiRepository.findLiquorPriKeyByTagPriKey(
+            return liquorRepository.findByTags(
+                    pageable,
+                    liquorTagSearchDto.getSnackPriKeys(),
+                    liquorTagSearchDto.getSellPriKeys(),
+                    liquorTagSearchDto.getMaterialPriKeys(),
+                    liquorTagSearchDto.getStatePriKeys(),
+                    liquorTagSearchDto.getTastePriKeys(),
+                    liquorTagSearchDto.getLiquorAbvPriKeys(),
+                    liquorTagSearchDto.getLiquorDetailPriKeys(),
+                    liquorTagSearchDto.getDrinkingCapacityPriKeys(),
+                    liquorTagSearchDto.getLiquorNamePriKeys(),
+                    liquorTagSearchDto.getSearchTag()
+            );
+//            List<Long> resultLiquorPriKey = new ArrayList<>();
+//            if (liquorTagSearchDto.getSearchTag() != null && !liquorTagSearchDto.getSearchTag().isBlank()) {
+//                resultLiquorPriKey.addAll(liquorRepository.findBySearchTag(liquorTagSearchDto.getSearchTag()));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getSnackPriKeys())) {
+//                resultLiquorPriKey.addAll(snToLiRepository.findLiquorPriKeyByTagPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getSnackPriKeys()
-//                );
-                resultLiquorPriKey.addAll(snToLiRepository.findLiquorPriKeyByTagPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getSnackPriKeys()
-                ));
-            }
-            if (checkLongList(liquorTotalReq.getSellPriKeys())) {
-//                resultLiquorPriKey = slToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        liquorTagSearchDto.getSnackPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getSellPriKeys())) {
+//                resultLiquorPriKey.addAll(slToLiRepository.findLiquorPriKeyByTagPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getSellPriKeys()
-//                );
-                resultLiquorPriKey.addAll(slToLiRepository.findLiquorPriKeyByTagPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getSellPriKeys()
-                ));
-            }
-            if (checkLongList(liquorTotalReq.getStatePriKeys())) {
-//                resultLiquorPriKey = stToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        liquorTagSearchDto.getSellPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getStatePriKeys())) {
+//                resultLiquorPriKey.addAll(stToLiRepository.findLiquorPriKeyByTagPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getStatePriKeys()
-//                );
-                resultLiquorPriKey.addAll(stToLiRepository.findLiquorPriKeyByTagPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getStatePriKeys()
-                ));
-            }
-            if (checkLongList(liquorTotalReq.getTastePriKeys())) {
-//                resultLiquorPriKey = ttToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        liquorTagSearchDto.getStatePriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getTastePriKeys())) {
+//                resultLiquorPriKey.addAll(ttToLiRepository.findLiquorPriKeyByTagPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getTastePriKeys()
-//                );
-                resultLiquorPriKey.addAll(ttToLiRepository.findLiquorPriKeyByTagPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getTastePriKeys()
-                ));
-            }
-            if (checkLongList(liquorTotalReq.getMaterialPriKeys())) {
-//                resultLiquorPriKey = mtToLiRepository.findLiquorPriKeyByTagPriKey(
+//                        liquorTagSearchDto.getTastePriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getMaterialPriKeys())) {
+//                resultLiquorPriKey.addAll(mtToLiRepository.findLiquorPriKeyByTagPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getMaterialPriKeys()
-//                );
-                resultLiquorPriKey.addAll(mtToLiRepository.findLiquorPriKeyByTagPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getMaterialPriKeys()
-                ));
-            }
-            if (liquorTotalReq.getLiquorAbvId() != null) {
-//                resultLiquorPriKey = liquorRepository.findByLiquorAbvPriKey(
+//                        liquorTagSearchDto.getMaterialPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorAbvPriKeys())) {
+//                resultLiquorPriKey.addAll(liquorRepository.findByLiquorAbvPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getLiquorAbvId()
-//                );
-                resultLiquorPriKey.addAll(liquorRepository.findByLiquorAbvPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getLiquorAbvId()
-                ));
-            }
-            if (liquorTotalReq.getLiquorDetailId() != null) {
-//                resultLiquorPriKey = liquorRepository.findByLiquorDetailPriKey(
+//                        liquorTagSearchDto.getLiquorAbvPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorDetailPriKeys())) {
+//                resultLiquorPriKey.addAll(liquorRepository.findByLiquorDetailPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getLiquorDetailId()
-//                );
-                resultLiquorPriKey.addAll(liquorRepository.findByLiquorDetailPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getLiquorDetailId()
-                ));
-            }
-            if (liquorTotalReq.getDrinkingCapacityId() != null) {
-//                resultLiquorPriKey = liquorRepository.findByDrinkingCapacityPriKey(
+//                        liquorTagSearchDto.getLiquorDetailPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getDrinkingCapacityPriKeys())) {
+//                resultLiquorPriKey.addAll(liquorRepository.findByDrinkingCapacityPriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getDrinkingCapacityId()
-//                );
-                resultLiquorPriKey.addAll(liquorRepository.findByDrinkingCapacityPriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getDrinkingCapacityId()
-                ));
-            }
-            if (liquorTotalReq.getLiquorNameId() != null) {
-//                resultLiquorPriKey = liquorRepository.findByLiquorNamePriKey(
+//                        liquorTagSearchDto.getDrinkingCapacityPriKeys()
+//                ));
+//            }
+//            if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorNamePriKeys())) {
+//                resultLiquorPriKey.addAll(liquorRepository.findByLiquorNamePriKey(
 //                        resultLiquorPriKey,
-//                        liquorTotalReq.getLiquorNameId()
-//                );
-                resultLiquorPriKey.addAll(liquorRepository.findByLiquorNamePriKey(
-                        resultLiquorPriKey,
-                        liquorTotalReq.getLiquorNameId()
-                ));
-            }
-
-            resultLiquorPriKey = removeDuplicates(resultLiquorPriKey);
-            List<LiquorDto> resultLiquorDto = new ArrayList<>();
-            for (Long key: resultLiquorPriKey) {
-                Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(key);
-                liquorDto.ifPresent(resultLiquorDto::add);
-            }
-            return resultLiquorDto;
+//                        liquorTagSearchDto.getLiquorNamePriKeys()
+//                ));
+//            }
+//
+//            resultLiquorPriKey = UtilTool.removeDuplicates(resultLiquorPriKey);
+//            List<LiquorTotalRes> resultLiquorDto = new ArrayList<>();
+//            for (Long key: resultLiquorPriKey) {
+//                resultLiquorDto.add(getLiquorTotalData(key));
+//            }
+//            return resultLiquorDto;
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
     }
@@ -253,26 +232,20 @@ public class LiquorViewService {
         }
     }
 
-    private Boolean checkLongList(List<Long> longList) {
-        return longList != null && !longList.isEmpty();
-    }
-
-    private List<Long> unionLists(List<Long> list1, List<Long> list2) {
-        // Create a Set to store unique elements from both lists
-        Set<Long> uniqueSet = new HashSet<>();
-
-        // Add elements from the first list to the set
-        uniqueSet.addAll(list1);
-
-        // Add elements from the second list to the set
-        uniqueSet.addAll(list2);
-
-        // Create a new ArrayList for the result
-        return new ArrayList<>(uniqueSet);
-    }
-
-    private List<Long> removeDuplicates(List<Long> inputList) {
-        HashSet<Long> uniqueSet = new HashSet<>(inputList);
-        return new ArrayList<>(uniqueSet);
-    }
+//    public List<LiquorTotalRes> getLiquorListByLiquorPriKey(
+//            List<Long> liquorPriKeyList
+//    ) {
+//        try {
+//            // 1 술 조회
+//            LiquorTagSearchDto liquorTagSearchDto = LiquorTagSearchDto.emptyListOf();
+//            for (Long liquorPriKey: liquorPriKeyList) {
+//                liquorTagSearchDto.addTags(getLiquorTotalData(liquorPriKey));
+//            }
+//            return getLiquorByTag(liquorTagSearchDto);
+//        } catch (GeneralException e) {
+//            throw new GeneralException(e.getErrorCode(), e.getMessage());
+//        } catch (Exception e) {
+//            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+//        }
+//    }
 }

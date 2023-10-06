@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,5 +42,28 @@ public class UtilTool {
                 pageNum == null || pageNum < 0 ? 0 : pageNum,
                 recordSize == null || recordSize < 0 ? 10 : recordSize
         );
+    }
+
+    public static Boolean checkLongList(List<Long> longList) {
+        return longList != null && !longList.isEmpty();
+    }
+
+    public static List<Long> unionLists(List<Long> list1, List<Long> list2) {
+        // Create a Set to store unique elements from both lists
+        Set<Long> uniqueSet = new HashSet<>();
+
+        // Add elements from the first list to the set
+        uniqueSet.addAll(list1);
+
+        // Add elements from the second list to the set
+        uniqueSet.addAll(list2);
+
+        // Create a new ArrayList for the result
+        return new ArrayList<>(uniqueSet);
+    }
+
+    public static List<Long> removeDuplicates(List<Long> inputList) {
+        HashSet<Long> uniqueSet = new HashSet<>(inputList);
+        return new ArrayList<>(uniqueSet);
     }
 }

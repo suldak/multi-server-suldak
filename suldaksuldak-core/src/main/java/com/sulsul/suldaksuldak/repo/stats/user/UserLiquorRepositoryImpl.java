@@ -3,17 +3,20 @@ package com.sulsul.suldaksuldak.repo.stats.user;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.sulsul.suldaksuldak.domain.stats.QUserLiquor.userLiquor;
-
-import static com.sulsul.suldaksuldak.domain.user.QUser.user;
-
-import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
+import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
+import static com.sulsul.suldaksuldak.domain.stats.QUserLiquor.userLiquor;
+import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,9 +24,13 @@ public class UserLiquorRepositoryImpl implements UserLiquorRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<UserLiquorDto> findRatingByUserId(Long userPriKey) {
-        return getUserLiquorDtoQuery()
+    public List<Long> findRatingByUserId(
+            Long userPriKey,
+            Integer limitNum
+    ) {
+        return jpaQueryFactory.select(userLiquor.liquor.id)
                 .from(userLiquor)
+                .limit(limitNum)
                 .innerJoin(userLiquor.user, user)
                 .on(userLiquor.user.id.eq(userPriKey))
                 .innerJoin(userLiquor.liquor, liquor)
