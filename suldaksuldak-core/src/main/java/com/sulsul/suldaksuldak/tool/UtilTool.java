@@ -25,6 +25,7 @@ public class UtilTool {
     }
 
     public static Long getUserPriKeyFromHeader(HttpServletRequest request) {
-        return (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
+        return request.getAttribute(SDTokken.USER_PRI_KEY.getText()) == null ? null :
+                (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
     }
 }

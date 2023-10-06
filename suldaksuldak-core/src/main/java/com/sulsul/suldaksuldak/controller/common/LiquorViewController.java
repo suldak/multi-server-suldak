@@ -5,6 +5,8 @@ import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorRes;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
+import com.sulsul.suldaksuldak.service.stats.StatsService;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,18 +29,24 @@ import java.util.stream.Collectors;
 @Api(tags = "[COMMON] 술 관련 정보 조회")
 public class LiquorViewController {
     private final LiquorViewService liquorViewService;
+    private final StatsService statsService;
 
     @ApiOperation(
-            value = "술에 관한 모든 정보 조회",
-            notes = "술에 관한 모든 태그와 정보를 조회합니다."
+            value = "술에 관한 모든 정보 조회 (집계)",
+            notes = "술에 관한 모든 태그와 정보를 조회합니다. 유저가 해당 술을 검색했다고 판단하여 집계합니다. (인증 Token을 꼭 넣어주세요.)"
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "liquorPriKey", value = "술의 기본키", required = true, dataTypeClass = Long.class)
     })
     @GetMapping(value = "/liquor")
     public ApiDataResponse<LiquorTotalRes> getLiquorTotalData (
+            HttpServletRequest request,
             Long liquorPriKey
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey != null) {
+            statsService.countSearchCnt(userPriKey, liquorPriKey);
+        }
         return ApiDataResponse.of(
                 liquorViewService.getLiquorTotalData(liquorPriKey)
         );

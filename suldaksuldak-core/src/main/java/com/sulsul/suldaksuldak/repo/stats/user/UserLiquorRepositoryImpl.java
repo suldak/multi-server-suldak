@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,6 +30,22 @@ public class UserLiquorRepositoryImpl implements UserLiquorRepositoryCustom {
                 .on(userLiquor.liquor.id.eq(liquor.id))
                 .orderBy(userLiquor.searchCnt.desc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<UserLiquorDto> findByUserPriKeyAndLiquorPriKey(
+            Long userPriKey,
+            Long liquorPriKey
+    ) {
+        return Optional.ofNullable(
+                getUserLiquorDtoQuery()
+                        .from(userLiquor)
+                        .innerJoin(userLiquor.user, user)
+                        .on(userLiquor.user.id.eq(userPriKey))
+                        .innerJoin(userLiquor.liquor, liquor)
+                        .on(userLiquor.liquor.id.eq(liquorPriKey))
+                        .fetchFirst()
+        );
     }
 
     private JPAQuery<UserLiquorDto> getUserLiquorDtoQuery() {

@@ -12,6 +12,20 @@ public class UserLiquorDto {
     Long liquorId;
     Double searchCnt;
 
+    public static UserLiquorDto of (
+            Long id,
+            Long userId,
+            Long liquorId,
+            Double searchCnt
+    ) {
+        return new UserLiquorDto(
+                id,
+                userId,
+                liquorId,
+                searchCnt
+        );
+    }
+
     public UserLiquor toEntity(
             User user,
             Liquor liquor
@@ -22,5 +36,12 @@ public class UserLiquorDto {
                 liquor,
                 searchCnt
         );
+    }
+
+    public static UserLiquor addSearchCnt(
+            UserLiquor userLiquor
+    ) {
+        userLiquor.setSearchCnt(userLiquor.getSearchCnt() + 0.1);
+        return userLiquor;
     }
 }
