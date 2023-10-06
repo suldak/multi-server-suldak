@@ -28,7 +28,7 @@ CREATE TABLE `tb_consent_item` (
   `item_seq` int unsigned NOT NULL,
   `item_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,39 @@ CREATE TABLE `tb_consent_item` (
 
 LOCK TABLES `tb_consent_item` WRITE;
 /*!40000 ALTER TABLE `tb_consent_item` DISABLE KEYS */;
+INSERT INTO `tb_consent_item` VALUES (1,'TEAM_OF_SERVICE',1,'제1조(목적) 이 약관은 술닥술닥 (이하 \'회사\' 라고 합니다)가 제공하는 제반 서비스의 이용과 관련하여 회사와 회원 과의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.'),(2,'TEAM_OF_SERVICE',2,'제2조(정의) 이 약관에서 사용하는 주요 용어의 정의는 다음과 같습니다. \'서비스\'라 함은 구현되는 단말기(PC, TV, 휴대형단말기 등의 각종 유무선 장치를 포함)와 상관없이 \'이용자\'가 이용할 수 있는 회사가 제공하는 제반 서비스를 의미합니다.');
 /*!40000 ALTER TABLE `tb_consent_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_cut_off_user`
+--
+
+DROP TABLE IF EXISTS `tb_cut_off_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_cut_off_user` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `modified_at` timestamp NOT NULL,
+  `cut_user_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tb_cut_off_user_FK` (`user_id`),
+  KEY `tb_cut_off_user_FK_1` (`cut_user_id`),
+  CONSTRAINT `tb_cut_off_user_FK` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tb_cut_off_user_FK_1` FOREIGN KEY (`cut_user_id`) REFERENCES `tb_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_cut_off_user`
+--
+
+LOCK TABLES `tb_cut_off_user` WRITE;
+/*!40000 ALTER TABLE `tb_cut_off_user` DISABLE KEYS */;
+INSERT INTO `tb_cut_off_user` VALUES (2,6,'2023-10-05 04:15:15','2023-10-05 04:15:15',7);
+/*!40000 ALTER TABLE `tb_cut_off_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -61,7 +93,7 @@ CREATE TABLE `tb_drinking_capacity` (
 
 LOCK TABLES `tb_drinking_capacity` WRITE;
 /*!40000 ALTER TABLE `tb_drinking_capacity` DISABLE KEYS */;
-INSERT INTO `tb_drinking_capacity` VALUES (4,'입문자'),(3,'전문가'),(2,'평군');
+INSERT INTO `tb_drinking_capacity` VALUES (4,'입문자'),(3,'전문가'),(2,'평균');
 /*!40000 ALTER TABLE `tb_drinking_capacity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,6 +145,7 @@ CREATE TABLE `tb_liquor` (
   `liquor_name_id` bigint unsigned DEFAULT NULL,
   `search_tag` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `liquor_recipe` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `detail_abv` double NOT NULL,
   PRIMARY KEY (`id`),
   KEY `tb_liquor_FK` (`liquor_abv_id`),
   KEY `tb_liquor_FK_1` (`liquor_detail_id`),
@@ -122,7 +155,7 @@ CREATE TABLE `tb_liquor` (
   CONSTRAINT `tb_liquor_FK_1` FOREIGN KEY (`liquor_detail_id`) REFERENCES `tb_liquor_detail` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `tb_liquor_FK_2` FOREIGN KEY (`drinking_capacity_id`) REFERENCES `tb_drinking_capacity` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `tb_liquor_FK_3` FOREIGN KEY (`liquor_name_id`) REFERENCES `tb_liquor_name` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='술 DB';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='술 DB';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +164,7 @@ CREATE TABLE `tb_liquor` (
 
 LOCK TABLES `tb_liquor` WRITE;
 /*!40000 ALTER TABLE `tb_liquor` DISABLE KEYS */;
-INSERT INTO `tb_liquor` VALUES (2,'CASS','한국의 맥주','한국의 대표 맥주입니다.','2023-09-17 07:05:06','2023-09-18 08:55:55',1,1,4,2,'맥주 카스',NULL),(3,'Kelly','한국의 맥주','손석구가 광고하는 맥주','2023-09-17 09:22:00','2023-09-17 09:22:00',1,1,NULL,NULL,'맥주 켈리',NULL);
+INSERT INTO `tb_liquor` VALUES (2,'CASS','한국의 맥주','한국의 대표 맥주입니다.','2023-09-17 07:05:06','2023-10-05 07:13:58',1,1,4,2,'맥주 카스','테스트',4.5),(3,'Kelly','한국의 맥주','손석구가 광고하는 맥주','2023-09-17 09:22:00','2023-09-17 09:22:00',1,1,NULL,NULL,'맥주 켈리',NULL,4.5),(4,'처음처럼','한국의 소주','한국의 소주로 유명한 소주','2023-10-06 07:27:31','2023-10-06 07:30:48',NULL,NULL,2,NULL,'소주, 처음처럼, 처음 처럼',NULL,16.5);
 /*!40000 ALTER TABLE `tb_liquor` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,6 +266,33 @@ LOCK TABLES `tb_liquor_name` WRITE;
 /*!40000 ALTER TABLE `tb_liquor_name` DISABLE KEYS */;
 INSERT INTO `tb_liquor_name` VALUES (2,'맥주'),(1,'소주');
 /*!40000 ALTER TABLE `tb_liquor_name` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_liquor_search_log`
+--
+
+DROP TABLE IF EXISTS `tb_liquor_search_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_liquor_search_log` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `liquor_id` bigint unsigned NOT NULL,
+  `search_at` timestamp NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tb_liquor_search_log_FK` (`liquor_id`),
+  CONSTRAINT `tb_liquor_search_log_FK` FOREIGN KEY (`liquor_id`) REFERENCES `tb_liquor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_liquor_search_log`
+--
+
+LOCK TABLES `tb_liquor_search_log` WRITE;
+/*!40000 ALTER TABLE `tb_liquor_search_log` DISABLE KEYS */;
+INSERT INTO `tb_liquor_search_log` VALUES ('1696567458111_2',2,'2023-10-06 04:44:18'),('1696567552768_2',2,'2023-10-06 04:45:53'),('1696567556229_3',3,'2023-10-06 04:45:56');
+/*!40000 ALTER TABLE `tb_liquor_search_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -355,7 +415,7 @@ CREATE TABLE `tb_sl_li` (
   KEY `tb_sl_li_FK` (`liquor_sell_id`),
   CONSTRAINT `tb_sl_li_FK` FOREIGN KEY (`liquor_sell_id`) REFERENCES `tb_liquor_sell` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tb_sl_li_FK_to_li` FOREIGN KEY (`liquor_id`) REFERENCES `tb_liquor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='판매처 to 술';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='판매처 to 술';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -364,7 +424,7 @@ CREATE TABLE `tb_sl_li` (
 
 LOCK TABLES `tb_sl_li` WRITE;
 /*!40000 ALTER TABLE `tb_sl_li` DISABLE KEYS */;
-INSERT INTO `tb_sl_li` VALUES (1,2,1),(2,3,1);
+INSERT INTO `tb_sl_li` VALUES (1,2,1),(2,3,1),(3,4,1);
 /*!40000 ALTER TABLE `tb_sl_li` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -537,7 +597,7 @@ CREATE TABLE `tb_user` (
   UNIQUE KEY `tb_user_un_nickname` (`nickname`),
   KEY `tb_user_FK` (`file_base_nm`),
   CONSTRAINT `tb_user_FK` FOREIGN KEY (`file_base_nm`) REFERENCES `tb_file_base` (`file_nm`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='유저 목록';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -546,8 +606,38 @@ CREATE TABLE `tb_user` (
 
 LOCK TABLES `tb_user` WRITE;
 /*!40000 ALTER TABLE `tb_user` DISABLE KEYS */;
-INSERT INTO `tb_user` VALUES (6,'admin','2023-10-04 04:24:37','2023-10-04 07:52:09','ADMIN','M',2000,'SULDAKSULDAK','2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI=',0,0,1,'안녕하세요','10c2b6de2d9d4ec9be73dd7c35298837_1696402175140',1,0,1,1,1);
+INSERT INTO `tb_user` VALUES (6,'admin','2023-10-04 04:24:37','2023-10-05 07:26:13','ADMIN','M',2000,'SULDAKSULDAK','2CSU8F1pF7oC96qilonMtES7c/IDgIdssF0fN1N7eJI=',0,0,1,'안녕!','10c2b6de2d9d4ec9be73dd7c35298837_1696402175140',1,0,1,1,1),(7,'test','2023-10-05 02:20:56','2023-10-05 02:20:56','TEST','M',2000,'SULDAKSULDAK','NyaDNd1pMQRb3N+SYj/4GaZCRLU9DnRtQ4eXNJ1NpXg=',0,0,1,NULL,NULL,1,1,1,1,1);
 /*!40000 ALTER TABLE `tb_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tb_user_liquor`
+--
+
+DROP TABLE IF EXISTS `tb_user_liquor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tb_user_liquor` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `liquor_id` bigint unsigned NOT NULL,
+  `search_cnt` double NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tb_user_tag_FK` (`user_id`),
+  KEY `tb_user_liquor_FK` (`liquor_id`),
+  CONSTRAINT `tb_user_liquor_FK` FOREIGN KEY (`liquor_id`) REFERENCES `tb_liquor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `tb_user_tag_FK` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tb_user_liquor`
+--
+
+LOCK TABLES `tb_user_liquor` WRITE;
+/*!40000 ALTER TABLE `tb_user_liquor` DISABLE KEYS */;
+INSERT INTO `tb_user_liquor` VALUES (1,6,2,0.3),(2,6,3,0.1);
+/*!40000 ALTER TABLE `tb_user_liquor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -559,4 +649,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-10-04 17:37:32
+-- Dump completed on 2023-10-06 17:38:36
