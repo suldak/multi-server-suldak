@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.bridge.*;
+import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
@@ -100,6 +101,11 @@ public class Liquor extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
     private Set<UserLiquor> userLiquors = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    private Set<LiquorSearchLog> liquorSearchLogs = new LinkedHashSet<>();
 
     protected Liquor () {}
 
