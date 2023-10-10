@@ -125,6 +125,7 @@ public class LiquorViewService {
             Pageable pageable
     ) {
         try {
+            log.info(liquorTagSearchDto.toString());
             return liquorRepository.findByTags(
                     pageable,
                     liquorTagSearchDto.getSnackPriKeys(),

@@ -2,9 +2,15 @@ package com.sulsul.suldaksuldak.dto.liquor.snack;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Value;
+import lombok.*;
 
-@Value
+//@Value
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "안주 정보")
 public class LiquorSnackRes {
     @ApiModelProperty(value = "안주 기본키")

@@ -1,5 +1,7 @@
 package com.sulsul.suldaksuldak.repo.liquor.liquor;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -175,75 +177,112 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
             List<Long> liquorNamePriKeys,
             String searchTag
     ) {
-        List<LiquorTotalRes> liquorTotalRes =
+        JPAQuery<LiquorTotalRes> selectQuery =
                 getLiquorTotalResQuery()
                         .from(liquor)
-                        .innerJoin(liquor.liquorAbv, liquorAbv)
+                        .leftJoin(liquor.liquorAbv, liquorAbv)
                         .on(
                                 liquorAbvPriKeys == null || liquorAbvPriKeys.isEmpty() ?
                                         liquor.liquorAbv.id.eq(liquorAbv.id) :
                                         liquor.liquorAbv.id.in(liquorAbvPriKeys)
                         )
-                        .innerJoin(liquor.liquorDetail, liquorDetail)
+                        .leftJoin(liquor.liquorDetail, liquorDetail)
                         .on(
                                 liquorDetailPriKeys == null || liquorDetailPriKeys.isEmpty() ?
                                         liquor.liquorDetail.id.eq(liquorDetail.id) :
                                         liquor.liquorDetail.id.in(liquorDetailPriKeys)
                         )
-                        .innerJoin(liquor.drinkingCapacity, drinkingCapacity)
+                        .leftJoin(liquor.drinkingCapacity, drinkingCapacity)
                         .on(
                                 drinkingCapacityPriKeys == null || drinkingCapacityPriKeys.isEmpty() ?
                                         liquor.drinkingCapacity.id.eq(drinkingCapacity.id) :
                                         liquor.drinkingCapacity.id.in(drinkingCapacityPriKeys)
                         )
-                        .innerJoin(liquor.liquorName, liquorName)
+                        .leftJoin(liquor.liquorName, liquorName)
                         .on(
                                 liquorNamePriKeys == null || liquorNamePriKeys.isEmpty() ?
                                         liquor.liquorName.id.eq(liquorName.id) :
                                         liquor.liquorName.id.in(liquorNamePriKeys)
                         )
-                        .innerJoin(snToLi.liquorSnack, liquorSnack)
-                        .on(
-                                snackPriKeys == null || snackPriKeys.isEmpty() ?
-                                        snToLi.liquorSnack.id.eq(liquorSnack.id) :
-                                        snToLi.liquorSnack.id.in(snackPriKeys)
-                        )
-                        .innerJoin(slToLi.liquorSell, liquorSell)
-                        .on(
-                                sellPriKeys == null || sellPriKeys.isEmpty() ?
-                                        slToLi.liquorSell.id.eq(liquorSell.id) :
-                                        slToLi.liquorSell.id.in(sellPriKeys)
-                        )
-                        .innerJoin(mtToLi.liquorMaterial, liquorMaterial)
+                        .leftJoin(liquor.snToLis, snToLi).fetchJoin()
+//                        .on(
+//                                snackPriKeys == null || snackPriKeys.isEmpty() ?
+//                                        snToLi.liquor.id.eq(liquor.id):
+//                                        snToLi.liquorSnack.id.in(snackPriKeys).and(snToLi.liquor.id.eq(liquor.id))
+//                        )
+                        .leftJoin(liquor.slToLis, slToLi).fetchJoin()
+//                        .on(
+//                                sellPriKeys == null || sellPriKeys.isEmpty() ?
+//                                        slToLi.liquor.id.eq(liquor.id) :
+//                                        slToLi.liquorSell.id.in(sellPriKeys).and(slToLi.liquor.id.eq(liquor.id))
+//                        )
+                        .leftJoin(liquor.mtToLis, mtToLi)
                         .on(
                                 materialPriKeys == null || materialPriKeys.isEmpty() ?
-                                        mtToLi.liquorMaterial.id.eq(liquorMaterial.id) :
-                                        mtToLi.liquorMaterial.id.in(materialPriKeys)
+                                        mtToLi.liquor.id.eq(liquor.id) :
+                                        mtToLi.liquorMaterial.id.in(materialPriKeys).and(mtToLi.liquor.id.eq(liquor.id))
                         )
-                        .innerJoin(stToLi.stateType, stateType)
+                        .leftJoin(liquor.stToLis, stToLi)
                         .on(
                                 statePriKeys == null || statePriKeys.isEmpty() ?
-                                        stToLi.stateType.id.eq(stateType.id) :
-                                        stToLi.stateType.id.in(statePriKeys)
+                                        stToLi.liquor.id.eq(liquor.id) :
+                                        stToLi.stateType.id.in(statePriKeys).and(stToLi.liquor.id.eq(liquor.id))
                         )
-                        .innerJoin(ttToLi.tasteType, tasteType)
+                        .leftJoin(liquor.ttToLis, ttToLi)
                         .on(
                                 tastePriKeys == null || tastePriKeys.isEmpty() ?
-                                        ttToLi.tasteType.id.eq(tasteType.id) :
-                                        ttToLi.tasteType.id.in(tastePriKeys)
+                                        ttToLi.liquor.id.eq(liquor.id) :
+                                        ttToLi.tasteType.id.in(tastePriKeys).and(ttToLi.liquor.id.eq(liquor.id))
                         )
-                        .where(searchTagLike(searchTag))
+                        .where(
+                                searchTagLike(searchTag),
+                                searchSnToLi(snackPriKeys),
+                                searchSlToLi(sellPriKeys)
+                        );
+
+        List<LiquorTotalRes> liquorTotalRes =
+                selectQuery
                         .orderBy(liquor.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
-                        .fetch();
+                        .transform(GroupBy.groupBy(liquor.id)
+                                .list(
+                                        Projections.constructor(
+                                                LiquorTotalRes.class,
+                                                liquor.id,
+                                                liquor.name,
+                                                liquor.summaryExplanation,
+                                                liquor.detailExplanation,
+                                                liquor.liquorRecipe,
+                                                liquor.detailAbv,
+                                                Projections.bean(LiquorAbvDto.class, liquorAbv.id, liquorAbv.name),
+                                                Projections.bean(LiquorDetailDto.class, liquorDetail.id, liquorDetail.name),
+                                                Projections.bean(DrinkingCapacityDto.class, drinkingCapacity.id, drinkingCapacity.name),
+                                                Projections.bean(LiquorNameDto.class, liquorName.id, liquorName.name),
+                                                Projections.list(Projections.bean(LiquorSnackRes.class, snToLi.liquorSnack.id, snToLi.liquorSnack.name)),
+                                                Projections.list(Projections.bean(LiquorSellDto.class, slToLi.liquorSell.id, slToLi.liquorSell.name)),
+//                                                Projections.list(Projections.bean(LiquorMaterialDto.class, mtToLi.liquorMaterial.id, mtToLi.liquorMaterial.name)),
+//                                                Projections.list(Projections.bean(StateTypeDto.class, stToLi.stateType.id, stToLi.stateType.name)),
+//                                                Projections.list(Projections.bean(TasteTypeDto.class, ttToLi.tasteType.id, ttToLi.tasteType.name)),
+                                                liquor.createdAt,
+                                                liquor.modifiedAt
+                                        )
+                                )
+                        );
 
-        JPAQuery<Liquor> countQuery = jpaQueryFactory.selectFrom(liquor);
+        System.out.println(liquorTotalRes.size());
+        for (LiquorTotalRes res: liquorTotalRes) {
+            System.out.println(res.toString());
+        }
+
+        JPAQuery<LiquorTotalRes> countQuery = selectQuery
+                .where(searchTagLike(searchTag));
 
         return PageableExecutionUtils.getPage(
                 liquorTotalRes, pageable,
                 countQuery::fetchCount
         );
+//        return null;
     }
 
     private JPAQuery<LiquorDto> getLiquorDtoQuery() {
@@ -285,9 +324,9 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 Projections.bean(LiquorNameDto.class, liquorName.id, liquorName.name),
                                 Projections.list(Projections.bean(LiquorSnackRes.class, snToLi.liquorSnack.id, snToLi.liquorSnack.name)),
                                 Projections.list(Projections.bean(LiquorSellDto.class, slToLi.liquorSell.id, slToLi.liquorSell.name)),
-                                Projections.list(Projections.bean(LiquorMaterialDto.class, mtToLi.liquorMaterial.id, mtToLi.liquorMaterial.name)),
-                                Projections.list(Projections.bean(StateTypeDto.class, stToLi.stateType.id, stToLi.stateType.name)),
-                                Projections.list(Projections.bean(TasteTypeDto.class, ttToLi.tasteType.id, ttToLi.tasteType.name)),
+//                                Projections.list(Projections.bean(LiquorMaterialDto.class, mtToLi.liquorMaterial.id, mtToLi.liquorMaterial.name)),
+//                                Projections.list(Projections.bean(StateTypeDto.class, stToLi.stateType.id, stToLi.stateType.name)),
+//                                Projections.list(Projections.bean(TasteTypeDto.class, ttToLi.tasteType.id, ttToLi.tasteType.name)),
                                 liquor.createdAt,
                                 liquor.modifiedAt
                         )
@@ -310,5 +349,19 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     ) {
         return hasText(searchTag) ?
                 liquor.searchTag.contains(searchTag) : null;
+    }
+
+    private BooleanExpression searchSnToLi(
+            List<Long> snackPriKeys
+    ) {
+        return snackPriKeys == null || snackPriKeys.isEmpty() ? null :
+                snToLi.liquorSnack.id.in(snackPriKeys);
+    }
+
+    private BooleanExpression searchSlToLi(
+            List<Long> sellPriKeys
+    ) {
+        return sellPriKeys == null || sellPriKeys.isEmpty() ? null :
+                slToLi.liquorSell.id.in(sellPriKeys);
     }
 }

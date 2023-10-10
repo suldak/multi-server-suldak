@@ -51,6 +51,41 @@ public class LiquorTotalRes {
     @ApiModelProperty(value = "술 수정 일자")
     LocalDateTime modifiedAt;
 
+    public LiquorTotalRes (
+            Long id,
+            String name,
+            String summaryExplanation,
+            String detailExplanation,
+            String liquorRecipe,
+            Double detailAbv,
+            LiquorAbvDto liquorAbvDto,
+            LiquorDetailDto liquorDetailDto,
+            DrinkingCapacityDto drinkingCapacityDto,
+            LiquorNameDto liquorNameDto,
+            List<LiquorSnackRes> liquorSnackRes,
+            List<LiquorSellDto> liquorSellDtos,
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt
+    ) {
+        this.id = id;
+        this.name = name;
+        this.summaryExplanation = summaryExplanation;
+        this.detailExplanation = detailExplanation;
+        this.liquorRecipe = liquorRecipe;
+        this.detailAbv = detailAbv;
+        this.liquorAbvDto = liquorAbvDto;
+        this.liquorDetailDto = liquorDetailDto;
+        this.drinkingCapacityDto = drinkingCapacityDto;
+        this.liquorNameDto = liquorNameDto;
+        this.liquorSnackRes = liquorSnackRes;
+        this.liquorSellDtos = liquorSellDtos;
+        this.liquorMaterialDtos = null;
+        this.stateTypeDtos = null;
+        this.tasteTypeDtos = null;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+    }
+
     public static LiquorTotalRes of (
             LiquorDto liquorDto,
             LiquorAbvDto liquorAbvDto,
@@ -76,9 +111,9 @@ public class LiquorTotalRes {
                 liquorNameDto,
                 liquorSnackDtos.stream().map(LiquorSnackRes::from).collect(Collectors.toList()),
                 liquorSellDtos,
-                liquorMaterialDtos,
-                stateTypeDtos,
-                tasteTypeDtos,
+//                liquorMaterialDtos,
+//                stateTypeDtos,
+//                tasteTypeDtos,
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );
