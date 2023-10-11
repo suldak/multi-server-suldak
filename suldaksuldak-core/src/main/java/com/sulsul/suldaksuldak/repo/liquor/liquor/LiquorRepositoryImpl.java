@@ -58,6 +58,22 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     }
 
     @Override
+    public List<Long> findByLiquorAbvPriKey(
+            List<Long> tagPriKeys
+    ) {
+        return jpaQueryFactory
+                .select(liquor.id)
+                .from(liquor)
+                .innerJoin(liquor.liquorAbv, liquorAbv)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                liquor.liquorAbv.id.eq(liquorAbv.id) :
+                                liquor.liquorAbv.id.in(tagPriKeys)
+                )
+                .fetch();
+    }
+
+    @Override
     public List<Long> findByLiquorDetailPriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys
@@ -73,6 +89,22 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .where(
                         priKeyIn(liquorPriKeys)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<Long> findByLiquorDetailPriKey(
+            List<Long> tagPriKeys
+    ) {
+        return jpaQueryFactory
+                .select(liquor.id)
+                .from(liquor)
+                .innerJoin(liquor.liquorDetail, liquorDetail)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                liquor.liquorDetail.id.eq(liquorDetail.id) :
+                                liquor.liquorDetail.id.in(tagPriKeys)
                 )
                 .fetch();
     }
@@ -98,6 +130,22 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     }
 
     @Override
+    public List<Long> findByDrinkingCapacityPriKey(
+            List<Long> tagPriKeys
+    ) {
+        return jpaQueryFactory
+                .select(liquor.id)
+                .from(liquor)
+                .innerJoin(liquor.drinkingCapacity, drinkingCapacity)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                liquor.drinkingCapacity.id.eq(drinkingCapacity.id) :
+                                liquor.drinkingCapacity.id.in(tagPriKeys)
+                )
+                .fetch();
+    }
+
+    @Override
     public List<Long> findByLiquorNamePriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys
@@ -113,6 +161,22 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .where(
                         priKeyIn(liquorPriKeys)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<Long> findByLiquorNamePriKey(
+            List<Long> tagPriKeys
+    ) {
+        return jpaQueryFactory
+                .select(liquor.id)
+                .from(liquor)
+                .innerJoin(liquor.liquorName, liquorName)
+                .on(
+                        tagPriKeys == null || tagPriKeys.isEmpty() ?
+                                liquor.liquorName.id.eq(liquorName.id) :
+                                liquor.liquorName.id.in(tagPriKeys)
                 )
                 .fetch();
     }

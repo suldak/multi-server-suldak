@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.service.stats;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
+import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -128,7 +128,7 @@ public class StatsService {
     /**
      * 유저 별 추천 술 목록 조회
      */
-    public List<Long> getLiquorPriKeyByUserStats(
+    public List<UserLiquorTagDto> getLiquorPriKeyByUserStats(
             Long userPriKey,
             Integer limitNum
     ) {

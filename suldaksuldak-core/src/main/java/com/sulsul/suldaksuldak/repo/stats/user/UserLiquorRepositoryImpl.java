@@ -3,12 +3,9 @@ package com.sulsul.suldaksuldak.repo.stats.user;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
+import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,11 +21,11 @@ public class UserLiquorRepositoryImpl implements UserLiquorRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Long> findRatingByUserId(
+    public List<UserLiquorTagDto> findRatingByUserId(
             Long userPriKey,
             Integer limitNum
     ) {
-        return jpaQueryFactory.select(userLiquor.liquor.id)
+        return getUserLiquorTagDtoQuery()
                 .from(userLiquor)
                 .limit(limitNum)
                 .innerJoin(userLiquor.user, user)
@@ -64,6 +61,23 @@ public class UserLiquorRepositoryImpl implements UserLiquorRepositoryCustom {
                                 userLiquor.user.id,
                                 userLiquor.liquor.id,
                                 userLiquor.searchCnt
+                        )
+                );
+    }
+
+    private JPAQuery<UserLiquorTagDto> getUserLiquorTagDtoQuery() {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                UserLiquorTagDto.class,
+                                userLiquor.id,
+                                userLiquor.user.id,
+                                userLiquor.liquor.id,
+                                userLiquor.searchCnt,
+                                userLiquor.liquor.liquorAbv.id,
+                                userLiquor.liquor.liquorDetail.id,
+                                userLiquor.liquor.drinkingCapacity.id,
+                                userLiquor.liquor.liquorName.id
                         )
                 );
     }

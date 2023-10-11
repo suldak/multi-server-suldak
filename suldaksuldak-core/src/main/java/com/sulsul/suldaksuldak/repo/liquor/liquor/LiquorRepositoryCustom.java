@@ -13,16 +13,28 @@ public interface LiquorRepositoryCustom {
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys
     );
+    List<Long> findByLiquorAbvPriKey(
+            List<Long> tagPriKeys
+    );
     List<Long> findByLiquorDetailPriKey(
             List<Long> liquorPriKeys,
+            List<Long> tagPriKeys
+    );
+    List<Long> findByLiquorDetailPriKey(
             List<Long> tagPriKeys
     );
     List<Long> findByDrinkingCapacityPriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys
     );
+    List<Long> findByDrinkingCapacityPriKey(
+            List<Long> tagPriKeys
+    );
     List<Long> findByLiquorNamePriKey(
             List<Long> liquorPriKeys,
+            List<Long> tagPriKeys
+    );
+    List<Long> findByLiquorNamePriKey(
             List<Long> tagPriKeys
     );
     List<Long> findBySearchTag(

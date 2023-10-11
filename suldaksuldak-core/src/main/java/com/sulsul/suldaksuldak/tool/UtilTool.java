@@ -8,10 +8,8 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class UtilTool {
     public static String encryptPassword (
@@ -69,5 +67,40 @@ public class UtilTool {
         List<Long> result = new ArrayList<>(list1);
         result.retainAll(list2);
         return result;
+    }
+
+    public static HashMap<Long, Integer> generateCountedHashMap(List<Long> liquorPriKeyList) {
+        HashMap<Long, Integer> countedMap = new HashMap<>();
+        for (Long key : liquorPriKeyList) {
+            if (key != null) {
+                if (countedMap.containsKey(key)) {
+                    countedMap.put(key, countedMap.get(key) + 1);
+                } else {
+                    countedMap.put(key, 1);
+                }
+            }
+        }
+        return countedMap;
+    }
+
+    public static List<Long> selectKeysWithHighValues(HashMap<Long, Integer> inputMap) {
+        if (inputMap.isEmpty()) return List.of();
+        // Convert the map entries to a list of Map.Entry<Long, Integer>
+        List<Map.Entry<Long, Integer>> entryList = new ArrayList<>(inputMap.entrySet());
+
+        // Sort the entries in descending order of values
+        entryList.sort(Map.Entry.<Long, Integer>comparingByValue().reversed());
+
+        int limit = Math.min(3, entryList.size());
+        Random random = new Random();
+        if (entryList.size() > 3) {
+            limit = random.nextInt(3) + 1;
+        } else {
+            limit = random.nextInt(inputMap.size()) + 1;
+        }
+
+        return entryList.subList(0, limit).stream()
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 }
