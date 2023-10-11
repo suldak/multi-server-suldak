@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.liquor;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import com.sulsul.suldaksuldak.service.stats.StatsService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -30,6 +31,7 @@ import java.util.List;
 @Api(tags = "[MAIN] 유저 기준 술 정보 조회 및 관리")
 public class LiquorController {
     private final LiquorViewService liquorViewService;
+    private final LiquorDataService liquorDataService;
     private final StatsService statsService;
 
     @ApiOperation(
@@ -50,7 +52,7 @@ public class LiquorController {
             statsService.createLiquorSearchLog(liquorPriKey);
         }
         return ApiDataResponse.of(
-                liquorViewService.getLiquorTotalData(liquorPriKey)
+                liquorDataService.getLiquorTotalData(liquorPriKey)
         );
     }
 
@@ -90,7 +92,7 @@ public class LiquorController {
         }
         List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
         for (Long liquorPriKey: liquorPriKeyList.getContent()) {
-            liquorTotalRes.add(liquorViewService.getLiquorTotalData(liquorPriKey));
+            liquorTotalRes.add(liquorDataService.getLiquorTotalData(liquorPriKey));
         }
         return ApiDataResponse.of(
                 new PageImpl<>(

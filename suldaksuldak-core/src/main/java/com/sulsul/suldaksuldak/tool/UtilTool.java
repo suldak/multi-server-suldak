@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class UtilTool {
     public static String encryptPassword (
@@ -65,5 +63,11 @@ public class UtilTool {
     public static List<Long> removeDuplicates(List<Long> inputList) {
         HashSet<Long> uniqueSet = new HashSet<>(inputList);
         return new ArrayList<>(uniqueSet);
+    }
+
+    public static List<Long> findOverlappingElements(List<Long> list1, List<Long> list2) {
+        List<Long> result = new ArrayList<>(list1);
+        result.retainAll(list2);
+        return result;
     }
 }
