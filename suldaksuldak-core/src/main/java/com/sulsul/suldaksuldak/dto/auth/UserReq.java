@@ -24,13 +24,13 @@ public class UserReq {
     String userEmail;
     @ApiModelProperty(value = "비밀번호 (소셜 회원가입일 경우 identity 값을 넣어야 함", required = true)
     String userPw;
-    @ApiModelProperty(value = "닉네임")
+    @ApiModelProperty(value = "닉네임", required = true)
     String nickname;
-    @ApiModelProperty(value = "성별")
+    @ApiModelProperty(value = "성별", required = true)
     Gender gender;
-    @ApiModelProperty(value = "출생 년도")
+    @ApiModelProperty(value = "출생 년도", required = true)
     Integer birthdayYear;
-    @ApiModelProperty(value = "가입 방법")
+    @ApiModelProperty(value = "가입 방법", required = true)
     Registration registration;
     @ApiModelProperty(value = "유저 레빌")
     Integer level;
