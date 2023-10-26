@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -25,6 +27,11 @@ public class LiquorQuestion {
     @Setter
     @Column(nullable = false)
     private String qText;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "liquorQuestion", cascade = CascadeType.REMOVE)
+    private Set<LiquorAnswer> liquorAnswers = new LinkedHashSet<>();
 
     protected LiquorQuestion () {}
 
