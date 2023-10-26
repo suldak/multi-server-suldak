@@ -5,6 +5,7 @@ import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
@@ -155,6 +156,56 @@ public class StatsService {
         }
     }
 
+    /**
+     * Weight
+     */
+    public LiquorTagSearchDto getTagListByUserPriKey(
+            Long userPriKey,
+            Integer limitNum,
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        try {
+            List<UserTagDto> userTagDtos = userTagRepository.findByUserPriKey(
+                    userPriKey,
+                    limitNum
+            );
+
+            LiquorTagSearchDto resultDto = LiquorTagSearchDto.emptyListOf();
+            for (UserTagDto dto: userTagDtos) {
+                if (dto.getTagType().equals(TagType.DRINKING_CAPACITY)) {
+                    resultDto.getDrinkingCapacityPriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_ABV)) {
+                    resultDto.getLiquorAbvPriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_DETAIL)) {
+                    resultDto.getLiquorDetailPriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_MATERIAL)) {
+                    resultDto.getMaterialPriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_NAME)) {
+                    resultDto.getLiquorNamePriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_SELL)) {
+                    resultDto.getSellPriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.STATE_TYPE)) {
+                    resultDto.getStatePriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.TASTE_TYPE)) {
+                    resultDto.getTastePriKeys().add(dto.getTagId());
+                } else if (dto.getTagType().equals(TagType.LIQUOR_SNACK)) {
+                    resultDto.getSnackPriKeys().add(dto.getTagId());
+                }
+            }
+            resultDto.setPageNum(pageNum);
+            resultDto.setRecordSize(recordSize);
+            return resultDto;
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    /**
+     * 술에 등록된 태그들을 유저의 집계 테이블에 추가
+     */
     public Boolean countSearchTagCnt(
             Long userPriKey,
             Long liquorPriKey

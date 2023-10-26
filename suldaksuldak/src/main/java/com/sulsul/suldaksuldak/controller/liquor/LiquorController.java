@@ -1,8 +1,10 @@
 package com.sulsul.suldaksuldak.controller.liquor;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
+import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import com.sulsul.suldaksuldak.service.stats.StatsService;
@@ -106,15 +108,15 @@ public class LiquorController {
     }
 
     @ApiOperation(
-            value = "유저 별 추천 술 목록 반환",
-            notes = "유저의 집게 테이블을 기준으로 유저가 많이 검색한 술의 태그로 술을 검색하여 보여줍니다. (유저 인증 Token 필요)"
+            value = "유저 별 추천 술 목록 반환 (술 기준)",
+            notes = "유저의 술 집계 테이블을 기준으로 유저가 많이 검색한 술의 태그로 술을 검색하여 보여줍니다. (유저 인증 Token 필요)"
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
             @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
     })
-    @GetMapping(value = "/liquor-user")
-    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListFromUser(
+    @GetMapping(value = "/user-liquor")
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListFromLiquor(
             HttpServletRequest request,
             Integer pageNum,
             Integer recordSize
@@ -137,6 +139,39 @@ public class LiquorController {
                                 pageNum,
                                 recordSize
                         )
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "유저 별 추천 술 목록 반환 (태그 기준)",
+            notes = "유저의 태그 집계 테이블을 기준으로 유저가 많이 검색한 술의 태그로 술을 검색하여 보여줍니다. (유저 인증 Token 필요)"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
+    })
+    @GetMapping(value = "/user-tag")
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListFromTag(
+            HttpServletRequest request,
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey == null) {
+            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)));
+        }
+        LiquorTagSearchDto liquorTagSearchDto =
+                statsService.getTagListByUserPriKey(
+                        userPriKey,
+                        5,
+                        pageNum,
+                        recordSize
+                );
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorByTag(
+                        liquorTagSearchDto,
+                        UtilTool.getPageable(pageNum, recordSize)
                 )
         );
     }

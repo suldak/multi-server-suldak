@@ -9,6 +9,7 @@ import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.stats.QUserTag.userTag;
@@ -38,6 +39,20 @@ public class UserTagRepositoryImpl
                         )
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public List<UserTagDto> findByUserPriKey(
+            Long userPriKey,
+            Integer limitNum
+    ) {
+        return getUserTagDtoQuery()
+                .from(userTag)
+                .limit(limitNum)
+                .innerJoin(userTag.user, user)
+                .on(userTag.user.id.eq(userPriKey))
+                .orderBy(userTag.weight.desc())
+                .fetch();
     }
 
     private JPAQuery<UserTagDto> getUserTagDtoQuery() {
