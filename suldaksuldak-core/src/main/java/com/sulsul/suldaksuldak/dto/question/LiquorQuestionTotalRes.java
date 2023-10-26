@@ -15,7 +15,7 @@ public class LiquorQuestionTotalRes {
     Integer qIndex;
     @ApiModelProperty(value = "질문 내용")
     String qText;
-    @ApiModelProperty(value = "질문에 답변 목록")
+
     List<LiquorAnswerRes> liquorAnswerRes;
 
     public static LiquorQuestionTotalRes of (

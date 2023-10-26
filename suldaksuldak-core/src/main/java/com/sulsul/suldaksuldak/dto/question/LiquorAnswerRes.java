@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
 @Value
-@ApiModel(value = "프로필 질문의 답변 Req")
+@ApiModel(value = "프로필 질문의 답변 Res")
 public class LiquorAnswerRes {
     @ApiModelProperty(value = "답변 기본키")
     Long priKey;
