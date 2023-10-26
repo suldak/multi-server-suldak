@@ -1,14 +1,24 @@
 package com.sulsul.suldaksuldak.service.stats;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
+import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
+import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
+import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
+import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
+import com.sulsul.suldaksuldak.service.common.LiquorDataService;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,8 +27,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +40,8 @@ public class StatsService {
     private final LiquorRepository liquorRepository;
     private final UserLiquorRepository userLiquorRepository;
     private final LiquorSearchLogRepository liquorSearchLogRepository;
+    private final UserTagRepository userTagRepository;
+    private final LiquorDataService liquorDataService;
 
     /**
      * 유저 - 술 집게 Table에 집계
@@ -139,5 +153,86 @@ public class StatsService {
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
+    }
+
+    public Boolean countSearchTagCnt(
+            Long userPriKey,
+            Long liquorPriKey
+    ) {
+        try {
+            Optional<User> user = userRepository.findById(userPriKey);
+            if (user.isEmpty())
+                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND USER");
+            LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey);
+            HashMap<TagType, List<Long>> tagMap = new HashMap<>();
+            LiquorAbvDto liquorAbvDto = liquorTotalRes.getLiquorAbvDto();
+            if (liquorAbvDto != null) tagMap.put(TagType.LIQUOR_ABV, List.of(liquorAbvDto.getId()));
+            LiquorDetailDto liquorDetailDto = liquorTotalRes.getLiquorDetailDto();
+            if (liquorDetailDto != null) tagMap.put(TagType.LIQUOR_DETAIL, List.of(liquorDetailDto.getId()));
+            DrinkingCapacityDto drinkingCapacityDto = liquorTotalRes.getDrinkingCapacityDto();
+            if (drinkingCapacityDto != null) tagMap.put(TagType.DRINKING_CAPACITY, List.of(drinkingCapacityDto.getId()));
+            LiquorNameDto liquorNameDto = liquorTotalRes.getLiquorNameDto();
+            if (liquorNameDto != null) tagMap.put(TagType.LIQUOR_NAME, List.of(liquorNameDto.getId()));
+            List<LiquorSnackRes> liquorSnackRes = liquorTotalRes.getLiquorSnackRes();
+            if (liquorSnackRes != null && !liquorSnackRes.isEmpty())
+                tagMap.put(TagType.LIQUOR_SNACK,
+                        liquorSnackRes.stream().map(LiquorSnackRes::getId).collect(Collectors.toList()));
+            List<LiquorSellDto> liquorSellDtos = liquorTotalRes.getLiquorSellDtos();
+            if (liquorSellDtos != null && !liquorSellDtos.isEmpty())
+                tagMap.put(TagType.LIQUOR_SELL,
+                        liquorSellDtos.stream().map(LiquorSellDto::getId).collect(Collectors.toList()));
+            List<LiquorMaterialDto> liquorMaterialDtos = liquorTotalRes.getLiquorMaterialDtos();
+            if (liquorMaterialDtos != null && !liquorMaterialDtos.isEmpty())
+                tagMap.put(TagType.LIQUOR_MATERIAL,
+                        liquorMaterialDtos.stream().map(LiquorMaterialDto::getId).collect(Collectors.toList()));
+            List<StateTypeDto> stateTypeDtos = liquorTotalRes.getStateTypeDtos();
+            if (stateTypeDtos != null && !stateTypeDtos.isEmpty())
+                tagMap.put(TagType.STATE_TYPE,
+                        stateTypeDtos.stream().map(StateTypeDto::getId).collect(Collectors.toList()));
+            List<TasteTypeDto> tasteTypeDtos = liquorTotalRes.getTasteTypeDtos();
+            if (tasteTypeDtos != null && !tasteTypeDtos.isEmpty())
+                tagMap.put(TagType.TASTE_TYPE,
+                        tasteTypeDtos.stream().map(TasteTypeDto::getId).collect(Collectors.toList()));
+
+            for (TagType tagType: tagMap.keySet()) {
+                for (Long tagId: tagMap.get(tagType)) {
+                    Optional<UserTagDto> userTagDto =
+                            userTagRepository.findByUserPriKeyAndTagTypeAndTagId(
+                                    userPriKey,
+                                    tagType,
+                                    tagId
+                            );
+                    if (userTagDto.isEmpty()) {
+                        String priKey = tagType + "_" + userPriKey + "_" + tagId;
+                        userTagRepository.save(
+                                UserTagDto.of(
+                                        priKey,
+                                        tagType,
+                                        tagId,
+                                        0.1,
+                                        user.get().getId()
+                                ).toEntity(user.get())
+                        );
+                    } else {
+                        userTagRepository.findById(userTagDto.get().getId())
+                                .ifPresent(
+                                        findEntity -> {
+                                            userTagRepository.save(
+                                                    UserTagDto.updateWeight(
+                                                            findEntity,
+                                                            0.1
+                                                    )
+                                            );
+                                        }
+                                );
+                    }
+                }
+            }
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
     }
 }

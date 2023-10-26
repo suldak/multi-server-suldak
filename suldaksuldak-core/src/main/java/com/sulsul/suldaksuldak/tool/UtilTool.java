@@ -8,10 +8,15 @@ import org.springframework.data.domain.Pageable;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class UtilTool {
+    public static String getLocalDateTimeString() {
+        return Long.toString(LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli());
+    }
     public static String encryptPassword (
             @NotNull String password,
             @NotNull String id

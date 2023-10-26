@@ -52,6 +52,7 @@ public class LiquorDataService {
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
+            // TODO 비동기 처리
             return LiquorTotalRes.of(
                     liquorDto.get(),
                     getLiquorAbvDto(liquorDto.get().getLiquorAbvId()),
@@ -75,6 +76,7 @@ public class LiquorDataService {
             LiquorDto liquorDto
     ) {
         try {
+            // TODO 비동기 처리
             return LiquorTotalRes.of(
                     liquorDto,
                     getLiquorAbvDto(liquorDto.getLiquorAbvId()),
