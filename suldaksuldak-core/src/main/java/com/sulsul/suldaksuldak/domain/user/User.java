@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.question.UserSelect;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
+import com.sulsul.suldaksuldak.domain.stats.UserTag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -107,6 +108,11 @@ public class User extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<UserSelect> userSelects = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<UserTag> userTags = new LinkedHashSet<>();
 
     protected User () {}
 
