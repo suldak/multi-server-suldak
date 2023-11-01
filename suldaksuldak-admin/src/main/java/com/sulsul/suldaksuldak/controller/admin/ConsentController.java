@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/consent/admin")
+@RequestMapping("/api/admin/consent")
 @Api(tags = "[ADMIN] 동의 항목 관련 정보 관리")
 public class ConsentController {
     private final ConsentService consentService;

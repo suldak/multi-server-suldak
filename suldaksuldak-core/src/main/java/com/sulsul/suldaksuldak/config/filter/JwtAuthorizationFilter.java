@@ -78,7 +78,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 "/api/auth/kakao",
                 "/api/auth/naver",
                 "/api/auth/google",
-                "/api/auth/reissue-token"
+                "/api/auth/reissue-token",
+                "/api/admin/auth/login"
     //            "/api/auth/soojibee-access"
         );
 
@@ -110,8 +111,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 chain.doFilter(request, response);
                 return;
             }
-            UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
-            request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
+            if (!request.getRequestURI().startsWith("/api/admin")) {
+                UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
+                request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
+            }
 
     //        logger.debug("---------------------------------");
     //        logger.debug("[+] url: " + request.getRequestURI());

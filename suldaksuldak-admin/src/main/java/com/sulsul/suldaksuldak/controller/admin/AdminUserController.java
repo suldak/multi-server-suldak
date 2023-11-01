@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/user/admin")
+@RequestMapping("/api/admin/user")
 @Api(tags = "[ADMIN] 유저 관련 정보 관리")
 public class AdminUserController {
     private final AdminUserService adminUserService;
