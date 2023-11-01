@@ -21,7 +21,7 @@ public class UserSelectController {
     private final UserSelectService userSelectService;
 
     @ApiOperation(
-            value = "프로필 질문 생성 및 수정",
+            value = "유저의 프로필 질문 생성 및 수정",
             notes = "유저가 프로필 질문에 대한 답변을 생성하거나 수정합니다."
     )
     @PostMapping("/user-select")
