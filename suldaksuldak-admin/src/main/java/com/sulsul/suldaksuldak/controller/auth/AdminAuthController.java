@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.controller.auth;
 import com.sulsul.suldaksuldak.Service.auth.AdminAuthService;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.auth.AdminLoginReq;
 import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
 import com.sulsul.suldaksuldak.dto.auth.AdminUserRes;
 import com.sulsul.suldaksuldak.dto.auth.TokenRes;
@@ -38,13 +39,12 @@ public class AdminAuthController {
     })
     @PostMapping(value = "/login")
     public ApiDataResponse<AdminUserRes> adminLogin(
-            String adminId,
-            String adminPw
+            @RequestBody AdminLoginReq adminLoginReq
     ) {
         try {
-            String encryptedPw = UtilTool.encryptPassword(adminPw, adminId);
+            String encryptedPw = UtilTool.encryptPassword(adminLoginReq.getAdminPw(), adminLoginReq.getAdminId());
             Optional<AdminUserDto> adminUserDto =
-                    adminAuthService.loginAdminUser(adminId, encryptedPw);
+                    adminAuthService.loginAdminUser(adminLoginReq.getAdminPw(), encryptedPw);
             if (adminUserDto.isEmpty()) {
                 throw new GeneralException(ErrorCode.NOT_FOUND, "ID 또는 PW가 없습니다.");
             }

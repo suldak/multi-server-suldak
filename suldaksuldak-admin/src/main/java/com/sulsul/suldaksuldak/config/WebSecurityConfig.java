@@ -39,7 +39,8 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*"); // '*' 대신 허용하려는 도메인을 지정합니다.
+//        configuration.addAllowedOrigin("*"); // '*' 대신 허용하려는 도메인을 지정합니다.
+        configuration.addAllowedOriginPattern("*"); // '*' 대신 허용하려는 도메인을 지정합니다.
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드를 허용합니다.
         configuration.addAllowedHeader("*"); // 모든 헤더를 허용합니다.
         configuration.setAllowCredentials(true);
