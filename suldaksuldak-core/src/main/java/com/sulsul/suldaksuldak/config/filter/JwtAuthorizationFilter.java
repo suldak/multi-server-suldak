@@ -88,6 +88,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+        
+        // 프로필 질문 요청 시 토큰 검사 스킵
+        if (request.getRequestURI().startsWith("/api/question/view")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (request.getRequestURI().startsWith(FileUrl.FILE_DOWN_URL.getUrl())) {
             chain.doFilter(request, response);
