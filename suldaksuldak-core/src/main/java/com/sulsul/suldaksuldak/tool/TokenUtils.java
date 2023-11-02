@@ -181,7 +181,8 @@ public class TokenUtils {
         Calendar c = Calendar.getInstance();
         // TODO: 여기서 RefreshToken 만료시간 관리
 //        c.add(Calendar.DATE, 30);
-        c.add(Calendar.HOUR, 3);
+//        c.add(Calendar.HOUR, 3);
+        c.add(Calendar.MINUTE, 10);
         // c.add(Calendar.DATE, 1);         // 1일
         return c.getTime();
     }

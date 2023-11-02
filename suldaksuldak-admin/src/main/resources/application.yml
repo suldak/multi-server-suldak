@@ -1,5 +1,10 @@
 server:
   port: 8083
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: 140437
+#    keyStoreType: PKCS12
+#    keyAlias: mykey
 
 spring:
   datasource:

@@ -164,7 +164,7 @@ public class UserController {
             HttpServletRequest request
     ) {
         String refreshToken = request.getHeader(SDTokken.REFRESH_HEADER.getText());
-        TokenUtils.removeRefreshToken(refreshToken);
+        TokenUtils.removeRefreshToken(TokenUtils.getTokenFromHeader(refreshToken));
         return ApiDataResponse.of(true);
     }
 

@@ -1,12 +1,10 @@
 package com.sulsul.suldaksuldak.controller.auth;
 
 import com.sulsul.suldaksuldak.Service.auth.AdminAuthService;
+import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.auth.AdminLoginReq;
-import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
-import com.sulsul.suldaksuldak.dto.auth.AdminUserRes;
-import com.sulsul.suldaksuldak.dto.auth.TokenRes;
+import com.sulsul.suldaksuldak.dto.auth.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -18,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,10 +32,6 @@ public class AdminAuthController {
             value = "관리자 로그인",
             notes = "관리자 페이지 로그인"
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "adminId", value = "관리자 ID", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(name = "adminPw", value = "관리자 PW", required = true, dataTypeClass = String.class)
-    })
     @PostMapping(value = "/login")
     public ApiDataResponse<AdminUserRes> adminLogin(
             @RequestBody AdminLoginReq adminLoginReq
@@ -65,28 +60,19 @@ public class AdminAuthController {
             value = "관리자 생성 및 수정",
             notes = "관리자 계정의 정보를 생성하거나 수정합니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priKey", value = "관리자 계정 기본키 (없으면 생성)", dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "adminId", value = "관리자 ID", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(name = "adminPw", value = "관리자 PW", required = true, dataTypeClass = String.class),
-            @ApiImplicitParam(name = "adminNm", value = "관리자 이름", required = true, dataTypeClass = String.class)
-    })
     @PostMapping(value = "/signup")
     public ApiDataResponse<Boolean> signUpAdminUser(
-            Long priKey,
-            String adminId,
-            String adminPw,
-            String adminNm
+            @RequestBody AdminUserReq adminUserReq
     ) {
         try {
-            String encryptedPw = UtilTool.encryptPassword(adminPw, adminId);
+            String encryptedPw = UtilTool.encryptPassword(adminUserReq.getAdminPw(), adminUserReq.getAdminId());
             return ApiDataResponse.of(
                     adminAuthService.createAdminUser(
                             AdminUserDto.of(
-                                    priKey,
-                                    adminId,
+                                    adminUserReq.getPriKey(),
+                                    adminUserReq.getAdminId(),
                                     encryptedPw,
-                                    adminNm
+                                    adminUserReq.getAdminNm()
                             )
                     )
             );
@@ -127,5 +113,18 @@ public class AdminAuthController {
                         priKey
                 )
         );
+    }
+
+    @ApiOperation(
+            value = "관리자 로그아웃",
+            notes = "관리자 계정의 로그아웃"
+    )
+    @PostMapping(value = "/logout")
+    public ApiDataResponse<Boolean> logout(
+            HttpServletRequest request
+    ) {
+        String refreshToken = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        TokenUtils.removeRefreshToken(TokenUtils.getTokenFromHeader(refreshToken));
+        return ApiDataResponse.of(true);
     }
 }
