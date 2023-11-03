@@ -36,6 +36,11 @@ public class LiquorAnswer {
     @OneToMany(mappedBy = "liquorAnswer", cascade = CascadeType.REMOVE)
     private Set<UserSelect> userSelects = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "liquorAnswer", cascade = CascadeType.REMOVE)
+    private Set<AnswerWeight> answerWeights = new LinkedHashSet<>();
+
     protected LiquorAnswer() {}
 
     protected LiquorAnswer(
