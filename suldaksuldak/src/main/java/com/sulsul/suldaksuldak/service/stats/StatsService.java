@@ -4,7 +4,6 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.user.User;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
@@ -19,7 +18,6 @@ import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
-import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -204,6 +202,55 @@ public class StatsService {
     }
 
     /**
+     * UserTag 저장 및 수정
+     */
+    public Boolean countTagCnt(
+            User user,
+            TagType tagType,
+            Long tagId,
+            Double weight
+    ) {
+        try {
+            Long userPriKey = user.getId();
+            Optional<UserTagDto> userTagDto =
+                    userTagRepository.findByUserPriKeyAndTagTypeAndTagId(
+                            userPriKey,
+                            tagType,
+                            tagId
+                    );
+            if (userTagDto.isEmpty()) {
+                String priKey = tagType + "_" + userPriKey + "_" + tagId;
+                userTagRepository.save(
+                        UserTagDto.of(
+                                priKey,
+                                tagType,
+                                tagId,
+                                weight,
+                                userPriKey
+                        ).toEntity(user)
+                );
+            } else {
+                userTagRepository.findById(userTagDto.get().getId())
+                        .ifPresent(
+                                findEntity -> {
+                                    userTagRepository.save(
+                                            UserTagDto.updateWeight(
+                                                    findEntity,
+                                                    weight
+                                            )
+                                    );
+                                }
+                        );
+            }
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+        return true;
+    }
+
+    /**
      * 술에 등록된 태그들을 유저의 집계 테이블에 추가
      */
     public Boolean countSearchTagCnt(
@@ -214,6 +261,23 @@ public class StatsService {
             Optional<User> user = userRepository.findById(userPriKey);
             if (user.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND USER");
+            return countSearchTagCnt(user.get(), liquorPriKey);
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    /**
+     * 술에 등록된 태그들을 유저의 집계 테이블에 추가
+     */
+    public Boolean countSearchTagCnt(
+            User user,
+            Long liquorPriKey
+    ) {
+        try {
+            Long userPriKey = user.getId();
             LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey);
             HashMap<TagType, List<Long>> tagMap = new HashMap<>();
             LiquorAbvDto liquorAbvDto = liquorTotalRes.getLiquorAbvDto();
@@ -247,36 +311,12 @@ public class StatsService {
 
             for (TagType tagType: tagMap.keySet()) {
                 for (Long tagId: tagMap.get(tagType)) {
-                    Optional<UserTagDto> userTagDto =
-                            userTagRepository.findByUserPriKeyAndTagTypeAndTagId(
-                                    userPriKey,
-                                    tagType,
-                                    tagId
-                            );
-                    if (userTagDto.isEmpty()) {
-                        String priKey = tagType + "_" + userPriKey + "_" + tagId;
-                        userTagRepository.save(
-                                UserTagDto.of(
-                                        priKey,
-                                        tagType,
-                                        tagId,
-                                        0.1,
-                                        user.get().getId()
-                                ).toEntity(user.get())
-                        );
-                    } else {
-                        userTagRepository.findById(userTagDto.get().getId())
-                                .ifPresent(
-                                        findEntity -> {
-                                            userTagRepository.save(
-                                                    UserTagDto.updateWeight(
-                                                            findEntity,
-                                                            0.1
-                                                    )
-                                            );
-                                        }
-                                );
-                    }
+                    countTagCnt(
+                            user,
+                            tagType,
+                            tagId,
+                            0.1
+                    );
                 }
             }
         } catch (GeneralException e) {
