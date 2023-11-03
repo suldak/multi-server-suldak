@@ -169,7 +169,7 @@ public class StatsService {
                     limitNum
             );
 
-            LiquorTagSearchDto resultDto = LiquorTagSearchDto.emptyListOf();
+            LiquorTagSearchDto resultDto = LiquorTagSearchDto.emptyListOf(false);
             for (UserTagDto dto: userTagDtos) {
                 if (dto.getTagType().equals(TagType.DRINKING_CAPACITY)) {
                     resultDto.getDrinkingCapacityPriKeys().add(dto.getTagId());

@@ -44,94 +44,194 @@ public class LiquorViewService {
             LiquorTagSearchDto liquorTagSearchDto,
             Pageable pageable
     ) {
+        // TODO 병렬 처리
+        Boolean andBool = liquorTagSearchDto.getAndBool() == null ? true : liquorTagSearchDto.getAndBool();
         try {
             List<Long> resultLiquorPriKey = liquorRepository.findAllLiquorPriKey();
             if (liquorTagSearchDto.getSearchTag() != null && !liquorTagSearchDto.getSearchTag().isBlank()) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        liquorRepository.findBySearchTag(liquorTagSearchDto.getSearchTag())
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            liquorRepository.findBySearchTag(liquorTagSearchDto.getSearchTag())
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            liquorRepository.findBySearchTag(liquorTagSearchDto.getSearchTag())
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorAbvPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        liquorRepository.findByLiquorAbvPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getLiquorAbvPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorAbvPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorAbvPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorAbvPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorAbvPriKeys()
+                            )
+                    );
+                }
+
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorDetailPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        liquorRepository.findByLiquorDetailPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getLiquorDetailPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorDetailPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorDetailPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorDetailPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorDetailPriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getDrinkingCapacityPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        liquorRepository.findByDrinkingCapacityPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getDrinkingCapacityPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            liquorRepository.findByDrinkingCapacityPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getDrinkingCapacityPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            liquorRepository.findByDrinkingCapacityPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getDrinkingCapacityPriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getLiquorNamePriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        liquorRepository.findByLiquorNamePriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getLiquorNamePriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorNamePriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorNamePriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            liquorRepository.findByLiquorNamePriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getLiquorNamePriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getSnackPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        snToLiRepository.findLiquorPriKeyByTagPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getSnackPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            snToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getSnackPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            snToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getSnackPriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getSellPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        slToLiRepository.findLiquorPriKeyByTagPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getSellPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            slToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getSellPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            slToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getSellPriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getStatePriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        stToLiRepository.findLiquorPriKeyByTagPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getStatePriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            stToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getStatePriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            stToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getStatePriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getTastePriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        ttToLiRepository.findLiquorPriKeyByTagPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getTastePriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            ttToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getTastePriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            ttToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getTastePriKeys()
+                            )
+                    );
+                }
             }
             if (UtilTool.checkLongList(liquorTagSearchDto.getMaterialPriKeys())) {
-                resultLiquorPriKey = UtilTool.findOverlappingElements(
-                        resultLiquorPriKey,
-                        mtToLiRepository.findLiquorPriKeyByTagPriKey(
-                                resultLiquorPriKey,
-                                liquorTagSearchDto.getMaterialPriKeys()
-                        )
-                );
+                if (andBool) {
+                    resultLiquorPriKey = UtilTool.findOverlappingElements(
+                            resultLiquorPriKey,
+                            mtToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getMaterialPriKeys()
+                            )
+                    );
+                } else {
+                    resultLiquorPriKey = UtilTool.unionLists(
+                            resultLiquorPriKey,
+                            mtToLiRepository.findLiquorPriKeyByTagPriKey(
+                                    resultLiquorPriKey,
+                                    liquorTagSearchDto.getMaterialPriKeys()
+                            )
+                    );
+                }
             }
             resultLiquorPriKey = UtilTool.removeDuplicates(resultLiquorPriKey);
             log.info(resultLiquorPriKey.toString());

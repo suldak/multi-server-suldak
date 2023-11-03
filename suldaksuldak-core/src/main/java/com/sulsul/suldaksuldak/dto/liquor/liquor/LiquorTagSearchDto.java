@@ -42,12 +42,16 @@ public class LiquorTagSearchDto {
     List<Long> liquorNamePriKeys;
     @ApiModelProperty(value = "술 검색을 위한 문구")
     String searchTag;
+    @ApiModelProperty(value = "true: 태그에 맞는 정확한 검색 (and 조건), false: 태그가 포함된 모든 술 조회 (or 조건)")
+    Boolean andBool;
     @ApiModelProperty(value = "페이지 번호 (0이 시작)")
     Integer pageNum;
     @ApiModelProperty(value = "페이지 사이즈")
     Integer recordSize;
 
-    public static LiquorTagSearchDto emptyListOf() {
+    public static LiquorTagSearchDto emptyListOf(
+            Boolean andBool
+    ) {
         return new LiquorTagSearchDto(
                 new ArrayList<>(),
                 new ArrayList<>(),
@@ -59,6 +63,7 @@ public class LiquorTagSearchDto {
                 new ArrayList<>(),
                 new ArrayList<>(),
                 null,
+                andBool,
                 0,
                 10
         );

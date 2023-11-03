@@ -50,16 +50,9 @@ public class UtilTool {
     }
 
     public static List<Long> unionLists(List<Long> list1, List<Long> list2) {
-        // Create a Set to store unique elements from both lists
         Set<Long> uniqueSet = new HashSet<>();
-
-        // Add elements from the first list to the set
         uniqueSet.addAll(list1);
-
-        // Add elements from the second list to the set
         uniqueSet.addAll(list2);
-
-        // Create a new ArrayList for the result
         return new ArrayList<>(uniqueSet);
     }
 
