@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.question;
 
 import com.sulsul.suldaksuldak.Service.question.LiquorQuestionAdminService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.question.LiquorAnswerReq;
 import com.sulsul.suldaksuldak.dto.question.LiquorQuestionReq;
 import io.swagger.annotations.Api;
@@ -39,16 +40,13 @@ public class LiquorQuestionAdminController {
             value = "프로필 질문 삭제",
             notes = "프로필 질문을 삭제합니다. 해당 질문에 해당하는 모든 값이 삭제됩니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priKey", value = "질문의 기본키", required = true, dataTypeClass = Long.class)
-    })
     @DeleteMapping("/liquor-question")
     public ApiDataResponse<Boolean> deleteLiquorQuestion(
-            Long priKey
+            @RequestBody BasicPriKeyReq basicPriKeyReq
     ) {
         return ApiDataResponse.of(
                 liquorQuestionAdminService.deleteLiquorQuestion(
-                        priKey
+                        basicPriKeyReq.getPriKey()
                 )
         );
     }
@@ -72,16 +70,13 @@ public class LiquorQuestionAdminController {
             value = "프로필 질문의 답변 삭제",
             notes = "프로필 질문의 답변을 삭제합니다. 해당 답변에 연결된 가중치 설정도 삭제됩니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priKey", value = "답변의 기본키", required = true, dataTypeClass = Long.class)
-    })
     @DeleteMapping("/liquor-answer")
     public ApiDataResponse<Boolean> deleteLiquorAnswer(
-            Long priKey
+            @RequestBody BasicPriKeyReq basicPriKeyReq
     ) {
         return ApiDataResponse.of(
                 liquorQuestionAdminService.deleteLiquorAnswer(
-                        priKey
+                        basicPriKeyReq.getPriKey()
                 )
         );
     }

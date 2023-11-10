@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.admin;
 
 import com.sulsul.suldaksuldak.Service.admin.ConsentService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.admin.consent.ConsentItemReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,13 +35,10 @@ public class ConsentController {
             value = "동의 항목 삭제",
             notes = "동의 항목을 삭제합니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priKey", value = "동의 항목 기본키", required = true, dataTypeClass = Long.class)
-    })
     @DeleteMapping(value = "/consent")
     public ApiDataResponse<Boolean> deleteConsent(
-            Long priKey
+            @RequestBody BasicPriKeyReq basicPriKeyReq
     ) {
-        return ApiDataResponse.of(consentService.deleteConsentItem(priKey));
+        return ApiDataResponse.of(consentService.deleteConsentItem(basicPriKeyReq.getPriKey()));
     }
 }

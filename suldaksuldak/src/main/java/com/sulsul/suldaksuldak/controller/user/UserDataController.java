@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.controller.user;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.service.user.UserDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -97,13 +98,12 @@ public class UserDataController {
             value = "유저 탈퇴",
             notes = "유저를 탈퇴 처리 합니다."
     )
-    @ApiImplicitParam(name = "userPriKey", value = "유저 기본키", required = true, dataTypeClass = Long.class)
     @DeleteMapping(value = "/user")
     public ApiDataResponse<Boolean> withdrawalUser(
-            Long userPriKey
+            @RequestBody BasicPriKeyReq basicPriKeyReq
     ) {
         return ApiDataResponse.of(
-                userDataService.withdrawalUser(userPriKey)
+                userDataService.withdrawalUser(basicPriKeyReq.getPriKey())
         );
     }
 

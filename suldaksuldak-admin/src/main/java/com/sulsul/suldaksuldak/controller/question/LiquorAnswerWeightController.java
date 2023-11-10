@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.question;
 
 import com.sulsul.suldaksuldak.Service.question.LiquorAnswerWeightService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.question.AnswerWeightReq;
 import com.sulsul.suldaksuldak.dto.question.AnswerWeightRes;
 import io.swagger.annotations.Api;
@@ -61,15 +62,12 @@ public class LiquorAnswerWeightController {
             value = "답변의 태그 가중치 삭제",
             notes = "답변의 기본키로 해당 데이터를 삭제합니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "priKey", value = "답변에 가중치 기본키", required = true, dataTypeClass = Long.class)
-    })
     @DeleteMapping("/answer-weight")
     public ApiDataResponse<Boolean> deleteAnswerWeight(
-            Long priKey
+            @RequestBody BasicPriKeyReq basicPriKeyReq
     ) {
         return ApiDataResponse.of(
-                liquorAnswerWeightService.deleteAnswerWeight(priKey)
+                liquorAnswerWeightService.deleteAnswerWeight(basicPriKeyReq.getPriKey())
         );
     }
 }
