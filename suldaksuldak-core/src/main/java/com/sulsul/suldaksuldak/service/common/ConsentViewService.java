@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.service.common;
 
+import com.sulsul.suldaksuldak.constant.admin.ConsentItemType;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.admin.consent.ConsentItemDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -17,10 +18,16 @@ public class ConsentViewService {
     private final ConsentItemRepository consentItemRepository;
 
     public List<ConsentItemDto> getConsentList(
-            ConsentItemDto consentItemDto
+//            ConsentItemDto consentItemDto
+            ConsentItemType consentItemType,
+            Integer itemSeq
     ) {
         try {
-            return consentItemRepository.findConsentList(consentItemDto.getItemType(), consentItemDto.getItemSeq());
+            return consentItemRepository
+                    .findConsentList(
+                            consentItemType,
+                            itemSeq
+                    );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
