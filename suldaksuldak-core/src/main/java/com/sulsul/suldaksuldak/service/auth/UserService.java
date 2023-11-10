@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.search.UserSearchReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -114,6 +116,29 @@ public class UserService implements UserDetailsService {
             }
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+        } catch (Exception e) {
+            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public List<UserDto> getUserDtoList(
+            UserSearchReq userSearchReq
+    ) {
+        try {
+            return userRepository.findByOptions(
+                    userSearchReq.getUserEmail(),
+                    userSearchReq.getNickname(),
+                    userSearchReq.getGender(),
+                    userSearchReq.getBirthdayYear(),
+                    userSearchReq.getStartYear(),
+                    userSearchReq.getEndYear(),
+                    userSearchReq.getRegistration(),
+                    userSearchReq.getLevelList(),
+                    userSearchReq.getWarningCntList(),
+                    userSearchReq.getIsActive()
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }

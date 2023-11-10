@@ -2,7 +2,7 @@ package com.sulsul.suldaksuldak.Service.auth;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
-import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
+import com.sulsul.suldaksuldak.dto.admin.user.AdminUserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.admin.auth.AdminUserRepository;
 import lombok.RequiredArgsConstructor;

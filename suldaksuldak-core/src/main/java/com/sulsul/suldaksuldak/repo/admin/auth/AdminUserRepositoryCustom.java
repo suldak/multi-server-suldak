@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.repo.admin.auth;
 
-import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
+import com.sulsul.suldaksuldak.dto.admin.user.AdminUserDto;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,6 +1,7 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.admin.user;
 
 import com.sulsul.suldaksuldak.domain.admin.AdminUser;
+import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import lombok.Value;
 
 import java.time.LocalDateTime;

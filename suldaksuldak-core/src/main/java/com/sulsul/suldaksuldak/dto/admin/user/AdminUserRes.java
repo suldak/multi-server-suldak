@@ -1,5 +1,6 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.admin.user;
 
+import com.sulsul.suldaksuldak.dto.auth.TokenRes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;

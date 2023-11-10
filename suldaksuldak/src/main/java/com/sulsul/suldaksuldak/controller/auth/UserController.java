@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.component.auth.ToNaver;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.admin.user.SocialUserDto;
 import com.sulsul.suldaksuldak.dto.auth.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.auth.UserService;

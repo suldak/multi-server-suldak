@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.component;
 
-import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
+import com.sulsul.suldaksuldak.dto.admin.user.AdminUserDto;
 import com.sulsul.suldaksuldak.repo.admin.auth.AdminUserRepository;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
+import com.sulsul.suldaksuldak.dto.admin.user.SocialUserDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;

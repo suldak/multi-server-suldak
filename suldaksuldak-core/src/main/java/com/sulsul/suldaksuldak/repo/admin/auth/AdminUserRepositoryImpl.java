@@ -5,7 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import static com.sulsul.suldaksuldak.domain.admin.QAdminUser.adminUser;
-import com.sulsul.suldaksuldak.dto.auth.AdminUserDto;
+import com.sulsul.suldaksuldak.dto.admin.user.AdminUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.admin.user;
 
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import lombok.Value;

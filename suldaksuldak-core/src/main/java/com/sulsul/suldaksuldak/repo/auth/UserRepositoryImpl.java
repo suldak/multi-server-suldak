@@ -6,11 +6,14 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
+import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.dto.auth.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -60,6 +63,36 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         )
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public List<UserDto> findByOptions(
+            String userEmail,
+            String nickname,
+            Gender gender,
+            Integer birthdayYear,
+            Integer startYear,
+            Integer endYear,
+            Registration registration,
+            List<Integer> levelList,
+            List<Integer> warningCntList,
+            Boolean isActive
+    ) {
+        return getUserDtoQuery()
+                .from(user)
+                .where(
+                        userEmailLike(userEmail),
+                        nicknameLike(nickname),
+                        genderEq(gender),
+                        birthdayYearEq(birthdayYear),
+                        birthdayYearBtw(startYear, endYear),
+                        registrationEq(registration),
+                        levelListIn(levelList),
+                        warningCntListIn(warningCntList),
+                        isActiveEq(isActive)
+                )
+                .orderBy(user.id.asc())
+                .fetch();
     }
 
     private JPAQuery<UserDto> getUserDtoQuery() {
@@ -112,5 +145,68 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Registration registration
     ) {
         return user.registration.eq(registration);
+    }
+
+    private BooleanExpression userEmailLike(
+            String userEmail
+    ) {
+        return StringUtils.hasText(userEmail) ?
+                user.userEmail.contains(userEmail) : null;
+    }
+
+    private BooleanExpression nicknameLike(
+            String nickname
+    ) {
+        return StringUtils.hasText(nickname) ?
+                user.nickname.contains(nickname) : null;
+    }
+
+    private BooleanExpression genderEq(
+            Gender gender
+    ) {
+        return user.gender.eq(gender);
+    }
+
+    private BooleanExpression birthdayYearEq(
+            Integer birthdayYear
+    ) {
+        return birthdayYear == null || birthdayYear < 0 ?
+                null : user.birthdayYear.eq(birthdayYear);
+    }
+
+    private BooleanExpression birthdayYearBtw(
+            Integer startYear,
+            Integer endYear
+    ) {
+        if (startYear == null || endYear == null || startYear < 0 || endYear < 0)
+            return null;
+        return user.birthdayYear.between(startYear, endYear);
+    }
+
+    private BooleanExpression registrationEq(
+            Registration registration
+    ) {
+        return registration == null ? null :
+                user.registration.eq(registration);
+    }
+
+    private BooleanExpression levelListIn(
+            List<Integer> levelList
+    ) {
+        return levelList == null || levelList.isEmpty() ?
+                null : user.level.in(levelList);
+    }
+
+    private BooleanExpression warningCntListIn(
+            List<Integer> warningCntList
+    ) {
+        return warningCntList == null || warningCntList.isEmpty() ?
+                null : user.warningCnt.in(warningCntList);
+    }
+
+    private BooleanExpression isActiveEq(
+            Boolean isActive
+    ) {
+        return isActive == null ? null : user.isActive.eq(isActive);
     }
 }

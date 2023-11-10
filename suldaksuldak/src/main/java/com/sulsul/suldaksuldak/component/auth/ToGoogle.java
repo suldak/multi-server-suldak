@@ -2,10 +2,8 @@ package com.sulsul.suldaksuldak.component.auth;
 
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
-import com.sulsul.suldaksuldak.dto.auth.SocialUserDto;
-import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.admin.user.SocialUserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
