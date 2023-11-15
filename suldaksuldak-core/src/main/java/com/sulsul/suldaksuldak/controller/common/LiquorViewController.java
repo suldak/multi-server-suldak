@@ -3,7 +3,9 @@ package com.sulsul.suldaksuldak.controller.common;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
+import com.sulsul.suldaksuldak.service.stats.StatsService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,7 +14,13 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "[COMMON] 술 관련 정보 조회")
 public class LiquorViewController {
     private final LiquorViewService liquorViewService;
+    private final StatsService statsService;
+    private final LiquorDataService liquorDataService;
 
     @ApiOperation(
             value = "태그 및 검색 키워드로 술 조회",
@@ -53,6 +63,53 @@ public class LiquorViewController {
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize))
+        );
+    }
+
+    @ApiOperation(
+            value = "기간 별 인기 술 목록 조회",
+            notes = "기간 별로 많이 검색되었던 술 목록을 조회합니다. (Pageable)"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10"),
+            @ApiImplicitParam(name = "startAt", value = "검색 시작 일시 (yyyy-MM-dd'T'HH:mm:ss)", required = true, dataTypeClass = String.class, example = "2023-10-05T00:00:00"),
+            @ApiImplicitParam(name = "endAt", value = "검색 끝 일시 (yyyy-MM-dd'T'HH:mm:ss)", required = true, dataTypeClass = String.class, example = "2023-10-06T00:00:00", defaultValue = "LocalDateTime.now()")
+    })
+    @GetMapping(value = "/liquor-date-range")
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByDateRange(
+            Integer pageNum,
+            Integer recordSize,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+            LocalDateTime startAt,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+            LocalDateTime endAt
+    ) {
+        Page<Long> liquorPriKeyList =
+                statsService.getLiquorDataByLogStats(
+                        startAt,
+                        endAt == null ? LocalDateTime.now() : endAt,
+                        UtilTool.getPageable(pageNum, recordSize)
+                );
+        if (liquorPriKeyList.getContent().isEmpty()) {
+            return ApiDataResponse.of(
+                    new PageImpl<>(
+                            List.of(),
+                            liquorPriKeyList.getPageable(),
+                            liquorPriKeyList.getTotalElements()
+                    )
+            );
+        }
+        List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
+        for (Long liquorPriKey: liquorPriKeyList.getContent()) {
+            liquorTotalRes.add(liquorDataService.getLiquorTotalData(liquorPriKey));
+        }
+        return ApiDataResponse.of(
+                new PageImpl<>(
+                        liquorTotalRes,
+                        liquorPriKeyList.getPageable(),
+                        liquorPriKeyList.getTotalElements()
+                )
         );
     }
 }
