@@ -9,6 +9,10 @@ spring:
     password: 1234
   main:
     allow-bean-definition-overriding: 'true'
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: create
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
