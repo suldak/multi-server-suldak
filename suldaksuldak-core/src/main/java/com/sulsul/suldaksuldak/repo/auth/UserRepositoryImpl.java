@@ -164,13 +164,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     private BooleanExpression genderEq(
             Gender gender
     ) {
-        return user.gender.eq(gender);
+        return gender == null ? null :
+                user.gender.eq(gender);
     }
 
     private BooleanExpression birthdayYearEq(
             Integer birthdayYear
     ) {
-        return birthdayYear == null || birthdayYear < 0 ?
+        return birthdayYear == null || birthdayYear <= 0 ?
                 null : user.birthdayYear.eq(birthdayYear);
     }
 
@@ -178,7 +179,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Integer startYear,
             Integer endYear
     ) {
-        if (startYear == null || endYear == null || startYear < 0 || endYear < 0)
+        if (startYear == null || endYear == null || startYear <= 0 || endYear <= 0)
             return null;
         return user.birthdayYear.between(startYear, endYear);
     }
