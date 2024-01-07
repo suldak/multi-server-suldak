@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.question.UserSelectReq;
 import com.sulsul.suldaksuldak.dto.question.UserSelectRes;
 import com.sulsul.suldaksuldak.service.question.UserSelectService;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +29,13 @@ public class UserSelectController {
     )
     @PostMapping("/user-select")
     public ApiDataResponse<Boolean> createUserSelect(
+            HttpServletRequest request,
             @RequestBody UserSelectReq userSelectReq
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         return ApiDataResponse.of(
                 userSelectService.createUserSelectData(
+                        userPriKey,
                         userSelectReq
                 )
         );
@@ -39,13 +45,15 @@ public class UserSelectController {
             value = "유저의 프로필 질문 답변 조회",
             notes = "유저가 선택한 프로필 질문의 답변들을 조회합니다."
     )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userPriKey", value = "유저의 기본키", required = true, dataTypeClass = Long.class)
-    })
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "userPriKey", value = "유저의 기본키", required = true, dataTypeClass = Long.class)
+//    })
     @GetMapping(value = "/user-select")
     public ApiDataResponse<UserSelectRes> getUserSelectRes(
-            Long userPriKey
+            HttpServletRequest request
+//            Long userPriKey
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         return ApiDataResponse.of(
                 userSelectService.getUserSelectRes(userPriKey)
         );

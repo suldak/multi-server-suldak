@@ -30,6 +30,10 @@ public class UtilTool {
         return new String(Base64.encodeBase64(hashValue, false));
     }
 
+    /**
+     * 사용자의 Request Header 에서
+     * Token을 분석하여 userPriKey를 조회
+     */
     public static Long getUserPriKeyFromHeader(HttpServletRequest request) {
         return request.getAttribute(SDTokken.USER_PRI_KEY.getText()) == null ? null :
                 (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());

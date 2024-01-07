@@ -39,23 +39,22 @@ public class UserSelectService {
     private final StatsService statsService;
 
     public Boolean createUserSelectData (
+            Long userPriKey,
             UserSelectReq userSelectReq
     ) {
         try {
             // 유저 기본키가 없으면 오류 발생
-            if (userSelectReq.getUserPriKey() == null)
+            if (userPriKey == null)
                 throw new GeneralException(ErrorCode.BAD_REQUEST, "USER PRI KEY NULL");
 
             // 유저를 기본키로 찾고, 찾지 못하면 오류 발생
-            Optional<User> user = userRepository.findById(userSelectReq.getUserPriKey());
+            Optional<User> user = userRepository.findById(userPriKey);
             if (user.isEmpty())
                 throw new GeneralException(ErrorCode.BAD_REQUEST, "NOT FOUND USER DATA");
 
             // 해당 유저에 이미 있던 답변 가중치 조회 및 감소
             List<UserSelectDto> userSelectDtos = userSelectRepository
-                    .findByUserPriKey(
-                            userSelectReq.getUserPriKey()
-                    );
+                    .findByUserPriKey(userPriKey);
             for (UserSelectDto userSelectDto: userSelectDtos) {
                 List<AnswerWeightDto> answerWeightDtos =
                         answerWeightRepository.findByLiquorAnswerPriKey(

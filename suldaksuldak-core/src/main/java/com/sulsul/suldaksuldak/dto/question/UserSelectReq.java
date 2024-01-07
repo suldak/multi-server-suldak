@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "유저의 프로필 질문의 답변 Req")
 public class UserSelectReq {
-    @ApiModelProperty(value = "유저 기본키", required = true)
-    Long userPriKey;
+//    @ApiModelProperty(value = "유저 기본키", required = true)
+//    Long userPriKey;
     List<QuestionAnswerObj> questionAnswerMap;
 
     @Setter
