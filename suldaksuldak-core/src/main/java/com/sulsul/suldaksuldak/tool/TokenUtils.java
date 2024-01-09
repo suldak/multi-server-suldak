@@ -261,11 +261,18 @@ public class TokenUtils {
             log.info("LOGIN USER IS EMPTY");
             return;
         }
+        List<String> removeKeyList = new ArrayList<>();
         for (String key: jwtRefreshMap.keySet()) {
             if (!isValidToken(key)) {
-                log.info("{} << token is not valid", key);
-                jwtRefreshMap.remove(key);
+//                log.info("{} << token is not valid", key);
+//                jwtRefreshMap.remove(key);
+                removeKeyList.add(key);
             }
+        }
+
+        for (String key: removeKeyList) {
+            log.info("{} << token is not valid", key);
+            jwtRefreshMap.remove(key);
         }
     }
 }
