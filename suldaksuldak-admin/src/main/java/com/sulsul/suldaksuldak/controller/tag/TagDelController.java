@@ -2,7 +2,6 @@ package com.sulsul.suldaksuldak.controller.tag;
 
 import com.sulsul.suldaksuldak.Service.tag.TagDelService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.tag.TagPriKeyReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -10,7 +9,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,12 +25,15 @@ public class TagDelController {
             value = "주량 삭제",
             notes = "주량 정보를 삭제합니다."
     )
-    @DeleteMapping(value = "/drinking-capacity")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/drinking-capacity/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteDrinkingCapacity(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteDrinkingCapacity(tagPriKeyReq.getPriKey())
+                tagDelService.deleteDrinkingCapacity(priKey)
         );
     }
 
@@ -39,12 +41,15 @@ public class TagDelController {
             value = "도수 삭제",
             notes = "도수 정보를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-abv")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-abv/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorAbv(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorAbv(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorAbv(priKey)
         );
     }
 
@@ -52,12 +57,15 @@ public class TagDelController {
             value = "2차 분류 삭제",
             notes = "2차 분류를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-detail")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-detail/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorDetail(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorDetail(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorDetail(priKey)
         );
     }
 
@@ -65,12 +73,15 @@ public class TagDelController {
             value = "재료 삭제",
             notes = "재료 정보를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-material")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-material/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorMaterial(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorMaterial(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorMaterial(priKey)
         );
     }
 
@@ -78,12 +89,15 @@ public class TagDelController {
             value = "1차 분류 삭제",
             notes = "1차 분류를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-name")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-name/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorName(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorName(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorName(priKey)
         );
     }
 
@@ -91,12 +105,15 @@ public class TagDelController {
             value = "판매처 삭제",
             notes = "판매처를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-sell")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-sell/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorSell(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorSell(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorSell(priKey)
         );
     }
 
@@ -104,24 +121,30 @@ public class TagDelController {
             value = "상태 정보 삭제",
             notes = "상태 정보를 삭제합니다."
     )
-    @DeleteMapping(value = "/state-type")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/state-type/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteStateType(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteStateType(tagPriKeyReq.getPriKey())
+                tagDelService.deleteStateType(priKey)
         );
     }
     @ApiOperation(
             value = "맛 정보 삭제",
             notes = "맛 정보를 삭제합니다."
     )
-    @DeleteMapping(value = "/taste-type")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/taste-type/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteTasteType(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteTasteType(tagPriKeyReq.getPriKey())
+                tagDelService.deleteTasteType(priKey)
         );
     }
 
@@ -129,12 +152,15 @@ public class TagDelController {
             value = "안주 삭제",
             notes = "안주를 삭제합니다."
     )
-    @DeleteMapping(value = "/liquor-snack")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "태그의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping(value = "/liquor-snack/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorSnack(
-            @RequestBody TagPriKeyReq tagPriKeyReq
+            @PathVariable Long priKey
     ) {
         return ApiDataResponse.of(
-                tagDelService.deleteLiquorSnack(tagPriKeyReq.getPriKey())
+                tagDelService.deleteLiquorSnack(priKey)
         );
     }
 }
