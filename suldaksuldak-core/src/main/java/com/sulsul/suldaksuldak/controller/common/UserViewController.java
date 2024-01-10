@@ -8,8 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,11 +24,12 @@ public class UserViewController {
 
     @ApiOperation(
             value = "유저 목록 조회",
-            notes = "여러 조건을 기준으로 유저 목록 조회 (Body가 복잡해서 POST로 수정)"
+            notes = "여러 조건을 기준으로 유저 목록 조회"
     )
-    @PostMapping(value = "/user")
+//    @PostMapping(value = "/user")
+    @GetMapping(value = "/user")
     public ApiDataResponse<List<UserRes>> getUserDataList(
-            @RequestBody UserSearchReq userSearchReq
+            UserSearchReq userSearchReq
     ) {
         return ApiDataResponse.of(
                 userService.getUserDtoList(
