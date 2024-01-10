@@ -12,8 +12,8 @@ import lombok.*;
 @NoArgsConstructor
 @ApiModel(value = "차단 유저 Request")
 public class CutOffUserReq {
-    @ApiModelProperty(value = "해당 유저의 기본키")
-    Long userId;
+//    @ApiModelProperty(value = "해당 유저의 기본키")
+//    Long userId;
     @ApiModelProperty(value = "차단 할 (당한) 유저의 기본키")
     Long cutUserId;
 }
