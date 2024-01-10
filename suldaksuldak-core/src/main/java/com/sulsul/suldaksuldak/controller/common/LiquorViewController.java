@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,11 +36,12 @@ public class LiquorViewController {
 
     @ApiOperation(
             value = "태그 및 검색 키워드로 술 조회",
-            notes = "태그와 검색 키워드에 해당되는 술 목록을 조회합니다. (Body가 복잡해서 POST로 수정)"
+            notes = "태그와 검색 키워드에 해당되는 술 목록을 조회합니다."
     )
-    @PostMapping(value = "/liquor-search")
+//    @PostMapping(value = "/liquor-search")
+    @GetMapping(value = "/liquor-search")
     public ApiDataResponse<Page<LiquorTotalRes>> getLiquorByTags(
-            @RequestBody LiquorTagSearchDto liquorTagSearchDto
+            LiquorTagSearchDto liquorTagSearchDto
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(
