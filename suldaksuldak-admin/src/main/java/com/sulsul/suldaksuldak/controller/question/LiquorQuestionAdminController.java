@@ -2,7 +2,6 @@ package com.sulsul.suldaksuldak.controller.question;
 
 import com.sulsul.suldaksuldak.Service.question.LiquorQuestionAdminService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.question.LiquorAnswerReq;
 import com.sulsul.suldaksuldak.dto.question.LiquorQuestionReq;
 import io.swagger.annotations.Api;
@@ -40,14 +39,15 @@ public class LiquorQuestionAdminController {
             value = "프로필 질문 삭제",
             notes = "프로필 질문을 삭제합니다. 해당 질문에 해당하는 모든 값이 삭제됩니다."
     )
-    @DeleteMapping("/liquor-question")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "liquorQPriKey", value = "질문의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping("/liquor-question/{liquorQPriKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorQuestion(
-            @RequestBody BasicPriKeyReq basicPriKeyReq
+            @PathVariable Long liquorQPriKey
     ) {
         return ApiDataResponse.of(
-                liquorQuestionAdminService.deleteLiquorQuestion(
-                        basicPriKeyReq.getPriKey()
-                )
+                liquorQuestionAdminService.deleteLiquorQuestion(liquorQPriKey)
         );
     }
 
@@ -70,14 +70,15 @@ public class LiquorQuestionAdminController {
             value = "프로필 질문의 답변 삭제",
             notes = "프로필 질문의 답변을 삭제합니다. 해당 답변에 연결된 가중치 설정도 삭제됩니다."
     )
-    @DeleteMapping("/liquor-answer")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "liquorAPriKey", value = "답변의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping("/liquor-answer/{liquorAPriKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteLiquorAnswer(
-            @RequestBody BasicPriKeyReq basicPriKeyReq
+            @PathVariable Long liquorAPriKey
     ) {
         return ApiDataResponse.of(
-                liquorQuestionAdminService.deleteLiquorAnswer(
-                        basicPriKeyReq.getPriKey()
-                )
+                liquorQuestionAdminService.deleteLiquorAnswer(liquorAPriKey)
         );
     }
 }
