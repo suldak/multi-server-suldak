@@ -4,10 +4,11 @@ import com.sulsul.suldaksuldak.Service.auth.AdminAuthService;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.admin.user.AdminUserDto;
 import com.sulsul.suldaksuldak.dto.admin.user.AdminUserRes;
-import com.sulsul.suldaksuldak.dto.auth.*;
+import com.sulsul.suldaksuldak.dto.auth.AdminLoginReq;
+import com.sulsul.suldaksuldak.dto.auth.AdminUserReq;
+import com.sulsul.suldaksuldak.dto.auth.TokenRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -102,14 +103,12 @@ public class AdminAuthController {
             value = "관리자 삭제",
             notes = "관리자 계정을 삭제 합니다."
     )
-    @DeleteMapping(value = "/admin-user")
+    @DeleteMapping(value = "/admin-user/{userPriKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteAdminUser(
-            @RequestBody BasicPriKeyReq basicPriKeyReq
+            @PathVariable Long userPriKey
     ) {
         return ApiDataResponse.of(
-                adminAuthService.deleteAdminUser(
-                        basicPriKeyReq.getPriKey()
-                )
+                adminAuthService.deleteAdminUser(userPriKey)
         );
     }
 
