@@ -2,7 +2,6 @@ package com.sulsul.suldaksuldak.controller.question;
 
 import com.sulsul.suldaksuldak.Service.question.LiquorAnswerWeightService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.BasicPriKeyReq;
 import com.sulsul.suldaksuldak.dto.question.AnswerWeightReq;
 import com.sulsul.suldaksuldak.dto.question.AnswerWeightRes;
 import io.swagger.annotations.Api;
@@ -44,9 +43,9 @@ public class LiquorAnswerWeightController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "liquorAnswerPriKey", value = "답변의 기본키", required = true, dataTypeClass = Long.class)
     })
-    @GetMapping("/answer-weight")
+    @GetMapping("/answer-weight/{liquorAnswerPriKey:[0-9]+}")
     public ApiDataResponse<List<AnswerWeightRes>> getAnswerWeightRes(
-            Long liquorAnswerPriKey
+            @PathVariable Long liquorAnswerPriKey
     ) {
         return ApiDataResponse.of(
                 liquorAnswerWeightService
@@ -62,12 +61,15 @@ public class LiquorAnswerWeightController {
             value = "답변의 태그 가중치 삭제",
             notes = "답변의 기본키로 해당 데이터를 삭제합니다."
     )
-    @DeleteMapping("/answer-weight")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "liquorAnswerPriKey", value = "답변의 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping("/answer-weight/{liquorAnswerPriKey:[0-9]+}")
     public ApiDataResponse<Boolean> deleteAnswerWeight(
-            @RequestBody BasicPriKeyReq basicPriKeyReq
+            @PathVariable Long liquorAnswerPriKey
     ) {
         return ApiDataResponse.of(
-                liquorAnswerWeightService.deleteAnswerWeight(basicPriKeyReq.getPriKey())
+                liquorAnswerWeightService.deleteAnswerWeight(liquorAnswerPriKey)
         );
     }
 }
