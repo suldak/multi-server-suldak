@@ -35,8 +35,12 @@ public class UtilTool {
      * Token을 분석하여 userPriKey를 조회
      */
     public static Long getUserPriKeyFromHeader(HttpServletRequest request) {
-        return request.getAttribute(SDTokken.USER_PRI_KEY.getText()) == null ? null :
-                (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
+        try {
+            return request.getAttribute(SDTokken.USER_PRI_KEY.getText()) == null ? null :
+                    (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static Pageable getPageable(
