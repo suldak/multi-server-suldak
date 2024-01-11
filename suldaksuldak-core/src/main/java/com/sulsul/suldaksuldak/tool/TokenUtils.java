@@ -262,12 +262,16 @@ public class TokenUtils {
             return;
         }
         List<String> removeKeyList = new ArrayList<>();
-        for (String key: jwtRefreshMap.keySet()) {
-            if (!isValidToken(key)) {
+        try {
+            for (String key: jwtRefreshMap.keySet()) {
+                if (!isValidToken(key)) {
 //                log.info("{} << token is not valid", key);
 //                jwtRefreshMap.remove(key);
-                removeKeyList.add(key);
+                    removeKeyList.add(key);
+                }
             }
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
         for (String key: removeKeyList) {
