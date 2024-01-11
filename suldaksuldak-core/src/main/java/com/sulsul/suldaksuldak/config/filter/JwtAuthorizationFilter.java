@@ -81,7 +81,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 "/api/auth/naver",
                 "/api/auth/google",
                 "/api/auth/reissue-token",
-                "/api/admin/auth/login"
+                "/api/admin/auth/login",
+                // 닉네임 중복 체그
+                "/api/user/user-nickname"
     //            "/api/auth/soojibee-access"
         );
 
