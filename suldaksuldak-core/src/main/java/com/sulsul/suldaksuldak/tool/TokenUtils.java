@@ -46,7 +46,7 @@ public class TokenUtils {
                 .setClaims(Jwts.claims().setSubject(refreshUUIDToken)) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setHeader(createHeader())
-                .setExpiration(createRefreshDate()) // set Expire Time
+//                .setExpiration(createRefreshDate()) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
