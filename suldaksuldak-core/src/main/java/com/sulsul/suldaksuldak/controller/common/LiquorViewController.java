@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
@@ -41,12 +42,16 @@ public class LiquorViewController {
 //    @PostMapping(value = "/liquor-search")
     @GetMapping(value = "/liquor-search")
     public ApiDataResponse<Page<LiquorTotalRes>> getLiquorByTags(
-            LiquorTagSearchDto liquorTagSearchDto
+//            LiquorTagSearchDto liquorTagSearchDto
+            LiquorTagSearchReq liquorTagSearchReq
     ) {
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(
-                        liquorTagSearchDto,
-                        UtilTool.getPageable(liquorTagSearchDto.getPageNum(), liquorTagSearchDto.getRecordSize())
+                        liquorTagSearchReq.toDto(),
+                        UtilTool.getPageable(
+                                liquorTagSearchReq.getPageNum(),
+                                liquorTagSearchReq.getRecordSize()
+                        )
                 )
         );
     }

@@ -1,6 +1,8 @@
 package com.sulsul.suldaksuldak.tool;
 
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.exception.GeneralException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +42,35 @@ public class UtilTool {
                     (Long) request.getAttribute(SDTokken.USER_PRI_KEY.getText());
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static <T> List<T> getSplitList(
+            String targetStr,
+            Class<T> type
+    ) {
+        List<T> resultList = new ArrayList<>();
+        if (targetStr == null || targetStr.isBlank()) {
+            return null;
+        }
+        String[] tokens = targetStr.split(",");
+        Arrays.stream(tokens).forEach(token -> {
+            T convertedValue = convertStringToType(token.trim(), type);
+            resultList.add(convertedValue);
+        });
+
+        return resultList;
+    }
+
+    private static <T> T convertStringToType(String value, Class<T> type) {
+        if (type.equals(Integer.class)) {
+            return type.cast(Integer.parseInt(value));
+        } else if (type.equals(Long.class)) {
+            return type.cast(Long.parseLong(value));
+        } else if (type.equals(String.class)) {
+            return type.cast(value);
+        } else {
+            throw new GeneralException(ErrorCode.INTERNAL_ERROR, "원하는 자료형으로 변환할 수 없습니다.");
         }
     }
 

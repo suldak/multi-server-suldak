@@ -49,6 +49,38 @@ public class LiquorTagSearchDto {
     @ApiModelProperty(value = "페이지 사이즈")
     Integer recordSize;
 
+    public static LiquorTagSearchDto of (
+            List<Long> snackPriKeys,
+            List<Long> sellPriKeys,
+            List<Long> materialPriKeys,
+            List<Long> statePriKeys,
+            List<Long> tastePriKeys,
+            List<Long> liquorAbvPriKeys,
+            List<Long> liquorDetailPriKeys,
+            List<Long> drinkingCapacityPriKeys,
+            List<Long> liquorNamePriKeys,
+            String searchTag,
+            Boolean andBool,
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        return new LiquorTagSearchDto(
+                snackPriKeys,
+                sellPriKeys,
+                materialPriKeys,
+                statePriKeys,
+                tastePriKeys,
+                liquorAbvPriKeys,
+                liquorDetailPriKeys,
+                drinkingCapacityPriKeys,
+                liquorNamePriKeys,
+                searchTag,
+                andBool,
+                pageNum,
+                recordSize
+        );
+    }
+
     public static LiquorTagSearchDto emptyListOf(
             Boolean andBool
     ) {

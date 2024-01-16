@@ -30,10 +30,12 @@ public class UserSearchReq {
     Integer endYear;
     @ApiModelProperty(value = "가입 방법")
     Registration registration;
-    @ApiModelProperty(value = "유저 레빌 리스트 (검색하고 싶은 레벨을 리스트에 넣어주세요)")
-    List<Integer> levelList;
-    @ApiModelProperty(value = "유저 경고 점수 (검색하고 싶은 경고 점수를 리스트에 넣어주세요)")
-    List<Integer> warningCntList;
+    @ApiModelProperty(value = "유저 레벨 리스트 (검색하고 싶은 레벨을 \",\"를 기준으로 입력해주세요.)")
+//    List<Integer> levelList;
+    String levelList;
+    @ApiModelProperty(value = "유저 경고 점수 (검색하고 싶은 경고 점수를 \",\"를 기준으로 입력해주세요.)")
+//    List<Integer> warningCntList;
+    String warningCntList;
     @ApiModelProperty(value = "유저 탈퇴 여부")
     Boolean isActive;
 }
