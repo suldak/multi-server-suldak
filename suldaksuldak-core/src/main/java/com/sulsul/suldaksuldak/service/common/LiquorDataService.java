@@ -19,13 +19,18 @@ import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LiquorDataService {
     private final LiquorRepository liquorRepository;
     private final LiquorAbvRepository liquorAbvRepository;
@@ -52,18 +57,8 @@ public class LiquorDataService {
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
-            // TODO 비동기 처리
-            return LiquorTotalRes.of(
-                    liquorDto.get(),
-                    getLiquorAbvDto(liquorDto.get().getLiquorAbvId()),
-                    getLiquorDetailDto(liquorDto.get().getLiquorDetailId()),
-                    getDrinkingCapacityDto(liquorDto.get().getDrinkingCapacityId()),
-                    getLiquorNameDto(liquorDto.get().getLiquorNameId()),
-                    getLiquorSnackDtoList(liquorDto.get().getId()),
-                    getLiquorSellDtoList(liquorDto.get().getId()),
-                    getLiquorMaterialDtoList(liquorDto.get().getId()),
-                    getStateTypeDtoList(liquorDto.get().getId()),
-                    getTasteTypeDtoList(liquorDto.get().getId())
+            return getLiquorTotalData(
+                    liquorDto.get()
             );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
@@ -76,18 +71,90 @@ public class LiquorDataService {
             LiquorDto liquorDto
     ) {
         try {
-            // TODO 비동기 처리
+            long startTime = System.currentTimeMillis();
+            ExecutorService executor = Executors.newFixedThreadPool(9);
+
+            CompletableFuture<Optional<LiquorAbvDto>> liquorAbvCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorAbvDto(liquorDto.getLiquorAbvId()), executor
+                    );
+
+            CompletableFuture<Optional<LiquorDetailDto>> liquorDetailCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorDetailDto(liquorDto.getLiquorDetailId()), executor
+                    );
+
+            CompletableFuture<Optional<DrinkingCapacityDto>> liquorDrinkCpCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getDrinkingCapacityDto(liquorDto.getDrinkingCapacityId()), executor
+                    );
+
+            CompletableFuture<Optional<LiquorNameDto>> liquorNameCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorNameDto(liquorDto.getLiquorNameId()), executor
+                    );
+
+            CompletableFuture<List<LiquorSnackDto>> liquorSnackCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorSnackDtoList(liquorDto.getId()), executor
+                    );
+
+            CompletableFuture<List<LiquorSellDto>> liquorSellCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorSellDtoList(liquorDto.getId()), executor
+                    );
+
+            CompletableFuture<List<LiquorMaterialDto>> liquorMtCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorMaterialDtoList(liquorDto.getId()), executor
+                    );
+
+            CompletableFuture<List<StateTypeDto>> liquorStateCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getStateTypeDtoList(liquorDto.getId()), executor
+                    );
+
+            CompletableFuture<List<TasteTypeDto>> liquorTasteCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getTasteTypeDtoList(liquorDto.getId()), executor
+                    );
+
+            CompletableFuture<Void> allOf = CompletableFuture.allOf(
+                    liquorAbvCompletableFuture,
+                    liquorDetailCompletableFuture,
+                    liquorDrinkCpCompletableFuture,
+                    liquorNameCompletableFuture,
+                    liquorSnackCompletableFuture,
+                    liquorSellCompletableFuture,
+                    liquorMtCompletableFuture,
+                    liquorStateCompletableFuture,
+                    liquorTasteCompletableFuture
+            );
+
+            allOf.get();
+
+            Optional<LiquorAbvDto> liquorAbvDto = liquorAbvCompletableFuture.get();
+            Optional<LiquorDetailDto> liquorDetailDto = liquorDetailCompletableFuture.get();
+            Optional<DrinkingCapacityDto> drinkingCapacityDto = liquorDrinkCpCompletableFuture.get();
+            Optional<LiquorNameDto> liquorNameDto = liquorNameCompletableFuture.get();
+            List<LiquorSnackDto> liquorSnackDtos = liquorSnackCompletableFuture.get();
+            List<LiquorSellDto> liquorSellDtos = liquorSellCompletableFuture.get();
+            List<LiquorMaterialDto> liquorMaterialDtos = liquorMtCompletableFuture.get();
+            List<StateTypeDto> stateTypeDtos = liquorStateCompletableFuture.get();
+            List<TasteTypeDto> tasteTypeDtos = liquorTasteCompletableFuture.get();
+
+            log.info("[{} 조회] >> {}", liquorDto.getName(), (System.currentTimeMillis() - startTime) / 1000.0);
             return LiquorTotalRes.of(
                     liquorDto,
-                    getLiquorAbvDto(liquorDto.getLiquorAbvId()),
-                    getLiquorDetailDto(liquorDto.getLiquorDetailId()),
-                    getDrinkingCapacityDto(liquorDto.getDrinkingCapacityId()),
-                    getLiquorNameDto(liquorDto.getLiquorNameId()),
-                    getLiquorSnackDtoList(liquorDto.getId()),
-                    getLiquorSellDtoList(liquorDto.getId()),
-                    getLiquorMaterialDtoList(liquorDto.getId()),
-                    getStateTypeDtoList(liquorDto.getId()),
-                    getTasteTypeDtoList(liquorDto.getId())
+                    liquorAbvDto,
+                    liquorDetailDto,
+                    drinkingCapacityDto,
+                    liquorNameDto,
+                    liquorSnackDtos,
+                    liquorSellDtos,
+                    liquorMaterialDtos,
+                    stateTypeDtos,
+                    tasteTypeDtos
             );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
