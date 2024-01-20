@@ -15,6 +15,7 @@ import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.st.StToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.tt.TtToLiRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
+import com.sulsul.suldaksuldak.service.search.SearchService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorViewService {
+    private final SearchService searchService;
     private final LiquorDataService liquorDataService;
     private final LiquorRepository liquorRepository;
     private final SnToLiRepository snToLiRepository;
@@ -41,6 +43,7 @@ public class LiquorViewService {
     private final MtToLiRepository mtToLiRepository;
 
     public Page<LiquorTotalRes> getLiquorByTag(
+            Long userPriKey,
             LiquorTagSearchDto liquorTagSearchDto,
             Pageable pageable
     ) {
@@ -49,6 +52,13 @@ public class LiquorViewService {
         try {
             List<Long> resultLiquorPriKey = liquorRepository.findAllLiquorPriKey();
             if (liquorTagSearchDto.getSearchTag() != null && !liquorTagSearchDto.getSearchTag().isBlank()) {
+                // =============
+                if (userPriKey != null)
+                    searchService.createSearchLog(
+                            userPriKey,
+                            liquorTagSearchDto.getSearchTag()
+                    );
+                // =============
                 if (andBool) {
                     resultLiquorPriKey = UtilTool.findOverlappingElements(
                             resultLiquorPriKey,

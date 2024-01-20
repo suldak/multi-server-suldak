@@ -1,7 +1,6 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +43,14 @@ public class LiquorViewController {
     @GetMapping(value = "/liquor-search")
     public ApiDataResponse<Page<LiquorTotalRes>> getLiquorByTags(
 //            LiquorTagSearchDto liquorTagSearchDto
+            HttpServletRequest request,
             LiquorTagSearchReq liquorTagSearchReq
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(
+                        userPriKey,
                         liquorTagSearchReq.toDto(),
                         UtilTool.getPageable(
                                 liquorTagSearchReq.getPageNum(),

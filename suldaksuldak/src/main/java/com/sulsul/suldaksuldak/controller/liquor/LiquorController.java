@@ -120,6 +120,7 @@ public class LiquorController {
                 );
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(
+                        userPriKey,
                         liquorTagSearchDto,
                         UtilTool.getPageable(pageNum, recordSize)
                 )
@@ -164,6 +165,7 @@ public class LiquorController {
                     );
             return ApiDataResponse.of(
                     liquorViewService.getLiquorByTag(
+                            userPriKey,
                             liquorTagSearchDto,
                             UtilTool.getPageable(pageNum, recordSize)
                     )
