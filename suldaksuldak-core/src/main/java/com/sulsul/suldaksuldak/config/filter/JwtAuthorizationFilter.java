@@ -117,6 +117,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
             if (refreshHeader == null || refreshHeader.isBlank() || refreshHeader.equals("null"))
                 throw new GeneralException(ErrorCode.BUSINESS_EXCEPTION_ERROR);
+            // admin
+            if (request.getServerPort() == 8083)
+                request.setAttribute(SDTokken.ADMIN.getText(), "ADMIN");
+            else
+                request.setAttribute(SDTokken.ADMIN.getText(), "USER");
+
             if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
                 chain.doFilter(request, response);
                 return;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum SDTokken {
 //    REFRESH_HEADER("Refresh"),
     REFRESH_HEADER("Authorization"),
+    ADMIN("ADMIN"),
     TOKEN_TYPE("Bearer"),
     ACCESS_KEY_HEADER("AccessKey"),
 //    ReqUserNm("UserNm"),
