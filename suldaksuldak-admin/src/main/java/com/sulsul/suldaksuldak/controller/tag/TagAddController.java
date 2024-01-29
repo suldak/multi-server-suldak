@@ -32,7 +32,8 @@ public class TagAddController {
         return ApiDataResponse.of(
                 tagAddService.createDrinkingCapacity(
                         drinkingCapacityDto.getId(),
-                        drinkingCapacityDto.getName()
+                        drinkingCapacityDto.getName(),
+                        drinkingCapacityDto.getColor()
                 )
         );
     }

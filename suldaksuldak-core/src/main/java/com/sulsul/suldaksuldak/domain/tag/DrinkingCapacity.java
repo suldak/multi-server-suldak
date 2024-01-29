@@ -25,6 +25,10 @@ public class DrinkingCapacity implements TagEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String name;
 
+    @Setter
+    @Column
+    private String color;
+
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "drinkingCapacity")
@@ -34,19 +38,23 @@ public class DrinkingCapacity implements TagEntity {
 
     protected DrinkingCapacity(
             Long id,
-            String name
+            String name,
+            String color
     ) {
         this.id = id;
         this.name = name;
+        this.color = color;
     }
 
     public static DrinkingCapacity of (
             Long id,
-            String level
+            String level,
+            String color
     ) {
         return new DrinkingCapacity(
                 id,
-                level
+                level,
+                color
         );
     }
 }

@@ -17,11 +17,14 @@ public class DrinkingCapacityDto {
     Long id;
     @ApiModelProperty(value = "주량 Level 이름", required = true)
     String name;
+    @ApiModelProperty(value = "표시할 때의 색")
+    String color;
 
     public static DrinkingCapacityDto of (DrinkingCapacity drinkingCapacity) {
         return new DrinkingCapacityDto(
                 drinkingCapacity.getId(),
-                drinkingCapacity.getName()
+                drinkingCapacity.getName(),
+                drinkingCapacity.getColor()
         );
     }
 }

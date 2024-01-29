@@ -32,7 +32,8 @@ public class DrinkingCapacityRepositoryImpl implements DrinkingCapacityRepositor
                         Projections.constructor(
                                 DrinkingCapacityDto.class,
                                 drinkingCapacity.id,
-                                drinkingCapacity.name
+                                drinkingCapacity.name,
+                                drinkingCapacity.color
                         )
                 );
     }

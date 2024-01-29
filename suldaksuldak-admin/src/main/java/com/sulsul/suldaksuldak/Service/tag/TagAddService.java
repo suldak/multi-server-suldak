@@ -37,18 +37,20 @@ public class TagAddService {
      */
     public Boolean createDrinkingCapacity (
             Long id,
-            String level
+            String level,
+            String color
     ) {
         try {
             if (id == null) {
                 drinkingCapacityRepository.save(
-                        DrinkingCapacity.of(null, level)
+                        DrinkingCapacity.of(null, level, color)
                 );
             } else {
                 drinkingCapacityRepository.findById(id)
                         .ifPresentOrElse(
                                 entity -> {
                                     entity.setName(level);
+                                    entity.setColor(color);
                                     drinkingCapacityRepository.save(entity);
                                 },
                                 () -> {
