@@ -29,6 +29,7 @@ public class FileService {
                     FileTool.getTempFileNm(),
                     FileTool.getSavePath()
             );
+            if (saveFile == null) return null;
             Boolean saveResult = FileTool.saveFile(saveFile);
             if (!saveResult) throw new GeneralException(ErrorCode.INTERNAL_ERROR, "File 저장에 실패했습니다.");
             return fileBaseRepository.save(FileBaseDto.of(saveFile).toEntity());

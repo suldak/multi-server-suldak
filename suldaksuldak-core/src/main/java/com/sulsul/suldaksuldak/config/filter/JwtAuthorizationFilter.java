@@ -122,15 +122,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 request.setAttribute(SDTokken.ADMIN.getText(), "ADMIN");
             else
                 request.setAttribute(SDTokken.ADMIN.getText(), "USER");
+                UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
+                request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
 
             if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
                 chain.doFilter(request, response);
                 return;
             }
-            if (!request.getRequestURI().startsWith("/api/admin")) {
-                UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
-                request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
-            }
+//            if (!request.getRequestURI().startsWith("/api/admin")) {
+//                UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
+//                request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
+//            }
 
     //        logger.debug("---------------------------------");
     //        logger.debug("[+] url: " + request.getRequestURI());

@@ -21,6 +21,7 @@ public class LiquorNameRepositoryImpl implements LiquorNameRepositoryCustom {
         return Optional.ofNullable(
                 getLiquorNameDtoQuery()
                         .from(liquorName)
+                        .leftJoin(liquorName.fileBase)
                         .where(liquorName.id.eq(priKey))
                         .fetchFirst()
         );
@@ -32,7 +33,8 @@ public class LiquorNameRepositoryImpl implements LiquorNameRepositoryCustom {
                         Projections.constructor(
                                 LiquorNameDto.class,
                                 liquorName.id,
-                                liquorName.name
+                                liquorName.name,
+                                liquorName.fileBase.fileNm
                         )
                 );
     }

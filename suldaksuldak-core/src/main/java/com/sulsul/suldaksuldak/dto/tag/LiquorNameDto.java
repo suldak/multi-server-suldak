@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.tag;
 
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.domain.tag.LiquorName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,8 +18,16 @@ public class LiquorNameDto {
     Long id;
     @ApiModelProperty(value = "1차 분류 이름", required = true)
     String name;
+    @ApiModelProperty(value = "파일 경로", hidden = true)
+    String fileBaseNm;
+
 
     public static LiquorNameDto of (LiquorName liquorName) {
-        return new LiquorNameDto(liquorName.getId(), liquorName.getName());
+        return new LiquorNameDto(
+                liquorName.getId(),
+                liquorName.getName(),
+                liquorName.getFileBase() == null ?
+                        null : FileUrl.FILE_DOWN_URL.getUrl() + liquorName.getFileBase().getFileNm()
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.domain.tag;
 
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,11 @@ public class LiquorName implements TagEntity {
     @Column(nullable = false, unique = true, length = 10)
     private String name;
 
+    @OneToOne
+    @Setter
+    @JoinColumn(name = "file_base_nm")
+    private FileBase fileBase;
+
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquorName")
@@ -34,19 +40,23 @@ public class LiquorName implements TagEntity {
 
     protected LiquorName (
             Long id,
-            String name
+            String name,
+            FileBase fileBase
     ) {
         this.id = id;
         this.name = name;
+        this.fileBase = fileBase;
     }
 
     public static LiquorName of (
             Long id,
-            String name
+            String name,
+            FileBase fileBase
     ) {
         return new LiquorName(
                 id,
-                name
+                name,
+                fileBase
         );
     }
 }

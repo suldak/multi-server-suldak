@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.Service.tag;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.tag.*;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -14,9 +15,11 @@ import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
 import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
+import com.sulsul.suldaksuldak.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,7 @@ public class TagAddService {
     private final StateTypeRepository stateTypeRepository;
     private final TasteTypeRepository tasteTypeRepository;
     private final LiquorSnackRepository liquorSnackRepository;
+    private final FileService fileService;
 
     /**
      * 주량 저장
@@ -49,8 +53,10 @@ public class TagAddService {
                 drinkingCapacityRepository.findById(id)
                         .ifPresentOrElse(
                                 entity -> {
-                                    entity.setName(level);
-                                    entity.setColor(color);
+                                    if (level != null)
+                                        entity.setName(level);
+                                    if (color != null)
+                                        entity.setColor(color);
                                     drinkingCapacityRepository.save(entity);
                                 },
                                 () -> {
@@ -167,18 +173,28 @@ public class TagAddService {
      */
     public Boolean createLiquorName(
             Long id,
-            String name
+            String name,
+            MultipartFile file
     ) {
         try {
             if (id == null) {
+                FileBase fileBase = fileService.saveFile(file);
                 liquorNameRepository.save(
-                        LiquorName.of(null, name)
+                        LiquorName.of(null, name, fileBase)
                 );
             } else {
                 liquorNameRepository.findById(id)
                         .ifPresentOrElse(
                                 entity -> {
-                                    entity.setName(name);
+                                    if (name != null)
+                                        entity.setName(name);
+                                    if (file != null) {
+                                        FileBase fileBase = fileService.saveFile(file);
+                                        if (entity.getFileBase() != null) {
+                                            fileService.deleteFile(entity.getFileBase().getFileNm());
+                                        }
+                                        entity.setFileBase(fileBase);
+                                    }
                                     liquorNameRepository.save(entity);
                                 },
                                 () -> {
@@ -187,8 +203,10 @@ public class TagAddService {
                         );
             }
         } catch (GeneralException e) {
+            e.printStackTrace();
             throw new GeneralException(e.getErrorCode(), e.getErrorCode());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
         return true;
