@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
+import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.question.UserSelect;
 import com.sulsul.suldaksuldak.domain.search.SearchText;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
@@ -119,6 +120,11 @@ public class User extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<SearchText> searchTexts = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<Party> parties = new LinkedHashSet<>();
 
     protected User () {}
 
