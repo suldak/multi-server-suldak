@@ -80,7 +80,8 @@ public class Party extends BaseEntity {
             String partyPlace,
             String contactType,
             String useProgram,
-            String onlineUrl
+            String onlineUrl,
+            User user
     ) {
         this.id = id;
         this.name = name;
@@ -92,6 +93,7 @@ public class Party extends BaseEntity {
         this.contactType = contactType;
         this.useProgram = useProgram;
         this.onlineUrl = onlineUrl;
+        this.user = user;
     }
 
     public static Party of (
@@ -104,7 +106,8 @@ public class Party extends BaseEntity {
             String partyPlace,
             String contactType,
             String useProgram,
-            String onlineUrl
+            String onlineUrl,
+            User user
     ) {
         return new Party(
                 id,
@@ -116,7 +119,8 @@ public class Party extends BaseEntity {
                 partyPlace,
                 contactType,
                 useProgram,
-                onlineUrl
+                onlineUrl,
+                user
         );
     }
 }
