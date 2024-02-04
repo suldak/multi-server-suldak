@@ -1,6 +1,8 @@
 package com.sulsul.suldaksuldak.domain.file;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
+import com.sulsul.suldaksuldak.domain.party.Party;
+import com.sulsul.suldaksuldak.domain.tag.LiquorName;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.ToString;
@@ -30,6 +32,14 @@ public class FileBase extends BaseEntity {
     @ToString.Exclude
     @OneToOne(mappedBy = "fileBase")
     private User user;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "fileBase")
+    private LiquorName liquorName;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "fileBase")
+    private Party party;
 
     protected FileBase() {}
 

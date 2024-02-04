@@ -1,10 +1,10 @@
 package com.sulsul.suldaksuldak.dto.party;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -16,12 +16,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ApiModel(value = "모임 Request")
 public class PartyReq {
-    @ApiModelProperty(value = "모임 기본키 (생략하면 생성)")
-    Long id;
     @ApiModelProperty(value = "모임 이름", required = true)
     String name;
     @ApiModelProperty(value = "모임 일시", required = true)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime meetingDay;
     @ApiModelProperty(value = "모임 인원", required = true)
     Integer personnel;
@@ -37,12 +35,12 @@ public class PartyReq {
     String useProgram;
     @ApiModelProperty(value = "URL (온라인)")
     String onlineUrl;
-    @ApiModelProperty(value = "주최자 기본키", required = true)
-    Long hostUserPriKey;
+//    @ApiModelProperty(value = "주최자 기본키", required = true)
+//    Long hostUserPriKey;
 
-    public PartyDto toDto() {
+    public PartyDto toDto(Long hostUserPriKey) {
         return PartyDto.of(
-                id,
+                null,
                 name,
                 meetingDay,
                 personnel,

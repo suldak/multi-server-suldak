@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.domain.party;
 
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,6 +64,11 @@ public class Party extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @Setter
+    @JoinColumn(name = "file_base_nm")
+    private FileBase fileBase;
+
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
@@ -81,7 +87,8 @@ public class Party extends BaseEntity {
             String contactType,
             String useProgram,
             String onlineUrl,
-            User user
+            User user,
+            FileBase fileBase
     ) {
         this.id = id;
         this.name = name;
@@ -94,6 +101,7 @@ public class Party extends BaseEntity {
         this.useProgram = useProgram;
         this.onlineUrl = onlineUrl;
         this.user = user;
+        this.fileBase = fileBase;
     }
 
     public static Party of (
@@ -107,7 +115,8 @@ public class Party extends BaseEntity {
             String contactType,
             String useProgram,
             String onlineUrl,
-            User user
+            User user,
+            FileBase fileBase
     ) {
         return new Party(
                 id,
@@ -120,7 +129,8 @@ public class Party extends BaseEntity {
                 contactType,
                 useProgram,
                 onlineUrl,
-                user
+                user,
+                fileBase
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.party.PartyType;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Value;
@@ -21,6 +22,7 @@ public class PartyDto {
     String onlineUrl;
     Long hostUserPriKey;
     String hostUserName;
+    String fileBaseNm;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -51,12 +53,14 @@ public class PartyDto {
                 hostUserPriKey,
                 null,
                 null,
+                null,
                 null
         );
     }
 
     public Party toEntity(
-            User user
+            User user,
+            FileBase fileBase
     ) {
         return Party.of(
                 id,
@@ -69,7 +73,8 @@ public class PartyDto {
                 contactType,
                 useProgram,
                 onlineUrl,
-                user
+                user,
+                fileBase
         );
     }
 
@@ -84,7 +89,14 @@ public class PartyDto {
         if (contactType != null) party.setContactType(contactType);
         if (useProgram != null) party.setUseProgram(useProgram);
         if (onlineUrl != null) party.setOnlineUrl(onlineUrl);
+        return party;
+    }
 
+    public Party updatePartyPicture(
+            Party party,
+            FileBase fileBase
+    ) {
+        party.setFileBase(fileBase);
         return party;
     }
 }
