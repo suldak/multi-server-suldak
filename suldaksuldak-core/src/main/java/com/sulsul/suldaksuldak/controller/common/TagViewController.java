@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
+import com.sulsul.suldaksuldak.dto.party.tag.PartyTagDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.service.common.TagViewService;
 import io.swagger.annotations.Api;
@@ -105,6 +106,17 @@ public class TagViewController {
                         .stream()
                         .map(LiquorSnackRes::from)
                         .toList()
+        );
+    }
+
+    @ApiOperation(
+            value = "모든 모임 태그 조회",
+            notes = "모든 모임 태그를 조회 합니다."
+    )
+    @GetMapping(value = "/party-tag")
+    public ApiDataResponse<List<PartyTagDto>> getPartyTag() {
+        return ApiDataResponse.of(
+                tagViewService.getPartyTagDtoList()
         );
     }
 }

@@ -2,10 +2,12 @@ package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.party.tag.PartyTagDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
+import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
 import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
@@ -33,6 +35,7 @@ public class TagViewService {
     private final StateTypeRepository stateTypeRepository;
     private final TasteTypeRepository tasteTypeRepository;
     private final LiquorSnackRepository liquorSnackRepository;
+    private final PartyTagRepository partyTagRepository;
 
     /**
      * 모든 주량 조회
@@ -156,6 +159,25 @@ public class TagViewService {
             throw new GeneralException(e.getErrorCode(), e.getErrorCode());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public List<PartyTagDto> getPartyTagDtoList() {
+        try {
+            return partyTagRepository.findAll()
+                    .stream()
+                    .map(PartyTagDto::of)
+                    .toList();
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
         }
     }
 }
