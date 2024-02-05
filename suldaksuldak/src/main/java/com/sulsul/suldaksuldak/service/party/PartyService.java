@@ -4,12 +4,14 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
+import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
+import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class PartyService {
     private final FileService fileService;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
+    private final PartyTagRepository partyTagRepository;
 
     /**
      * 모임 생성
@@ -40,8 +43,19 @@ public class PartyService {
         try {
             if (partyDto.getHostUserPriKey() == null)
                 throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
+                        ErrorCode.BAD_REQUEST,
                         "주최자 기본키가 없습니다."
+                );
+            if (partyDto.getTagPriKey() == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임 태그 기본키가 누락되었습니다."
+                );
+            Optional<PartyTag> partyTag = partyTagRepository.findById(partyDto.getTagPriKey());
+            if (partyTag.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 모임 태그를 찾을 수 없습니다."
                 );
             Optional<User> user = userRepository.findById(partyDto.getHostUserPriKey());
             if (user.isEmpty())
@@ -53,7 +67,8 @@ public class PartyService {
             partyRepository.save(
                     partyDto.toEntity(
                             user.get(),
-                            fileBase
+                            fileBase,
+                            partyTag.get()
                     )
             );
             return true;

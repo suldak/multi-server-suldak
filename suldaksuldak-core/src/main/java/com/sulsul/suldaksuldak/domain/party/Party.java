@@ -10,8 +10,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @ToString
@@ -69,10 +67,8 @@ public class Party extends BaseEntity {
     @JoinColumn(name = "file_base_nm")
     private FileBase fileBase;
 
-    @ToString.Exclude
-    @OrderBy("id")
-    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
-    private Set<PtToTg> ptToTgs = new LinkedHashSet<>();
+    @ManyToOne(optional = false)
+    private PartyTag partyTag;
 
     protected Party () {}
 
@@ -88,7 +84,8 @@ public class Party extends BaseEntity {
             String useProgram,
             String onlineUrl,
             User user,
-            FileBase fileBase
+            FileBase fileBase,
+            PartyTag partyTag
     ) {
         this.id = id;
         this.name = name;
@@ -102,6 +99,7 @@ public class Party extends BaseEntity {
         this.onlineUrl = onlineUrl;
         this.user = user;
         this.fileBase = fileBase;
+        this.partyTag = partyTag;
     }
 
     public static Party of (
@@ -116,7 +114,8 @@ public class Party extends BaseEntity {
             String useProgram,
             String onlineUrl,
             User user,
-            FileBase fileBase
+            FileBase fileBase,
+            PartyTag partyTag
     ) {
         return new Party(
                 id,
@@ -130,7 +129,8 @@ public class Party extends BaseEntity {
                 useProgram,
                 onlineUrl,
                 user,
-                fileBase
+                fileBase,
+                partyTag
         );
     }
 }

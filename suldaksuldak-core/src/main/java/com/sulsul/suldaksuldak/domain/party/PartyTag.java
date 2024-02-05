@@ -26,8 +26,8 @@ public class PartyTag {
 
     @ToString.Exclude
     @OrderBy("id")
-    @OneToMany(mappedBy = "partyTag", cascade = CascadeType.REMOVE)
-    private Set<PtToTg> ptToTgs = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "partyTag")
+    private final Set<Party> parties = new LinkedHashSet<>();
 
     protected PartyTag () {}
 

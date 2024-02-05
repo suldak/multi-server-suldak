@@ -35,8 +35,8 @@ public class PartyReq {
     String useProgram;
     @ApiModelProperty(value = "URL (온라인)")
     String onlineUrl;
-//    @ApiModelProperty(value = "주최자 기본키", required = true)
-//    Long hostUserPriKey;
+    @ApiModelProperty(value = "모임 태그 기본키", required = true)
+    Long tagPriKey;
 
     public PartyDto toDto(Long hostUserPriKey) {
         return PartyDto.of(
@@ -50,7 +50,8 @@ public class PartyReq {
                 contactType,
                 useProgram,
                 onlineUrl,
-                hostUserPriKey
+                hostUserPriKey,
+                tagPriKey
         );
     }
 }

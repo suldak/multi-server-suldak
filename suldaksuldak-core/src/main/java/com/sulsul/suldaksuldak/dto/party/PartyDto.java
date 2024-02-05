@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.dto.party;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
+import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Value;
 
@@ -23,6 +24,8 @@ public class PartyDto {
     Long hostUserPriKey;
     String hostUserName;
     String fileBaseNm;
+    Long tagPriKey;
+    String tagName;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -37,7 +40,8 @@ public class PartyDto {
             String contactType,
             String useProgram,
             String onlineUrl,
-            Long hostUserPriKey
+            Long hostUserPriKey,
+            Long tagPriKey
     ) {
         return new PartyDto(
                 id,
@@ -53,6 +57,8 @@ public class PartyDto {
                 hostUserPriKey,
                 null,
                 null,
+                tagPriKey,
+                null,
                 null,
                 null
         );
@@ -60,7 +66,8 @@ public class PartyDto {
 
     public Party toEntity(
             User user,
-            FileBase fileBase
+            FileBase fileBase,
+            PartyTag partyTag
     ) {
         return Party.of(
                 id,
@@ -74,7 +81,8 @@ public class PartyDto {
                 useProgram,
                 onlineUrl,
                 user,
-                fileBase
+                fileBase,
+                partyTag
         );
     }
 

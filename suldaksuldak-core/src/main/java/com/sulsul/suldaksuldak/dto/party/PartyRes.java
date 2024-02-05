@@ -37,6 +37,10 @@ public class PartyRes {
     String hostUserName;
     @ApiModelProperty(value = "모임 사진 URL")
     String pictureUrl;
+    @ApiModelProperty(value = "모임 태그 기본키")
+    Long tagPriKey;
+    @ApiModelProperty(value = "모임 태그 이름")
+    String tagName;
     @ApiModelProperty(value = "모임 생성 일시")
     LocalDateTime createdAt;
     @ApiModelProperty(value = "모임 수정 일시")
@@ -61,6 +65,8 @@ public class PartyRes {
                 partyDto.getFileBaseNm() == null ||
                         partyDto.getFileBaseNm().isBlank() ?
                         null : FileUrl.FILE_DOWN_URL.getUrl() + partyDto.getFileBaseNm(),
+                partyDto.getTagPriKey(),
+                partyDto.getTagName(),
                 partyDto.getCreatedAt(),
                 partyDto.getModifiedAt()
         );
