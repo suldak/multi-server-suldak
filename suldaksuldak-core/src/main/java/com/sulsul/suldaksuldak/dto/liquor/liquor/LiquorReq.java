@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @ToString
@@ -26,6 +28,7 @@ public class LiquorReq {
     Double detailAbv;
     @ApiModelProperty(value = "술의 자세한 설명", required = true)
     String detailExplanation;
+    // -----------------------------------------------------------
     @ApiModelProperty(value = "술의 도수 기본키")
     Long liquorAbvId;
     @ApiModelProperty(value = "2차 분류 기본키")
@@ -34,6 +37,17 @@ public class LiquorReq {
     Long drinkingCapacityId;
     @ApiModelProperty(value = "1차 분류 기본키")
     Long liquorNameId;
+    // -----------------------------------------------------------
+    @ApiModelProperty(value = "추천 안주 기본키 리스트")
+    List<Long> snackPriKeys;
+    @ApiModelProperty(value = "판매처 기본키 리스트")
+    List<Long> sellPriKeys;
+    @ApiModelProperty(value = "재료 기본키 리스트")
+    List<Long> materialPriKeys;
+    @ApiModelProperty(value = "기분 기본키 리스트")
+    List<Long> statePriKeys;
+    @ApiModelProperty(value = "맛 기본키 리스트")
+    List<Long> tastePriKeys;
 
     public LiquorDto toDto() {
         return LiquorDto.of(
@@ -48,6 +62,24 @@ public class LiquorReq {
                 liquorDetailId,
                 drinkingCapacityId,
                 liquorNameId
+        );
+    }
+
+    public LiquorTotalReq toTotalReq(
+            Long priKey
+    ) {
+        return new LiquorTotalReq(
+                priKey,
+                searchTag,
+                snackPriKeys,
+                sellPriKeys,
+                materialPriKeys,
+                statePriKeys,
+                tastePriKeys,
+                null,
+                null,
+                null,
+                null
         );
     }
 }

@@ -30,7 +30,8 @@ public class LiquorAddService {
     /**
      * 술 생성 및 수정
      */
-    public Boolean createLiquor(
+//    public Boolean createLiquor(
+    public Long createLiquor(
             LiquorDto liquorDto
     ) {
         try {
@@ -63,7 +64,9 @@ public class LiquorAddService {
             }
 
             if (liquorDto.getId() == null) {
-                liquorRepository.save(liquorDto.toEntity(liquorAbv, liquorDetail, drinkingCapacity, liquorName));
+                return liquorRepository
+                        .save(liquorDto.toEntity(liquorAbv, liquorDetail, drinkingCapacity, liquorName))
+                        .getId();
             } else {
                 liquorRepository.findById(liquorDto.getId())
                         .ifPresentOrElse(
@@ -79,13 +82,13 @@ public class LiquorAddService {
                                     );
                                 }
                         );
+                return liquorDto.getId();
             }
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
-        return true;
     }
 
     /**

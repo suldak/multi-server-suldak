@@ -28,7 +28,6 @@ public class LiquorTotalReq {
     List<Long> statePriKeys;
     @ApiModelProperty(value = "맛 기본키 리스트")
     List<Long> tastePriKeys;
-
     @ApiModelProperty(value = "도수 기본키")
     Long liquorAbvId;
     @ApiModelProperty(value = "2차 분류 기본키")
