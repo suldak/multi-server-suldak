@@ -1,9 +1,12 @@
 package com.sulsul.suldaksuldak.controller.party;
 
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyReq;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
+import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
+import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -123,4 +127,90 @@ public class PartyController {
                 )
         );
     }
+
+    @PostMapping("/enter/{partyPriKey:[0-9]+}")
+    @ApiOperation(
+            value = "모임 참가 신청",
+            notes = "해당 모임의 자신이 참가를 신청합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class)
+    })
+    public ApiDataResponse<Boolean> enterParty(
+            HttpServletRequest request,
+            @PathVariable Long partyPriKey
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+
+        if (userPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
+
+        return ApiDataResponse.of(
+                partyService.participationParty(
+                        partyPriKey,
+                        userPriKey
+                )
+        );
+    }
+
+    @GetMapping("/guest-list/{partyPriKey:[0-9]+}")
+    @ApiOperation(
+            value = "모임의 참가 인원 조회 (모임 기준)",
+            notes = "해당 모임의 참가하는 인원을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyPriKey", value = "검색할 모임의 기본키", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "confirm", value = "확정 여부", dataTypeClass = Boolean.class)
+    })
+    public ApiDataResponse<List<PartyGuestDto>> getPartyGuestList(
+            @PathVariable Long partyPriKey,
+            Boolean confirm
+    ) {
+//        Long searchUserPriKey = userPriKey == null ?
+//            UtilTool.getUserPriKeyFromHeader(request) : userPriKey;
+//        if (searchUserPriKey == null)
+//            throw new GeneralException(
+//                    ErrorCode.BAD_REQUEST,
+//                    "유저 정보가 없습니다."
+//            );
+        return ApiDataResponse.of(
+                partyService.getPartyGuestList(
+                        partyPriKey,
+                        null,
+                        confirm
+                )
+        );
+    }
+
+//    @GetMapping("/guest-list/guest/{userPriKey:[0-9]+}")
+//    @ApiOperation(
+//            value = "모임의 참가 인원 조회 (유저 기준)",
+//            notes = "해당 유저가 참가하는 모임의 인원을 조회합니다."
+//    )
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "partyPriKey", value = "검색할 모임의 기본키", dataTypeClass = Long.class)
+//            @ApiImplicitParam(name = "confirm", value = "확정 여부", dataTypeClass = Boolean.class)
+//    })
+//    public ApiDataResponse<List<PartyGuestDto>> getPartyGuestList(
+//            @PathVariable Long partyPriKey,
+//            Boolean confirm
+//    ) {
+//        Long searchUserPriKey = userPriKey == null ?
+//            UtilTool.getUserPriKeyFromHeader(request) : userPriKey;
+//        if (searchUserPriKey == null)
+//            throw new GeneralException(
+//                    ErrorCode.BAD_REQUEST,
+//                    "유저 정보가 없습니다."
+//            );
+//        return ApiDataResponse.of(
+//                partyService.getPartyGuestList(
+//                        partyPriKey,
+//                        null,
+//                        confirm
+//                )
+//        );
+//    }
 }
