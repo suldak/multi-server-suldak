@@ -47,7 +47,7 @@ public class Party extends BaseEntity {
     private PartyType partyType;
 
     @Setter
-    @Column(nullable = false)
+    @Column
     private String partyPlace;
 
     @Setter
