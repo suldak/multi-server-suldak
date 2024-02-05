@@ -10,6 +10,8 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -69,6 +71,11 @@ public class Party extends BaseEntity {
 
     @ManyToOne(optional = false)
     private PartyTag partyTag;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    private Set<PartyGuest> partyGuests = new LinkedHashSet<>();
 
     protected Party () {}
 
