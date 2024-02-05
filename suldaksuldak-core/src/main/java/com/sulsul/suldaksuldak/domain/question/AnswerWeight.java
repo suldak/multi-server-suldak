@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Entity(name = "answerWeight")
 public class AnswerWeight {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

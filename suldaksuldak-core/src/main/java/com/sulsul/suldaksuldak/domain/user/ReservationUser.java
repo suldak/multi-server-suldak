@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Entity(name = "reservationUser")
 public class ReservationUser extends BaseEntity {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

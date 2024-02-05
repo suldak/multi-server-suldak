@@ -23,6 +23,7 @@ import java.util.Set;
 public class Party extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
     @Setter
@@ -30,7 +31,7 @@ public class Party extends BaseEntity {
     private String name;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime meetingDay;
 
     @Setter

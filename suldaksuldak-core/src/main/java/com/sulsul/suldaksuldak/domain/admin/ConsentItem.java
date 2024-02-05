@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Entity(name = "consentItem")
 public class ConsentItem {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

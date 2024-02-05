@@ -27,6 +27,7 @@ import java.util.Set;
 @Entity(name = "user")
 public class User extends BaseEntity {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

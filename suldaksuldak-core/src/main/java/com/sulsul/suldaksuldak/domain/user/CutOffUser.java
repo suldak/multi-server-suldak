@@ -15,6 +15,7 @@ import javax.persistence.*;
 @Entity(name = "cutOffUser")
 public class CutOffUser extends BaseEntity {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

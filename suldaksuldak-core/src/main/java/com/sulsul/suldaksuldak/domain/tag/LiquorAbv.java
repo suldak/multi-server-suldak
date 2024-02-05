@@ -18,6 +18,7 @@ import java.util.Set;
 @Entity(name = "liquorAbv")
 public class LiquorAbv implements TagEntity {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

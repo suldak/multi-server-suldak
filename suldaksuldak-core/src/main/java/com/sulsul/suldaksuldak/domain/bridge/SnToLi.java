@@ -17,6 +17,7 @@ import javax.persistence.*;
 @Entity(name = "snToLi")
 public class SnToLi {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

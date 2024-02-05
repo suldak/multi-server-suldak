@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Entity(name = "adminUser")
 public class AdminUser extends BaseEntity {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

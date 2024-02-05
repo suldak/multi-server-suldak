@@ -17,6 +17,7 @@ import java.util.Set;
 @Entity(name = "liquorAnswer")
 public class LiquorAnswer {
     @Id
+    @Column(columnDefinition = "BIGINT UNSIGNED")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
