@@ -55,11 +55,11 @@ public class Party extends BaseEntity {
     private String contactType;
 
     @Setter
-    @Column(nullable = false)
+    @Column
     private String useProgram;
 
     @Setter
-    @Column(nullable = false)
+    @Column
     private String onlineUrl;
 
     @ManyToOne(optional = false)

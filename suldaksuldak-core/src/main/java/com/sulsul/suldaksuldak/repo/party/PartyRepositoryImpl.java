@@ -99,6 +99,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 party.user.id,
                                 party.user.nickname,
                                 party.fileBase.fileNm,
+                                party.partyTag.id,
+                                party.partyTag.name,
                                 party.createdAt,
                                 party.modifiedAt
                         )

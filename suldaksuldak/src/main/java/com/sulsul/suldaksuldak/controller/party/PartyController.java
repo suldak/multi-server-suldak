@@ -85,6 +85,10 @@ public class PartyController {
     }
 
     @GetMapping
+    @ApiOperation(
+            value = "모임 목록 조회",
+            notes = "모임의 목록을 옵션에 따라서 조회합니다."
+    )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "이름을 조회합니다.", dataTypeClass = String.class),
             @ApiImplicitParam(name = "searchStartTime", value = "검색 시작 일시 (yyyy-MM-dd'T'HH:mm:ss)", dataTypeClass = String.class, example = "2023-10-05T00:00:00"),
