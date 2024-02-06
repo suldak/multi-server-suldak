@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.domain.party;
 
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
@@ -24,8 +25,9 @@ public class PartyGuest extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
-    @Column(nullable = false)
-    private Boolean confirm;
+    @Column(nullable = false, columnDefinition = "VARCHAR(10)")
+    @Enumerated(EnumType.STRING)
+    private GuestType confirm;
 
     protected PartyGuest () {}
 
@@ -33,7 +35,7 @@ public class PartyGuest extends BaseEntity {
             String id,
             Party party,
             User user,
-            Boolean confirm
+            GuestType confirm
     ) {
         this.id = id;
         this.party = party;
@@ -45,7 +47,7 @@ public class PartyGuest extends BaseEntity {
             String id,
             Party party,
             User user,
-            Boolean confirm
+            GuestType confirm
     ) {
         return new PartyGuest(
                 id,

@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.search.tag;
+package com.sulsul.suldaksuldak.repo.party.guest;
 
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.party.QPartyGuest;
