@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity(name = "partyComment")
 public class PartyComments extends BaseEntity {
     @Id
-    @Column(columnDefinition = "VARCHAR(20)")
+    @Column(columnDefinition = "VARCHAR(100)")
     private String id;
 
     @Setter
@@ -30,21 +30,21 @@ public class PartyComments extends BaseEntity {
     @ManyToOne(optional = false)
     private Party party;
 
-    @Column(columnDefinition = "VARCHAR(20)")
+    @Column(columnDefinition = "VARCHAR(20)", nullable = false)
     private String groupComment;
 
     @Setter
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private Integer commentDep;
 
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private Integer commentIndex;
 
     @Setter
     @Column(nullable = false)
     private Boolean isDelete;
 
-    @Column
+    @Column(nullable = false)
     private Integer warningCnt;
 
     protected PartyComments () {}
