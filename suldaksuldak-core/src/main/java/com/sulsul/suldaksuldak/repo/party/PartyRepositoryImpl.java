@@ -125,6 +125,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 party.onlineUrl,
                                 party.user.id,
                                 party.user.nickname,
+                                party.user.fileBase.fileNm,
                                 party.fileBase.fileNm,
                                 party.partyTag.id,
                                 party.partyTag.name,

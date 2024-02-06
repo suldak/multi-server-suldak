@@ -23,6 +23,7 @@ public class PartyDto {
     String onlineUrl;
     Long hostUserPriKey;
     String hostUserName;
+    String hostFileName;
     String fileBaseNm;
     Long tagPriKey;
     String tagName;
@@ -55,6 +56,7 @@ public class PartyDto {
                 useProgram,
                 onlineUrl,
                 hostUserPriKey,
+                null,
                 null,
                 null,
                 tagPriKey,
