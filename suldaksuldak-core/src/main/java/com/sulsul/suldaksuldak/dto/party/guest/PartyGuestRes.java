@@ -15,12 +15,18 @@ public class PartyGuestRes {
     Long partyPriKey;
     @ApiModelProperty(value = "모임 이름")
     String partyName;
+    @ApiModelProperty(value = "호스트 기본키")
+    Long hostPriKey;
+    @ApiModelProperty(value = "호스트 닉네임")
+    String hostNickname;
+    @ApiModelProperty(value = "호스트 사진 URL")
+    String hostFileNm;
     @ApiModelProperty(value = "참가원 기본키")
-    Long userPriKey;
+    Long guestPriKey;
     @ApiModelProperty(value = "참가원 닉네임")
-    String userNickname;
+    String guestNickname;
     @ApiModelProperty(value = "유저 사진 URL")
-    String pictureUrl;
+    String guestFileNm;
     @ApiModelProperty(value = "확정 여부")
     GuestType confirmState;
 
@@ -31,10 +37,14 @@ public class PartyGuestRes {
                 partyGuestDto.getId(),
                 partyGuestDto.getPartyPriKey(),
                 partyGuestDto.getPartyName(),
-                partyGuestDto.getUserPriKey(),
-                partyGuestDto.getUserNickname(),
-                partyGuestDto.getFileNm() == null ? null :
-                        FileUrl.FILE_DOWN_URL.getUrl() + partyGuestDto.getFileNm(),
+                partyGuestDto.getHostPriKey(),
+                partyGuestDto.getHostNickname(),
+                partyGuestDto.getHostFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + partyGuestDto.getHostFileNm(),
+                partyGuestDto.getGuestPriKey(),
+                partyGuestDto.getGuestNickname(),
+                partyGuestDto.getGuestFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + partyGuestDto.getGuestFileNm(),
                 partyGuestDto.getConfirmState()
         );
     }

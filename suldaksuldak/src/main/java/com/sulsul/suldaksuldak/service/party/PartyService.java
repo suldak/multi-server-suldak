@@ -15,8 +15,8 @@ import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
-import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
+import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
@@ -362,6 +362,118 @@ public class PartyService {
                         ErrorMessage.NOT_FOUND_USER_PRI_KEY
                 );
             return partyRepository.findByHostPriKey(userPriKey);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 모임과 유저 기본키로
+     * 모임 참가 인원의 상태를 수정합니다.
+     */
+    public Boolean modifiedPartyGuest (
+            Long hostPriKey,
+            Long partyPriKey,
+            Long guestPriKey,
+            GuestType confirm
+    ) {
+        try {
+            if (hostPriKey == null || partyPriKey == null || guestPriKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "기본키를 찾지 못했습니다."
+                );
+            if (confirm == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "confirm 값이 NULL 입니다."
+                );
+
+            List<PartyGuestDto> partyGuestDtos =
+                    partyGuestRepository.findByOptions(
+                            partyPriKey,
+                            guestPriKey,
+                            null
+                    );
+
+            if (partyGuestDtos.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "모임 신청 정보가 존재하지 않습니다."
+                );
+            
+            PartyGuestDto dto = partyGuestDtos.get(0);
+            if (!dto.getHostPriKey().equals(hostPriKey))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 모임의 Host가 아닙니다."
+                );
+            Optional<PartyGuest> party =
+                    partyGuestRepository.findById(dto.getId());
+            if (party.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "해당 모임 신청 정보가 없습니다."
+                );
+            party.get().setConfirm(confirm);
+            partyGuestRepository.save(party.get());
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 관계 기본기
+     * 모임 참가 인원의 상태를 수정합니다.
+     */
+    public Boolean modifiedPartyGuest (
+            Long hostPriKey,
+            String priKey,
+            GuestType confirm
+    ) {
+        try {
+            if (priKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "기본키를 찾지 못했습니다."
+                );
+            if (confirm == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "confirm 값이 NULL 입니다."
+                );
+            Optional<PartyGuest> partyGuest =
+                    partyGuestRepository.findById(priKey);
+            if (partyGuest.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 모임을 찾을 수 없습니다."
+                );
+            if (!hostPriKey.equals(partyGuest.get().getParty().getUser().getId()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 모임의 호스트가 아닙니다."
+                );
+            partyGuest.get().setConfirm(confirm);
+            partyGuestRepository.save(partyGuest.get());
+            return true;
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

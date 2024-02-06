@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class PartyGuest extends BaseEntity {
     @ManyToOne(optional = false)
     private User user;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "VARCHAR(10)")
     @Enumerated(EnumType.STRING)
     private GuestType confirm;

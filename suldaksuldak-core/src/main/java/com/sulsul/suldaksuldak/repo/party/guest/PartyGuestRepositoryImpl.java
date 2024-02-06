@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,7 @@ public class PartyGuestRepositoryImpl
                         partyGuest.user.id.eq(user.id) :
                         partyGuest.user.id.eq(userPriKey)
                 )
+                .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
                 .where(confirmEq(confirm))
                 .fetch();
     }
@@ -52,6 +54,10 @@ public class PartyGuestRepositoryImpl
                                 partyGuest.id,
                                 partyGuest.party.id,
                                 partyGuest.party.name,
+                                partyGuest.party.user,
+//                                partyGuest.party.user.id,
+//                                partyGuest.party.user.nickname,
+//                                partyGuest.party.user.fileBase.fileNm,
                                 partyGuest.user.id,
                                 partyGuest.user.nickname,
                                 partyGuest.user.fileBase.fileNm,
