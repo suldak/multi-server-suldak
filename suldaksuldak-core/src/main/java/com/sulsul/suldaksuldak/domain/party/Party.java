@@ -78,6 +78,11 @@ public class Party extends BaseEntity {
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
     private Set<PartyGuest> partyGuests = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    private Set<PartyComments> partyComments = new LinkedHashSet<>();
+
     protected Party () {}
 
     protected Party (
