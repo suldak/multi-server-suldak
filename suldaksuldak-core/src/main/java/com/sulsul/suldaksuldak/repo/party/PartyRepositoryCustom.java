@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PartyRepositoryCustom {
     Page<PartyDto> findByOptional(
@@ -16,5 +17,13 @@ public interface PartyRepositoryCustom {
             PartyType partyType,
             Long hostUserPriKey,
             Pageable pageable
+    );
+
+    List<PartyDto> findByPriKeyList(
+            List<Long> priKeyList
+    );
+
+    List<PartyDto> findByHostPriKey(
+            Long hostPriKey
     );
 }

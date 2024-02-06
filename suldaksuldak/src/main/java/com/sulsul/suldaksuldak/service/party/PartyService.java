@@ -1,6 +1,8 @@
 package com.sulsul.suldaksuldak.service.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
@@ -14,7 +16,7 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
-import com.sulsul.suldaksuldak.repo.search.tag.PartyGuestRepository;
+import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
@@ -250,6 +252,19 @@ public class PartyService {
                         ErrorCode.BAD_REQUEST,
                         "자신이 호스트인 모임입니다."
                 );
+
+            List<PartyGuestDto> partyGuestDtos =
+                    partyGuestRepository.findByOptions(
+                            party.get().getId(),
+                            user.get().getId(),
+                            null
+                    );
+            if (!partyGuestDtos.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 신청한 모임입니다."
+                );
+
             String dateStr = UtilTool.getLocalDateTimeString();
 
             partyGuestRepository.save(
@@ -257,7 +272,7 @@ public class PartyService {
                             dateStr + "_" + partyPriKey + "_" + userPriKey,
                             party.get(),
                             user.get(),
-                            false
+                            GuestType.WAIT
                     )
             );
             return true;
@@ -280,7 +295,7 @@ public class PartyService {
     public List<PartyGuestDto> getPartyGuestList(
             Long partyPriKey,
             Long userPriKey,
-            Boolean confirm
+            GuestType confirm
     ) {
         try {
             return partyGuestRepository.findByOptions(
@@ -288,6 +303,65 @@ public class PartyService {
                     userPriKey,
                     confirm
             );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 유저가 참가하는 모임 목록 조회
+     */
+    public List<PartyDto> getPartyByUser(
+            Long userPriKey,
+            GuestType confirm
+    ) {
+        try {
+            if (userPriKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        ErrorMessage.NOT_FOUND_USER_PRI_KEY
+                );
+            List<Long> partyPriKeyList =
+                partyGuestRepository.findByOptions(
+                        null,
+                        userPriKey,
+                        confirm
+                ).stream().map(PartyGuestDto::getPartyPriKey).toList();
+            return partyRepository.findByPriKeyList(partyPriKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 유저가 Host인 모임 목록
+     */
+    public List<PartyDto> getPartyByHostPriKey(
+            Long userPriKey
+    ) {
+        try {
+            if (userPriKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        ErrorMessage.NOT_FOUND_USER_PRI_KEY
+                );
+            return partyRepository.findByHostPriKey(userPriKey);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

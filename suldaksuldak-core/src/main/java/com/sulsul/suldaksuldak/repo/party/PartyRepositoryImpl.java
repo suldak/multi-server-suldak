@@ -81,6 +81,33 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
         );
     }
 
+    @Override
+    public List<PartyDto> findByPriKeyList(
+            List<Long> priKeyList
+    ) {
+        return getPartyDtoQuery()
+                .from(party)
+                .innerJoin(party.user, user)
+                .on(party.user.id.eq(user.id))
+                .leftJoin(party.fileBase, QFileBase.fileBase)
+                .where(
+                        party.id.in(priKeyList)
+                )
+                .fetch();
+    }
+
+    @Override
+    public List<PartyDto> findByHostPriKey(
+            Long hostPriKey
+    ) {
+        return getPartyDtoQuery()
+                .from(party)
+                .innerJoin(party.user, user)
+                .on(party.user.id.eq(hostPriKey))
+                .leftJoin(party.fileBase, QFileBase.fileBase)
+                .fetch();
+    }
+
     private JPAQuery<PartyDto> getPartyDtoQuery() {
         return jpaQueryFactory
                 .select(

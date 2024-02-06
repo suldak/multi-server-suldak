@@ -1,11 +1,13 @@
 package com.sulsul.suldaksuldak.controller.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyReq;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
+import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -156,61 +158,71 @@ public class PartyController {
         );
     }
 
-    @GetMapping("/guest-list/{partyPriKey:[0-9]+}")
+    @GetMapping("/party-guest-list/{partyPriKey:[0-9]+}")
     @ApiOperation(
-            value = "모임의 참가 인원 조회 (모임 기준)",
+            value = "모임의 참가 인원 조회",
             notes = "해당 모임의 참가하는 인원을 조회합니다."
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "partyPriKey", value = "검색할 모임의 기본키", dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "confirm", value = "확정 여부", dataTypeClass = Boolean.class)
+            @ApiImplicitParam(name = "confirm", value = "확정 여부")
     })
-    public ApiDataResponse<List<PartyGuestDto>> getPartyGuestList(
+    public ApiDataResponse<List<PartyGuestRes>> getPartyGuestList(
             @PathVariable Long partyPriKey,
-            Boolean confirm
+            GuestType confirm
     ) {
-//        Long searchUserPriKey = userPriKey == null ?
-//            UtilTool.getUserPriKeyFromHeader(request) : userPriKey;
-//        if (searchUserPriKey == null)
-//            throw new GeneralException(
-//                    ErrorCode.BAD_REQUEST,
-//                    "유저 정보가 없습니다."
-//            );
         return ApiDataResponse.of(
                 partyService.getPartyGuestList(
                         partyPriKey,
                         null,
                         confirm
                 )
+                .stream()
+                .map(PartyGuestRes::from)
+                .toList()
         );
     }
 
-//    @GetMapping("/guest-list/guest/{userPriKey:[0-9]+}")
-//    @ApiOperation(
-//            value = "모임의 참가 인원 조회 (유저 기준)",
-//            notes = "해당 유저가 참가하는 모임의 인원을 조회합니다."
-//    )
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "partyPriKey", value = "검색할 모임의 기본키", dataTypeClass = Long.class)
-//            @ApiImplicitParam(name = "confirm", value = "확정 여부", dataTypeClass = Boolean.class)
-//    })
-//    public ApiDataResponse<List<PartyGuestDto>> getPartyGuestList(
-//            @PathVariable Long partyPriKey,
-//            Boolean confirm
-//    ) {
-//        Long searchUserPriKey = userPriKey == null ?
-//            UtilTool.getUserPriKeyFromHeader(request) : userPriKey;
-//        if (searchUserPriKey == null)
-//            throw new GeneralException(
-//                    ErrorCode.BAD_REQUEST,
-//                    "유저 정보가 없습니다."
-//            );
-//        return ApiDataResponse.of(
-//                partyService.getPartyGuestList(
-//                        partyPriKey,
-//                        null,
-//                        confirm
-//                )
-//        );
-//    }
+    @GetMapping("/user-party-list/{userPriKey:[0-9]+}")
+    @ApiOperation(
+            value = "유저가 참가하는 모임 조회",
+            notes = "해당 유저가 참가하는 모임을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userPriKey", value = "검색할 유저 기본키", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "confirm", value = "확정 여부")
+    })
+    public ApiDataResponse<List<PartyRes>> getUserPartyList(
+            @PathVariable Long userPriKey,
+            GuestType confirm
+    ) {
+        return ApiDataResponse.of(
+                partyService.getPartyByUser(
+                        userPriKey,
+                        confirm
+                )
+                .stream()
+                .map(PartyRes::from)
+                .toList()
+        );
+    }
+
+    @GetMapping("/host/{userPriKey:[0-9]+}")
+    @ApiOperation(
+            value = "유저가 호스트인 모임 조회",
+            notes = "해당 유저가 호스트인 모임을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userPriKey", value = "검색할 유저 기본키", dataTypeClass = Long.class)
+    })
+    public ApiDataResponse<List<PartyRes>> getHostPartyList(
+            @PathVariable Long userPriKey
+    ) {
+        return ApiDataResponse.of(
+                partyService.getPartyByHostPriKey(userPriKey)
+                        .stream()
+                        .map(PartyRes::from)
+                        .toList()
+        );
+    }
 }
