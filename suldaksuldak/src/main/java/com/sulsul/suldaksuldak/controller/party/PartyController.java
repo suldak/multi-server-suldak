@@ -6,7 +6,6 @@ import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyReq;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
-import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;

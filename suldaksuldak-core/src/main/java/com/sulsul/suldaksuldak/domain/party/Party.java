@@ -81,7 +81,7 @@ public class Party extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
-    private Set<PartyComments> partyComments = new LinkedHashSet<>();
+    private Set<PartyComment> partyComments = new LinkedHashSet<>();
 
     protected Party () {}
 

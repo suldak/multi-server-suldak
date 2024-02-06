@@ -15,7 +15,7 @@ import javax.persistence.*;
 )
 @EntityListeners(AutoCloseable.class)
 @Entity(name = "partyComment")
-public class PartyComments extends BaseEntity {
+public class PartyComment extends BaseEntity {
     @Id
     @Column(columnDefinition = "VARCHAR(100)")
     private String id;
@@ -30,34 +30,44 @@ public class PartyComments extends BaseEntity {
     @ManyToOne(optional = false)
     private Party party;
 
-    @Column(columnDefinition = "VARCHAR(20)", nullable = false)
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
     private String groupComment;
 
-    @Setter
+//    @Setter
+//    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
+//    private Integer commentCnt;
+
     @Column(columnDefinition = "INT UNSIGNED", nullable = false)
     private Integer commentDep;
 
-    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
-    private Integer commentIndex;
+//    @Column(columnDefinition = "INT UNSIGNED", nullable = false)
+//    private Integer commentIndex;
 
     @Setter
     @Column(nullable = false)
     private Boolean isDelete;
 
+    @Setter
+    @Column(nullable = false)
+    private Boolean isModified;
+
+    @Setter
     @Column(nullable = false)
     private Integer warningCnt;
 
-    protected PartyComments () {}
+    protected PartyComment() {}
 
-    protected PartyComments (
+    protected PartyComment(
             String id,
             String comment,
             User user,
             Party party,
             String groupComment,
+//            Integer commentCnt,
             Integer commentDep,
-            Integer commentIndex,
+//            Integer commentIndex,
             Boolean isDelete,
+            Boolean isModified,
             Integer warningCnt
     ) {
         this.id = id;
@@ -65,32 +75,38 @@ public class PartyComments extends BaseEntity {
         this.user = user;
         this.party = party;
         this.groupComment = groupComment;
+//        this.commentCnt = commentCnt;
         this.commentDep = commentDep;
-        this.commentIndex = commentIndex;
+//        this.commentIndex = commentIndex;
         this.isDelete = isDelete;
+        this.isModified = isModified;
         this.warningCnt = warningCnt;
     }
 
-    public static PartyComments of (
+    public static PartyComment of (
             String id,
             String comment,
             User user,
             Party party,
             String groupComment,
+//            Integer commentCnt,
             Integer commentDep,
-            Integer commentIndex,
+//            Integer commentIndex,
             Boolean isDelete,
+            Boolean isModified,
             Integer warningCnt
     ) {
-        return new PartyComments(
+        return new PartyComment(
                 id,
                 comment,
                 user,
                 party,
                 groupComment,
+//                commentCnt,
                 commentDep,
-                commentIndex,
+//                commentIndex,
                 isDelete,
+                isModified,
                 warningCnt
         );
     }

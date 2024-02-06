@@ -5,7 +5,7 @@ import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
-import com.sulsul.suldaksuldak.domain.party.PartyComments;
+import com.sulsul.suldaksuldak.domain.party.PartyComment;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.question.UserSelect;
 import com.sulsul.suldaksuldak.domain.search.SearchText;
@@ -137,7 +137,7 @@ public class User extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Set<PartyComments> partyComments = new LinkedHashSet<>();
+    private Set<PartyComment> partyComments = new LinkedHashSet<>();
 
     protected User () {}
 
