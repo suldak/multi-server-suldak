@@ -68,7 +68,7 @@ public class PartyCommentRepositoryImpl
                 .on(partyComment.user.id.eq(user.id))
                 .innerJoin(partyComment.party, party)
                 .on(partyComment.party.id.eq(partyPriKey))
-                .orderBy(partyComment.createdAt.desc())
+                .orderBy(partyComment.createdAt.asc())
                 .where(
                         partyComment.groupComment.eq(groupComment).and(
                                 partyComment.commentDep.goe(commentDep)
