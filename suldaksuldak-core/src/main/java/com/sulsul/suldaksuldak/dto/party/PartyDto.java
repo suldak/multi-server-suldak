@@ -29,6 +29,7 @@ public class PartyDto {
     String tagName;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
+    Long confirmCnt;
 
     public static PartyDto of (
             Long id,
@@ -60,6 +61,7 @@ public class PartyDto {
                 null,
                 null,
                 tagPriKey,
+                null,
                 null,
                 null,
                 null

@@ -1,14 +1,13 @@
 package com.sulsul.suldaksuldak.repo.party;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
-import static com.sulsul.suldaksuldak.domain.party.QParty.party;
-
-import static com.sulsul.suldaksuldak.domain.user.QUser.user;
-
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
@@ -21,6 +20,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.sulsul.suldaksuldak.domain.party.QParty.party;
+import static com.sulsul.suldaksuldak.domain.party.QPartyGuest.partyGuest;
+import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -133,7 +136,15 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 party.partyTag.id,
                                 party.partyTag.name,
                                 party.createdAt,
-                                party.modifiedAt
+                                party.modifiedAt,
+                                JPAExpressions.select(partyGuest.count())
+                                        .from(partyGuest)
+                                        .where(
+                                                partyGuest.party.id.eq(party.id)
+                                                        .and(
+                                                                partyConfirmCnt()
+                                                        )
+                                        )
                         )
                 );
     }
@@ -182,5 +193,13 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
     ) {
         return partyTagPriList == null || partyTagPriList.isEmpty() ? null :
                 party.partyTag.id.in(partyTagPriList);
+    }
+
+    public BooleanBuilder partyConfirmCnt() {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.or(partyGuest.confirm.eq(GuestType.CONFIRM));
+        booleanBuilder.or(partyGuest.confirm.eq(GuestType.COMPLETE));
+        booleanBuilder.or(partyGuest.confirm.eq(GuestType.COMPLETE_WAIT));
+        return booleanBuilder;
     }
 }
