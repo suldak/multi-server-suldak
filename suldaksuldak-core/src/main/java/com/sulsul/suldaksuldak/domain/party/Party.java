@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.domain.party;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
+import com.sulsul.suldaksuldak.domain.report.ReportParty;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -82,6 +83,11 @@ public class Party extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
     private Set<PartyComment> partyComments = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    private Set<ReportParty> reportParties = new LinkedHashSet<>();
 
     protected Party () {}
 
