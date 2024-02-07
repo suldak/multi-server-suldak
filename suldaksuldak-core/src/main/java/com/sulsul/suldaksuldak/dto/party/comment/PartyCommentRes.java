@@ -52,4 +52,30 @@ public class PartyCommentRes {
                 partyCommentDtos
         );
     }
+
+    public static PartyCommentRes from (
+            PartyCommentDto partyCommentDto
+    ) {
+        return new PartyCommentRes(
+                partyCommentDto.getId(),
+                partyCommentDto.getComment(),
+                partyCommentDto.getUserPriKey(),
+                partyCommentDto.getUserNickname(),
+                partyCommentDto.getUserFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + partyCommentDto.getUserFileNm(),
+                partyCommentDto.getPartyPriKey(),
+                partyCommentDto.getPartyName(),
+                partyCommentDto.getPartyFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + partyCommentDto.getPartyFileNm(),
+                partyCommentDto.getGroupComment(),
+//                partyCommentDto.getCommentCnt(),
+                partyCommentDto.getCommentDep(),
+                partyCommentDto.getIsDelete(),
+                partyCommentDto.getIsModified(),
+                partyCommentDto.getWarningCnt(),
+                partyCommentDto.getCreatedAt(),
+                partyCommentDto.getModifiedAt(),
+                List.of()
+        );
+    }
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -128,6 +129,7 @@ public class PartyCommentController {
             notes = "모임의 댓글 목록을 조회합니다."
     )
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", required = true, dataTypeClass = Long.class),
             @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
             @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
     })
@@ -141,6 +143,31 @@ public class PartyCommentController {
                         partyPriKey,
                         UtilTool.getPageable(pageNum, recordSize)
                 )
+        );
+    }
+
+    @GetMapping("/children/{partyPriKey:[0-9]+}")
+    @ApiOperation(
+            value = "모임 대댓글 목록 조회",
+            notes = "모임의 대댓글 목록을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", required = true, dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "commentPriKey", value = "댓글 기본키", required = true, dataTypeClass = String.class)
+    })
+    public ApiDataResponse<List<PartyCommentRes>> getChildrenComment(
+            @PathVariable Long partyPriKey,
+            String commentPriKey
+    ) {
+        return ApiDataResponse.of(
+                partyCommentService.getPartyChildrenComment(
+                            partyPriKey,
+                            commentPriKey,
+                            1
+                    )
+                    .stream()
+                    .map(PartyCommentRes::from)
+                    .toList()
         );
     }
 
