@@ -5,11 +5,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
@@ -25,6 +27,10 @@ public class PartyGuestRepositoryImpl
 
     @Override
     public List<PartyGuestDto> findByOptions(
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime,
+            PartyType partyType,
+            List<Long> partyTagPriList,
             Long partyPriKey,
             Long userPriKey,
             GuestType confirm
@@ -42,7 +48,13 @@ public class PartyGuestRepositoryImpl
                         partyGuest.user.id.eq(userPriKey)
                 )
                 .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
-                .where(confirmEq(confirm))
+                .where(
+                        searchAtBetween(searchStartTime, searchEndTime),
+                        partyTypeEq(partyType),
+                        partyTagListIn(partyTagPriList),
+                        confirmEq(confirm)
+                )
+                .orderBy(partyGuest.createdAt.asc())
                 .fetch();
     }
 
@@ -71,5 +83,30 @@ public class PartyGuestRepositoryImpl
     ) {
         return confirm == null ? null :
                 partyGuest.confirm.eq(confirm);
+    }
+
+    private BooleanExpression searchAtBetween (
+            LocalDateTime startAt,
+            LocalDateTime endAt
+    ) {
+        if ((startAt == null) || (endAt == null)) return null;
+        return partyGuest.party.meetingDay.between(
+                startAt,
+                endAt
+        );
+    }
+
+    private BooleanExpression partyTypeEq(
+            PartyType partyType
+    ) {
+        return partyType == null ? null :
+                partyGuest.party.partyType.eq(partyType);
+    }
+
+    private BooleanExpression partyTagListIn(
+            List<Long> partyTagList
+    ) {
+        return partyTagList == null || partyTagList.isEmpty()  ? null :
+                partyGuest.party.partyTag.id.in(partyTagList);
     }
 }

@@ -38,6 +38,7 @@ public class PartyViewService {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            Boolean sortBool,
             Pageable pageable
     ) {
         try {
@@ -49,6 +50,7 @@ public class PartyViewService {
                     partyType,
                     hostUserPriKey,
                     partyTagPriList,
+                    sortBool,
                     pageable
             );
 
@@ -76,14 +78,21 @@ public class PartyViewService {
      * 파티 참가원 목록 조회
      */
     public List<PartyGuestDto> getPartyGuestList(
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime,
+            PartyType partyType,
+            List<Long> partyTagPriList,
             Long partyPriKey,
-            Long userPriKey,
             GuestType confirm
     ) {
         try {
             return partyGuestRepository.findByOptions(
+                    searchStartTime,
+                    searchEndTime,
+                    partyType,
+                    partyTagPriList,
                     partyPriKey,
-                    userPriKey,
+                    null,
                     confirm
             );
         } catch (GeneralException e) {
@@ -103,8 +112,13 @@ public class PartyViewService {
      * 유저가 참가하는 모임 목록 조회
      */
     public List<PartyDto> getPartyByUser(
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime,
+            PartyType partyType,
+            List<Long> partyTagPriList,
             Long userPriKey,
-            GuestType confirm
+            GuestType confirm,
+            Boolean sortBool
     ) {
         try {
             if (userPriKey == null)
@@ -114,11 +128,15 @@ public class PartyViewService {
                 );
             List<Long> partyPriKeyList =
                     partyGuestRepository.findByOptions(
+                            searchStartTime,
+                            searchEndTime,
+                            partyType,
+                            partyTagPriList,
                             null,
                             userPriKey,
                             confirm
                     ).stream().map(PartyGuestDto::getPartyPriKey).toList();
-            return partyRepository.findByPriKeyList(partyPriKeyList);
+            return partyRepository.findByPriKeyList(partyPriKeyList, sortBool);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),
@@ -136,7 +154,8 @@ public class PartyViewService {
      * 유저가 Host인 모임 목록
      */
     public List<PartyDto> getPartyByHostPriKey(
-            Long userPriKey
+            Long userPriKey,
+            Boolean sortBool
     ) {
         try {
             if (userPriKey == null)
@@ -144,7 +163,7 @@ public class PartyViewService {
                         ErrorCode.BAD_REQUEST,
                         ErrorMessage.NOT_FOUND_USER_PRI_KEY
                 );
-            return partyRepository.findByHostPriKey(userPriKey);
+            return partyRepository.findByHostPriKey(userPriKey, sortBool);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

@@ -205,6 +205,10 @@ public class PartyService {
 
             List<PartyGuestDto> partyGuestDtos =
                     partyGuestRepository.findByOptions(
+                            null,
+                            null,
+                            null,
+                            null,
                             party.get().getId(),
                             user.get().getId(),
                             null
@@ -263,6 +267,10 @@ public class PartyService {
 
             List<PartyGuestDto> partyGuestDtos =
                     partyGuestRepository.findByOptions(
+                            null,
+                            null,
+                            null,
+                            null,
                             partyPriKey,
                             guestPriKey,
                             null

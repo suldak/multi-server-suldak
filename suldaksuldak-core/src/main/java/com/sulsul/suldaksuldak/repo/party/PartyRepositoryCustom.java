@@ -17,14 +17,17 @@ public interface PartyRepositoryCustom {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            Boolean sortBool,
             Pageable pageable
     );
 
     List<PartyDto> findByPriKeyList(
-            List<Long> priKeyList
+            List<Long> priKeyList,
+            Boolean sortBool
     );
 
     List<PartyDto> findByHostPriKey(
-            Long hostPriKey
+            Long hostPriKey,
+            Boolean sortBool
     );
 }

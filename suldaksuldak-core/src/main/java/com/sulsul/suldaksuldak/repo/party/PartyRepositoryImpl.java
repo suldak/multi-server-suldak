@@ -39,6 +39,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            Boolean sortBool,
             Pageable pageable
     ) {
         List<PartyDto> partyDtos =
@@ -58,7 +59,11 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 partyTypeEq(partyType),
                                 partyTagListIn(partyTagPriList)
                         )
-                        .orderBy(party.createdAt.desc())
+                        .orderBy(
+                                (sortBool == null || sortBool) ?
+                                        party.createdAt.desc() :
+                                        party.createdAt.asc()
+                        )
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
                         .fetch();
@@ -89,7 +94,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 
     @Override
     public List<PartyDto> findByPriKeyList(
-            List<Long> priKeyList
+            List<Long> priKeyList,
+            Boolean sortBool
     ) {
         return getPartyDtoQuery()
                 .from(party)
@@ -99,18 +105,29 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                 .where(
                         party.id.in(priKeyList)
                 )
+                .orderBy(
+                        (sortBool == null || sortBool) ?
+                                party.createdAt.desc() :
+                                party.createdAt.asc()
+                )
                 .fetch();
     }
 
     @Override
     public List<PartyDto> findByHostPriKey(
-            Long hostPriKey
+            Long hostPriKey,
+            Boolean sortBool
     ) {
         return getPartyDtoQuery()
                 .from(party)
                 .innerJoin(party.user, user)
                 .on(party.user.id.eq(hostPriKey))
                 .leftJoin(party.fileBase, QFileBase.fileBase)
+                .orderBy(
+                        (sortBool == null || sortBool) ?
+                                party.createdAt.desc() :
+                                party.createdAt.asc()
+                )
                 .fetch();
     }
 
