@@ -27,7 +27,7 @@ public class PartyGuest extends BaseEntity {
     private User user;
 
     @Setter
-    @Column(nullable = false, columnDefinition = "VARCHAR(10)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private GuestType confirm;
 

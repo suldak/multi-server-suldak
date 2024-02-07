@@ -8,5 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum GuestType {
     WAIT,
     CONFIRM,
-    REFUSE
+    REFUSE,
+    COMPLETE,
+    COMPLETE_WAIT
 }
