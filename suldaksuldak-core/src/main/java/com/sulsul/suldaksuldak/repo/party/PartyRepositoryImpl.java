@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
 import static com.sulsul.suldaksuldak.domain.party.QPartyGuest.partyGuest;
+import static com.sulsul.suldaksuldak.domain.report.QReportParty.reportParty;
 import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 @Repository
@@ -152,6 +153,11 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 party.fileBase.fileNm,
                                 party.partyTag.id,
                                 party.partyTag.name,
+                                JPAExpressions.select(reportParty.count())
+                                        .from(reportParty)
+                                        .where(
+                                                reportParty.party.id.eq(party.id)
+                                        ),
                                 party.createdAt,
                                 party.modifiedAt,
                                 JPAExpressions.select(partyGuest.count())

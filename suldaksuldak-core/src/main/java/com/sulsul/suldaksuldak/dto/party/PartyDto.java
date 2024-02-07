@@ -27,6 +27,7 @@ public class PartyDto {
     String fileBaseNm;
     Long tagPriKey;
     String tagName;
+    Long warningCnt;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
     Long confirmCnt;
@@ -61,6 +62,7 @@ public class PartyDto {
                 null,
                 null,
                 tagPriKey,
+                null,
                 null,
                 null,
                 null,

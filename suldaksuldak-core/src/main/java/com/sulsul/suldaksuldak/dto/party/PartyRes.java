@@ -49,6 +49,8 @@ public class PartyRes {
     LocalDateTime modifiedAt;
     @ApiModelProperty(value = "완료 했거나 확정된 인원")
     Long confirmCnt;
+    @ApiModelProperty(value = "모임 신고 횟수")
+    Long warningCnt;
 
     public static PartyRes from(
             PartyDto partyDto
@@ -76,7 +78,8 @@ public class PartyRes {
                 partyDto.getTagName(),
                 partyDto.getCreatedAt(),
                 partyDto.getModifiedAt(),
-                partyDto.getConfirmCnt()
+                partyDto.getConfirmCnt(),
+                partyDto.getWarningCnt()
         );
     }
 }
