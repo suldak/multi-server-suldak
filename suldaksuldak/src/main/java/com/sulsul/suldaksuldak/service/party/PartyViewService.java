@@ -37,6 +37,7 @@ public class PartyViewService {
             Integer personnel,
             PartyType partyType,
             Long hostUserPriKey,
+            List<Long> partyTagPriList,
             Pageable pageable
     ) {
         try {
@@ -47,6 +48,7 @@ public class PartyViewService {
                     personnel,
                     partyType,
                     hostUserPriKey,
+                    partyTagPriList,
                     pageable
             );
 

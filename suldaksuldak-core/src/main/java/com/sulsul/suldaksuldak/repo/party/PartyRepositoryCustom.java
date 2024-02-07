@@ -16,6 +16,7 @@ public interface PartyRepositoryCustom {
             Integer personnel,
             PartyType partyType,
             Long hostUserPriKey,
+            List<Long> partyTagPriList,
             Pageable pageable
     );
 

@@ -35,6 +35,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
             Integer personnel,
             PartyType partyType,
             Long hostUserPriKey,
+            List<Long> partyTagPriList,
             Pageable pageable
     ) {
         List<PartyDto> partyDtos =
@@ -51,7 +52,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 //                                introStrLike(searchStr),
                                 searchAtBetween(searchStartTime, searchEndTime),
                                 personnelEq(personnel),
-                                partyTypeEq(partyType)
+                                partyTypeEq(partyType),
+                                partyTagListIn(partyTagPriList)
                         )
                         .orderBy(party.createdAt.desc())
                         .offset(pageable.getOffset())
@@ -72,7 +74,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 //                                introStrLike(searchStr),
                                 searchAtBetween(searchStartTime, searchEndTime),
                                 personnelEq(personnel),
-                                partyTypeEq(partyType)
+                                partyTypeEq(partyType),
+                                partyTagListIn(partyTagPriList)
                         );
 
         return PageableExecutionUtils.getPage(
@@ -172,5 +175,12 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
     ) {
         return partyType == null ? null :
                 party.partyType.eq(partyType);
+    }
+
+    public BooleanExpression partyTagListIn(
+            List<Long> partyTagPriList
+    ) {
+        return partyTagPriList == null || partyTagPriList.isEmpty() ? null :
+                party.partyTag.id.in(partyTagPriList);
     }
 }

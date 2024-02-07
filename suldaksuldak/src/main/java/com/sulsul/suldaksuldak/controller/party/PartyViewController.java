@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,8 @@ public class PartyViewController {
             @ApiImplicitParam(name = "partyType", value = "모임 타입을 검색합니다."),
             @ApiImplicitParam(name = "hostUserPriKey", value = "모임 주최자를 검색합니다."),
             @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
-            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10"),
+            @ApiImplicitParam(name = "partyTagPriKey", value = "모임 태그들의 기본키 \",\" 로 구분", example = "1,2,6", dataTypeClass = String.class)
     })
     public ApiDataResponse<Page<PartyRes>> getPartyList(
             String name,
@@ -55,9 +57,21 @@ public class PartyViewController {
             Integer personnel,
             PartyType partyType,
             Long hostUserPriKey,
+            String partyTagPriKey,
             Integer pageNum,
             Integer recordSize
     ) {
+        List<Long> partyTagPriList = new ArrayList<>();
+        if (partyTagPriKey != null && !partyTagPriKey.isBlank()) {
+            List<String> partyTagPriStrList = List.of(partyTagPriKey.split(","));
+            for (String key: partyTagPriStrList) {
+                try {
+                    partyTagPriList.add(
+                            Long.parseLong(key.trim())
+                    );
+                } catch (Exception ignore) {}
+            }
+        }
         return ApiDataResponse.of(
                 partyViewService.getPartyPageList(
                         name,
@@ -66,6 +80,7 @@ public class PartyViewController {
                         personnel,
                         partyType,
                         hostUserPriKey,
+                        partyTagPriList,
                         UtilTool.getPageable(pageNum, recordSize)
                 )
         );
