@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.admin;
 
-import com.sulsul.suldaksuldak.Service.admin.ConsentService;
+import com.sulsul.suldaksuldak.service.admin.ConsentService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.admin.consent.ConsentItemReq;
 import io.swagger.annotations.Api;

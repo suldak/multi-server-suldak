@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.Service.tag;
+package com.sulsul.suldaksuldak.service.tag;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;

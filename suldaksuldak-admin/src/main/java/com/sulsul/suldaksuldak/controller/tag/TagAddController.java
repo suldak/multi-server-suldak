@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.tag;
 
-import com.sulsul.suldaksuldak.Service.tag.TagAddService;
+import com.sulsul.suldaksuldak.service.tag.TagAddService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackReq;
 import com.sulsul.suldaksuldak.dto.tag.*;

@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.liquor;
 
-import com.sulsul.suldaksuldak.Service.liquor.LiquorDelService;
+import com.sulsul.suldaksuldak.service.liquor.LiquorDelService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeReq;
 import io.swagger.annotations.Api;

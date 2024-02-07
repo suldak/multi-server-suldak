@@ -1,7 +1,7 @@
 package com.sulsul.suldaksuldak.controller.liquor;
 
-import com.sulsul.suldaksuldak.Service.liquor.LiquorAddService;
-import com.sulsul.suldaksuldak.Service.liquor.LiquorTagService;
+import com.sulsul.suldaksuldak.service.liquor.LiquorAddService;
+import com.sulsul.suldaksuldak.service.liquor.LiquorTagService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorReq;
 import io.swagger.annotations.Api;

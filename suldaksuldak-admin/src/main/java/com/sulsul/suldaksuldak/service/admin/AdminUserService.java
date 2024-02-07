@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.Service.admin;
+package com.sulsul.suldaksuldak.service.admin;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;

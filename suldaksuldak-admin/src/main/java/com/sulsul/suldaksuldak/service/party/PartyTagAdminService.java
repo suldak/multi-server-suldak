@@ -1,9 +1,9 @@
-package com.sulsul.suldaksuldak.Service.report;
+package com.sulsul.suldaksuldak.service.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
-import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
+import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.report.reason.party.ReportPartyReasonRepository;
+import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,36 +11,34 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReportReasonService {
-    private final ReportPartyReasonRepository reportPartyReasonRepository;
+public class PartyTagAdminService {
+    private final PartyTagRepository partyTagRepository;
 
     /**
-     * 모임 신고 이유 생성 및 수정
+     * 모임 태그 생성 및 수정
      */
-    public Boolean createReportPartyReason(
+    public Boolean createPartyTag(
             Long id,
-            String reason
+            String name
     ) {
         try {
             if (id == null) {
-                reportPartyReasonRepository.save(
-                        ReportPartyReason.of(
-                                null,
-                                reason
-                        )
+                partyTagRepository.save(
+                        PartyTag.of(null, name)
                 );
             } else {
-                reportPartyReasonRepository.findById(id)
+                partyTagRepository.findById(id)
                         .ifPresentOrElse(
                                 findEntity -> {
-                                    if (reason != null)
-                                        findEntity.setReason(reason);
-                                    reportPartyReasonRepository.save(findEntity);
+                                    if (name != null) findEntity.setName(name);
+                                    partyTagRepository.save(
+                                            findEntity
+                                    );
                                 },
                                 () -> {
                                     throw new GeneralException(
                                             ErrorCode.NOT_FOUND,
-                                            "해당 모임 신고 이유를 찾을 수 없습니다."
+                                            "해당 모임 태그를 찾지 못했습니다."
                                     );
                                 }
                         );
@@ -60,18 +58,16 @@ public class ReportReasonService {
     }
 
     /**
-     * 모임 신고 이유 삭제
+     * 모임 태그 삭제
      */
-    public Boolean deleteReportPartyReason (
-            Long id
-    ) {
+    public Boolean deletePartyTag(Long id) {
         try {
             if (id == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
-                        "기본키가 누락되었습니다."
+                        "기본키가 NULL 입니다."
                 );
-            reportPartyReasonRepository.deleteById(id);
+            partyTagRepository.deleteById(id);
             return true;
         } catch (GeneralException e) {
             throw new GeneralException(

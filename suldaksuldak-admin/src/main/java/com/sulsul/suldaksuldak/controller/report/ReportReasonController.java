@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.report;
 
-import com.sulsul.suldaksuldak.Service.report.ReportReasonService;
+import com.sulsul.suldaksuldak.service.report.ReportReasonService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyReasonDto;
 import io.swagger.annotations.Api;

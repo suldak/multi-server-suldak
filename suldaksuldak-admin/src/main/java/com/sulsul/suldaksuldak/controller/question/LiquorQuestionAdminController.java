@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.question;
 
-import com.sulsul.suldaksuldak.Service.question.LiquorQuestionAdminService;
+import com.sulsul.suldaksuldak.service.question.LiquorQuestionAdminService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.question.LiquorAnswerReq;
 import com.sulsul.suldaksuldak.dto.question.LiquorQuestionReq;

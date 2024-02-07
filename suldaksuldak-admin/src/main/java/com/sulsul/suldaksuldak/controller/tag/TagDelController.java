@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.tag;
 
-import com.sulsul.suldaksuldak.Service.tag.TagDelService;
+import com.sulsul.suldaksuldak.service.tag.TagDelService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

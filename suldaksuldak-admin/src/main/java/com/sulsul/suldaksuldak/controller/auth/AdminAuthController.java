@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.auth;
 
-import com.sulsul.suldaksuldak.Service.auth.AdminAuthService;
+import com.sulsul.suldaksuldak.service.auth.AdminAuthService;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;

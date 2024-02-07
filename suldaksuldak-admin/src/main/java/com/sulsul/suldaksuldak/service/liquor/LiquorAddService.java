@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.Service.liquor;
+package com.sulsul.suldaksuldak.service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;

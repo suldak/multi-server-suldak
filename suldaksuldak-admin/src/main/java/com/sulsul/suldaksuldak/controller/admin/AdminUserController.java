@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.admin;
 
-import com.sulsul.suldaksuldak.Service.admin.AdminUserService;
+import com.sulsul.suldaksuldak.service.admin.AdminUserService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.auth.UserReq;
 import io.swagger.annotations.Api;

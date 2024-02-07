@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.controller.party;
 
-import com.sulsul.suldaksuldak.Service.party.PartyTagAdminService;
+import com.sulsul.suldaksuldak.service.party.PartyTagAdminService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.tag.PartyTagDto;
 import io.swagger.annotations.Api;
