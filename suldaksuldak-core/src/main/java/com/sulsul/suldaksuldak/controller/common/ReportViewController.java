@@ -1,8 +1,8 @@
-package com.sulsul.suldaksuldak.controller.report;
+package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyRes;
-import com.sulsul.suldaksuldak.service.report.ReportViewService;
+import com.sulsul.suldaksuldak.service.common.ReportViewService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -18,8 +18,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/admin/report/view")
-@Api(tags = "[ADMIN] 신고 내용 조회")
+@RequestMapping("/api/report/view")
+@Api(tags = "[COMMON] 신고 내용 조회")
 public class ReportViewController {
     private final ReportViewService reportViewService;
 

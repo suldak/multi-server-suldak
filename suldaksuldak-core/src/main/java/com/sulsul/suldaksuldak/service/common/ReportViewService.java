@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.service.report;
+package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyDto;
