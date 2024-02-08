@@ -1,12 +1,15 @@
 package com.sulsul.suldaksuldak.domain.party;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
+import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -54,6 +57,11 @@ public class PartyComment extends BaseEntity {
     @Setter
     @Column(nullable = false)
     private Integer warningCnt;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "partyComment", cascade = CascadeType.REMOVE)
+    private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
 
     protected PartyComment() {}
 

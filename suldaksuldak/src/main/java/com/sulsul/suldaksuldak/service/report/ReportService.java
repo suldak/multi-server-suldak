@@ -2,13 +2,17 @@ package com.sulsul.suldaksuldak.service.report;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.party.Party;
+import com.sulsul.suldaksuldak.domain.party.PartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportParty;
+import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
+import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
+import com.sulsul.suldaksuldak.repo.report.party.comment.ReportPartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.reason.party.ReportPartyReasonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +26,10 @@ import java.util.Optional;
 public class ReportService {
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
+    private final PartyCommentRepository partyCommentRepository;
     private final ReportPartyReasonRepository reportPartyReasonRepository;
     private final ReportPartyRepository reportPartyRepository;
+    private final ReportPartyCommentRepository reportPartyCommentRepository;
 
     /**
      * 모임 신고 하기
@@ -69,6 +75,55 @@ public class ReportService {
                             user.get(),
                             party.get(),
                             false
+                    )
+            );
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public Boolean createReportPartyComment(
+            Long userPriKey,
+            String commentPriKey
+    ) {
+        try {
+            if (commentPriKey == null || commentPriKey.isBlank())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "댓글 기본키가 누락되었습니다."
+                );
+            if (userPriKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "사용자 정보가 누락되었습니다."
+                );
+            Optional<User> user = userRepository.findById(userPriKey);
+            if (user.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "사용자 정보를 찾을 수 없습니다."
+                );
+            Optional<PartyComment> partyComment =
+                    partyCommentRepository.findById(commentPriKey);
+            if (partyComment.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "댓글 정보를 찾을 수 없습니다."
+                );
+            reportPartyCommentRepository.save(
+                    ReportPartyComment.of(
+                            null,
+                            user.get(),
+                            partyComment.get()
                     )
             );
             return true;

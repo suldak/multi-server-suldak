@@ -46,4 +46,27 @@ public class ReportController {
                 )
         );
     }
+
+    @PostMapping("/party-comment/{partyCommentPriKey}")
+    @ApiOperation(
+            value = "모임 댓글 신고",
+            notes = "모임 댓글을 신고합니다."
+    )
+    public ApiDataResponse<Boolean> submitPartyCommentReport(
+            HttpServletRequest request,
+            @PathVariable String partyCommentPriKey
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
+        return ApiDataResponse.of(
+                reportService.createReportPartyComment(
+                        userPriKey,
+                        partyCommentPriKey
+                )
+        );
+    }
 }

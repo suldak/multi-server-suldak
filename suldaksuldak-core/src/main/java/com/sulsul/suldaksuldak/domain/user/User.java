@@ -9,6 +9,7 @@ import com.sulsul.suldaksuldak.domain.party.PartyComment;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.question.UserSelect;
 import com.sulsul.suldaksuldak.domain.report.ReportParty;
+import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.search.SearchText;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.stats.UserTag;
@@ -144,6 +145,11 @@ public class User extends BaseEntity {
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<ReportParty> reportParties = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
 
     protected User () {}
 

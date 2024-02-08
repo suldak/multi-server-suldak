@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.report.party.ReportPartyCommentRes;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyRes;
 import com.sulsul.suldaksuldak.service.common.ReportViewService;
 import io.swagger.annotations.Api;
@@ -50,6 +51,33 @@ public class ReportViewController {
                         .stream()
                         .map(ReportPartyRes::from)
                         .toList()
+        );
+    }
+
+    @GetMapping("/party-comment")
+    @ApiOperation(
+            value = "모임 댓글 신고 내역 조회",
+            notes = "모임 댓글을 신고한 내역들을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userPriKey", value = "신고한 유저 기본키", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "commentPriKey", value = "신고당한 모임 댓글 기본키", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "commentUserPriKey", value = "신고당한 모임 댓글 작성자 기본키", dataTypeClass = Long.class),
+    })
+    public ApiDataResponse<List<ReportPartyCommentRes>> getReportPartyCommentList(
+            Long userPriKey,
+            Long partyPriKey,
+            String commentPriKey,
+            Long commentUserPriKey
+    ) {
+        return ApiDataResponse.of(
+                reportViewService.getReportPartyCommentList(
+                        userPriKey,
+                        partyPriKey,
+                        commentPriKey,
+                        commentUserPriKey
+                ).stream().map(ReportPartyCommentRes::from).toList()
         );
     }
 }
