@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyCommentRes;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyRes;
 import com.sulsul.suldaksuldak.service.common.ReportViewService;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -11,9 +12,11 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -54,29 +57,26 @@ public class ReportViewController {
         );
     }
 
-    @GetMapping("/party-comment")
+    @GetMapping("/party-comment/{partyPriKey:[0-9]+}")
     @ApiOperation(
             value = "모임 댓글 신고 내역 조회",
             notes = "모임 댓글을 신고한 내역들을 조회합니다."
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userPriKey", value = "신고한 유저 기본키", dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class),
-            @ApiImplicitParam(name = "commentPriKey", value = "신고당한 모임 댓글 기본키", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "commentUserPriKey", value = "신고당한 모임 댓글 작성자 기본키", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "userPriKey", value = "신고한 유저 기본키 (NULL이면 자신의 신고 내역 조회)", dataTypeClass = Long.class),
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", required = true, dataTypeClass = Long.class)
     })
     public ApiDataResponse<List<ReportPartyCommentRes>> getReportPartyCommentList(
+            HttpServletRequest request,
             Long userPriKey,
-            Long partyPriKey,
-            String commentPriKey,
-            Long commentUserPriKey
+            @PathVariable Long partyPriKey
     ) {
+        Long searchUserPriKey = userPriKey != null ? userPriKey : UtilTool.getUserPriKeyFromHeader(request);
+
         return ApiDataResponse.of(
                 reportViewService.getReportPartyCommentList(
-                        userPriKey,
-                        partyPriKey,
-                        commentPriKey,
-                        commentUserPriKey
+                        searchUserPriKey,
+                        partyPriKey
                 ).stream().map(ReportPartyCommentRes::from).toList()
         );
     }

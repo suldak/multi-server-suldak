@@ -119,6 +119,11 @@ public class ReportService {
                         ErrorCode.NOT_FOUND,
                         "댓글 정보를 찾을 수 없습니다."
                 );
+            if (user.get().getId().equals(partyComment.get().getUser().getId()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "자신의 댓글입니다."
+                );
             reportPartyCommentRepository.save(
                     ReportPartyComment.of(
                             null,

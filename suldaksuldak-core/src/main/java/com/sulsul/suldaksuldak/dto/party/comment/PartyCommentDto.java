@@ -15,11 +15,10 @@ public class PartyCommentDto {
     String partyName;
     String partyFileNm;
     String groupComment;
-//    Long commentCnt;
     Integer commentDep;
     Boolean isDelete;
     Boolean isModified;
-    Integer warningCnt;
+    Long warningCnt;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 }

@@ -1,9 +1,11 @@
 package com.sulsul.suldaksuldak.repo.party.comment;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.domain.party.PartyComment;
+import static com.sulsul.suldaksuldak.domain.report.QReportPartyComment.reportPartyComment;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -91,11 +93,15 @@ public class PartyCommentRepositoryImpl
                                 partyComment.party.name,
                                 partyComment.party.fileBase.fileNm,
                                 partyComment.groupComment,
-//                                partyComment.groupComment.count(),
                                 partyComment.commentDep,
                                 partyComment.isDelete,
                                 partyComment.isModified,
-                                partyComment.warningCnt,
+//                                partyComment.warningCnt,
+                                JPAExpressions.select(reportPartyComment.count())
+                                        .from(reportPartyComment)
+                                        .where(
+                                                reportPartyComment.partyComment.id.eq(partyComment.id)
+                                        ),
                                 partyComment.createdAt,
                                 partyComment.modifiedAt
                         )

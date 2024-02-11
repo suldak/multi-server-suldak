@@ -50,16 +50,12 @@ public class ReportViewService {
 
     public List<ReportPartyCommentDto> getReportPartyCommentList(
             Long userPriKey,
-            Long partyPriKey,
-            String commentPriKey,
-            Long commentUserPriKey
+            Long partyPriKey
     ) {
         try {
             return reportPartyCommentRepository.findByOptions(
                     userPriKey,
-                    partyPriKey,
-                    commentPriKey,
-                    commentUserPriKey
+                    partyPriKey
             );
         } catch (GeneralException e) {
             throw new GeneralException(

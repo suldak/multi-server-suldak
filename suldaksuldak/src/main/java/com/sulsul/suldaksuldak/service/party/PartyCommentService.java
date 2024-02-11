@@ -71,8 +71,7 @@ public class PartyCommentService {
                             priKey,
                             0,
                             false,
-                            false,
-                            0
+                            false
                     )
             );
             return true;
@@ -127,6 +126,11 @@ public class PartyCommentService {
                         ErrorCode.NOT_FOUND,
                         "댓글 정보를 찾을 수 없습니다."
                 );
+            if (partyComment.get().getIsDelete())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 삭제된 댓글 입니다."
+                );
             String dateStr = UtilTool.getLocalDateTimeString();
             String priKey = dateStr + "_" + party.get().getId() + "_" + user.get().getId();
             // 먼저 대댓글 저장
@@ -139,8 +143,7 @@ public class PartyCommentService {
                             partyComment.get().getId(),
                             partyComment.get().getCommentDep() + 1,
                             false,
-                            false,
-                            0
+                            false
                     )
             );
             return true;
@@ -181,6 +184,11 @@ public class PartyCommentService {
                 throw new GeneralException(
                         ErrorCode.NOT_FOUND,
                         "댓글 정보를 찾을 수 없습니다."
+                );
+            if (partyComment.get().getIsDelete())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 삭제된 댓글 입니다."
                 );
             if (!userPriKey.equals(partyComment.get().getUser().getId()))
                 throw new GeneralException(
@@ -227,6 +235,11 @@ public class PartyCommentService {
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "댓글은 작성한 유저만 삭제할 수 있습니다."
+                );
+            if (partyComment.get().getIsDelete())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 삭제된 댓글 입니다."
                 );
             partyComment.get().setIsDelete(true);
             partyCommentRepository.save(partyComment.get());

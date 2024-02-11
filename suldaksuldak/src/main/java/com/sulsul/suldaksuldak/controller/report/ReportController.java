@@ -7,6 +7,8 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.report.ReportService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,9 @@ public class ReportController {
             value = "모임 신고",
             notes = "모임을 신고합니다."
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", required = true, dataTypeClass = Long.class)
+    })
     public ApiDataResponse<Boolean> submitPartyReport(
             HttpServletRequest request,
             @PathVariable Long partyPriKey,
@@ -52,6 +57,9 @@ public class ReportController {
             value = "모임 댓글 신고",
             notes = "모임 댓글을 신고합니다."
     )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "partyCommentPriKey", value = "모임 댓글 기본키", required = true, dataTypeClass = String.class)
+    })
     public ApiDataResponse<Boolean> submitPartyCommentReport(
             HttpServletRequest request,
             @PathVariable String partyCommentPriKey

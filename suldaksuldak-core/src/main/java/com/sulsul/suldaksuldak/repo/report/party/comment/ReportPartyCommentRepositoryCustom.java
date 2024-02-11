@@ -7,8 +7,6 @@ import java.util.List;
 public interface ReportPartyCommentRepositoryCustom {
     List<ReportPartyCommentDto> findByOptions(
             Long userPriKey,
-            Long partyPriKey,
-            String commentPriKey,
-            Long commentUserPriKey
+            Long partyPriKey
     );
 }

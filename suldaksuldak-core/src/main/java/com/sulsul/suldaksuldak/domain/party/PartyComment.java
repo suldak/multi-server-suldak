@@ -54,9 +54,9 @@ public class PartyComment extends BaseEntity {
     @Column(nullable = false)
     private Boolean isModified;
 
-    @Setter
-    @Column(nullable = false)
-    private Integer warningCnt;
+//    @Setter
+//    @Column(nullable = false)
+//    private Integer warningCnt;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -75,8 +75,8 @@ public class PartyComment extends BaseEntity {
             Integer commentDep,
 //            Integer commentIndex,
             Boolean isDelete,
-            Boolean isModified,
-            Integer warningCnt
+            Boolean isModified
+//            Integer warningCnt
     ) {
         this.id = id;
         this.comment = comment;
@@ -88,7 +88,7 @@ public class PartyComment extends BaseEntity {
 //        this.commentIndex = commentIndex;
         this.isDelete = isDelete;
         this.isModified = isModified;
-        this.warningCnt = warningCnt;
+//        this.warningCnt = warningCnt;
     }
 
     public static PartyComment of (
@@ -101,8 +101,8 @@ public class PartyComment extends BaseEntity {
             Integer commentDep,
 //            Integer commentIndex,
             Boolean isDelete,
-            Boolean isModified,
-            Integer warningCnt
+            Boolean isModified
+//            Integer warningCnt
     ) {
         return new PartyComment(
                 id,
@@ -114,8 +114,8 @@ public class PartyComment extends BaseEntity {
                 commentDep,
 //                commentIndex,
                 isDelete,
-                isModified,
-                warningCnt
+                isModified
+//                warningCnt
         );
     }
 }
