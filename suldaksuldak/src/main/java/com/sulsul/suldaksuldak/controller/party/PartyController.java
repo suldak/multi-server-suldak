@@ -110,39 +110,39 @@ public class PartyController {
         );
     }
 
-    @PostMapping("/confrim/{partyPriKey:[0-9]+}")
-    @ApiOperation(
-            value = "모임 참가 결정 (모임과 유저의 기본키 이용)",
-            notes = "해당 모임 참가를 결정합니다."
-    )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "partyPriKey", value = "해당 모임의 기본키", dataTypeClass = Long.class, required = true),
-            @ApiImplicitParam(name = "userPriKey", value = "해당 유저의 기본키", dataTypeClass = Long.class, required = true),
-            @ApiImplicitParam(name = "confirm", value = "결정 여부", required = true)
-    })
-    public ApiDataResponse<Boolean> confirmPartyGuest(
-            HttpServletRequest request,
-            @PathVariable Long partyPriKey,
-            Long userPriKey,
-            GuestType confirm
-    ) {
-        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
-        if (requestUserPriKey == null)
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "유저 정보가 없습니다."
-            );
-        return ApiDataResponse.of(
-                partyService.modifiedPartyGuest(
-                        requestUserPriKey,
-                        partyPriKey,
-                        userPriKey,
-                        confirm
-                )
-        );
-    }
+//    @PostMapping("/confirm/{partyPriKey:[0-9]+}")
+//    @ApiOperation(
+//            value = "모임 참가 결정 (모임과 유저의 기본키 이용)",
+//            notes = "해당 모임 참가를 결정합니다."
+//    )
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "partyPriKey", value = "해당 모임의 기본키", dataTypeClass = Long.class, required = true),
+//            @ApiImplicitParam(name = "userPriKey", value = "해당 유저의 기본키", dataTypeClass = Long.class, required = true),
+//            @ApiImplicitParam(name = "confirm", value = "결정 여부", required = true)
+//    })
+//    public ApiDataResponse<Boolean> confirmPartyGuest(
+//            HttpServletRequest request,
+//            @PathVariable Long partyPriKey,
+//            Long userPriKey,
+//            GuestType confirm
+//    ) {
+//        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
+//        if (requestUserPriKey == null)
+//            throw new GeneralException(
+//                    ErrorCode.BAD_REQUEST,
+//                    "유저 정보가 없습니다."
+//            );
+//        return ApiDataResponse.of(
+//                partyService.modifiedPartyGuest(
+//                        requestUserPriKey,
+//                        partyPriKey,
+//                        userPriKey,
+//                        confirm
+//                )
+//        );
+//    }
 
-    @PostMapping("/confrim")
+    @PostMapping("/confirm/{priKey}")
     @ApiOperation(
             value = "모임 참가 결정 (모임 신청 정보의 기본키 이용)",
             notes = "해당 모임 참가를 결정합니다."
@@ -153,7 +153,7 @@ public class PartyController {
     })
     public ApiDataResponse<Boolean> confirmPartyGuest(
             HttpServletRequest request,
-            String priKey,
+            @PathVariable String priKey,
             GuestType confirm
     ) {
         Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
