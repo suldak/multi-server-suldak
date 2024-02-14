@@ -145,7 +145,7 @@ public class PartyController {
     @PostMapping("/confirm/{priKey}")
     @ApiOperation(
             value = "모임 참가 결정 (모임 신청 정보의 기본키 이용)",
-            notes = "해당 모임 참가를 결정합니다."
+            notes = "해당 모임 참가를 결정합니다. (Host만 사용 가능)"
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "priKey", value = "모임 신청 정보의 기본키 (String으로 된 값)", dataTypeClass = String.class),
@@ -167,6 +167,32 @@ public class PartyController {
                         requestUserPriKey,
                         priKey,
                         confirm
+                )
+        );
+    }
+
+    @PostMapping("/cancel/{priKey}")
+    @ApiOperation(
+            value = "모임 참가 취소",
+            notes = "해당 모임 참가를 취소합니다. (본인만 취소 가능)"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "모임 신청 정보의 기본키 (String으로 된 값)", dataTypeClass = String.class)
+    })
+    public ApiDataResponse<Boolean> cancelPartyGuest(
+            HttpServletRequest request,
+            @PathVariable String priKey
+    ) {
+        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (requestUserPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
+        return ApiDataResponse.of(
+                partyService.partyCancel(
+                        requestUserPriKey,
+                        priKey
                 )
         );
     }

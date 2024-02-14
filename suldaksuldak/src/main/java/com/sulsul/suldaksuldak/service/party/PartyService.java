@@ -358,4 +358,58 @@ public class PartyService {
             );
         }
     }
+
+    /**
+     * 모임 신청을 취소합니다.
+     */
+    public Boolean partyCancel(
+            Long guestPriKey,
+            String priKey
+    ) {
+        try {
+            if (priKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "기본키를 찾지 못했습니다."
+                );
+            if (guestPriKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "유저 기본키를 찾지 못했습니다."
+                );
+            Optional<PartyGuest> partyGuest =
+                    partyGuestRepository.findById(priKey);
+            if (partyGuest.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 모임을 찾을 수 없습니다."
+                );
+            if (!partyGuest.get().getUser().getId().equals(guestPriKey))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "본인만 모임을 취소할 수 있습니다."
+                );
+            if (
+                    partyGuest.get().getConfirm().equals(GuestType.COMPLETE) ||
+                            partyGuest.get().getConfirm().equals(GuestType.COMPLETE_WAIT)
+            )
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 종료된 모임 입니다."
+                );
+            partyGuest.get().setConfirm(GuestType.CANCEL);
+            partyGuestRepository.save(partyGuest.get());
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
 }
