@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -51,6 +52,8 @@ public class PartyRes {
     Long confirmCnt;
     @ApiModelProperty(value = "모임 신고 횟수")
     Long warningCnt;
+    @ApiModelProperty(value = "유저 기준 검색 시, 모임에 대한 유저의 상태")
+    GuestType guestType;
 
     public static PartyRes from(
             PartyDto partyDto
@@ -79,7 +82,40 @@ public class PartyRes {
                 partyDto.getCreatedAt(),
                 partyDto.getModifiedAt(),
                 partyDto.getConfirmCnt(),
-                partyDto.getWarningCnt()
+                partyDto.getWarningCnt(),
+                null
+        );
+    }
+
+    public static PartyRes from(
+            PartyTotalDto partyTotalDto
+    ) {
+        return new PartyRes(
+                partyTotalDto.getId(),
+                partyTotalDto.getName(),
+                partyTotalDto.getMeetingDay(),
+                partyTotalDto.getPersonnel(),
+                partyTotalDto.getIntroStr(),
+                partyTotalDto.getPartyType(),
+                partyTotalDto.getPartyPlace(),
+                partyTotalDto.getContactType(),
+                partyTotalDto.getUseProgram(),
+                partyTotalDto.getOnlineUrl(),
+                partyTotalDto.getHostUserPriKey(),
+                partyTotalDto.getHostUserName(),
+                partyTotalDto.getHostFileName() == null ||
+                        partyTotalDto.getHostFileName().isBlank() ?
+                        null : FileUrl.FILE_DOWN_URL.getUrl() + partyTotalDto.getHostFileName(),
+                partyTotalDto.getFileBaseNm() == null ||
+                        partyTotalDto.getFileBaseNm().isBlank() ?
+                        null : FileUrl.FILE_DOWN_URL.getUrl() + partyTotalDto.getFileBaseNm(),
+                partyTotalDto.getTagPriKey(),
+                partyTotalDto.getTagName(),
+                partyTotalDto.getCreatedAt(),
+                partyTotalDto.getModifiedAt(),
+                partyTotalDto.getConfirmCnt(),
+                partyTotalDto.getWarningCnt(),
+                partyTotalDto.getGuestType()
         );
     }
 }

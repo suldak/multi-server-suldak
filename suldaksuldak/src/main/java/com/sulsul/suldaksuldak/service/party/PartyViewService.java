@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
+import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
@@ -111,7 +112,7 @@ public class PartyViewService {
     /**
      * 유저가 참가하는 모임 목록 조회
      */
-    public List<PartyDto> getPartyByUser(
+    public List<PartyTotalDto> getPartyByUser(
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
             PartyType partyType,
@@ -136,7 +137,7 @@ public class PartyViewService {
                             userPriKey,
                             confirm
                     ).stream().map(PartyGuestDto::getPartyPriKey).toList();
-            return partyRepository.findByPriKeyList(partyPriKeyList, sortBool);
+            return partyRepository.findByPriKeyAndGuestPriKey(partyPriKeyList, userPriKey, sortBool);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

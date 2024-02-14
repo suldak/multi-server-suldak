@@ -11,6 +11,7 @@ import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
+import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -115,6 +116,28 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
     }
 
     @Override
+    public List<PartyTotalDto> findByPriKeyAndGuestPriKey(
+            List<Long> priKeyList,
+            Long guestPriKey,
+            Boolean sortBool
+    ) {
+        return getPartyTotalDtoQuery(guestPriKey)
+                .from(party)
+                .innerJoin(party.user, user)
+                .on(party.user.id.eq(user.id))
+                .leftJoin(party.fileBase, QFileBase.fileBase)
+                .where(
+                        party.id.in(priKeyList)
+                )
+                .orderBy(
+                        (sortBool == null || sortBool) ?
+                                party.createdAt.desc() :
+                                party.createdAt.asc()
+                )
+                .fetch();
+    }
+
+    @Override
     public List<PartyDto> findByHostPriKey(
             Long hostPriKey,
             Boolean sortBool
@@ -166,6 +189,56 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                                 partyGuest.party.id.eq(party.id)
                                                         .and(
                                                                 partyConfirmCnt()
+                                                        )
+                                        )
+                        )
+                );
+    }
+
+    private JPAQuery<PartyTotalDto> getPartyTotalDtoQuery(
+            Long guestPriKey
+    ) {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                PartyTotalDto.class,
+                                party.id,
+                                party.name,
+                                party.meetingDay,
+                                party.personnel,
+                                party.introStr,
+                                party.partyType,
+                                party.partyPlace,
+                                party.contactType,
+                                party.useProgram,
+                                party.onlineUrl,
+                                party.user.id,
+                                party.user.nickname,
+                                party.user.fileBase.fileNm,
+                                party.fileBase.fileNm,
+                                party.partyTag.id,
+                                party.partyTag.name,
+                                JPAExpressions.select(reportParty.count())
+                                        .from(reportParty)
+                                        .where(
+                                                reportParty.party.id.eq(party.id)
+                                        ),
+                                party.createdAt,
+                                party.modifiedAt,
+                                JPAExpressions.select(partyGuest.count())
+                                        .from(partyGuest)
+                                        .where(
+                                                partyGuest.party.id.eq(party.id)
+                                                        .and(
+                                                                partyConfirmCnt()
+                                                        )
+                                        ),
+                                JPAExpressions.select(partyGuest.confirm)
+                                        .from(partyGuest)
+                                        .where(
+                                                partyGuest.party.id.eq(party.id)
+                                                        .and(
+                                                                partyGuest.user.id.eq(guestPriKey)
                                                         )
                                         )
                         )

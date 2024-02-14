@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.repo.party;
 
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
+import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +24,12 @@ public interface PartyRepositoryCustom {
 
     List<PartyDto> findByPriKeyList(
             List<Long> priKeyList,
+            Boolean sortBool
+    );
+
+    List<PartyTotalDto> findByPriKeyAndGuestPriKey(
+            List<Long> priKeyList,
+            Long guestPriKey,
             Boolean sortBool
     );
 
