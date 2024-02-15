@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.party;
 
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -38,7 +39,10 @@ public class PartyReq {
     @ApiModelProperty(value = "모임 태그 기본키", required = true)
     Long tagPriKey;
 
-    public PartyDto toDto(Long hostUserPriKey) {
+    public PartyDto toDto(
+            Long hostUserPriKey,
+            PartyStateType partyStateType
+    ) {
         return PartyDto.of(
                 null,
                 name,
@@ -50,6 +54,7 @@ public class PartyReq {
                 contactType,
                 useProgram,
                 onlineUrl,
+                partyStateType,
                 hostUserPriKey,
                 tagPriKey
         );

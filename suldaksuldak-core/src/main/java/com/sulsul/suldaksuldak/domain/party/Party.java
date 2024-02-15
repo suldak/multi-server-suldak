@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.domain.party;
 
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
@@ -63,6 +64,11 @@ public class Party extends BaseEntity {
     @Column
     private String onlineUrl;
 
+    @Setter
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
+    @Enumerated(EnumType.STRING)
+    private PartyStateType partyStateType;
+
     @ManyToOne(optional = false)
     private User user;
 
@@ -102,6 +108,7 @@ public class Party extends BaseEntity {
             String contactType,
             String useProgram,
             String onlineUrl,
+            PartyStateType partyStateType,
             User user,
             FileBase fileBase,
             PartyTag partyTag
@@ -116,6 +123,7 @@ public class Party extends BaseEntity {
         this.contactType = contactType;
         this.useProgram = useProgram;
         this.onlineUrl = onlineUrl;
+        this.partyStateType = partyStateType;
         this.user = user;
         this.fileBase = fileBase;
         this.partyTag = partyTag;
@@ -132,6 +140,7 @@ public class Party extends BaseEntity {
             String contactType,
             String useProgram,
             String onlineUrl,
+            PartyStateType partyStateType,
             User user,
             FileBase fileBase,
             PartyTag partyTag
@@ -147,6 +156,7 @@ public class Party extends BaseEntity {
                 contactType,
                 useProgram,
                 onlineUrl,
+                partyStateType,
                 user,
                 fileBase,
                 partyTag

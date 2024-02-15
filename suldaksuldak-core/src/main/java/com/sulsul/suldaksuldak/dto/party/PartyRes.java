@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,6 +33,8 @@ public class PartyRes {
     String useProgram;
     @ApiModelProperty(value = "URL (온라인)")
     String onlineUrl;
+    @ApiModelProperty(value = "모임 상태")
+    PartyStateType partyStateType;
     @ApiModelProperty(value = "주최자 기본키")
     Long hostUserPriKey;
     @ApiModelProperty(value = "주최자 이름")
@@ -69,6 +72,7 @@ public class PartyRes {
                 partyDto.getContactType(),
                 partyDto.getUseProgram(),
                 partyDto.getOnlineUrl(),
+                partyDto.getPartyStateType(),
                 partyDto.getHostUserPriKey(),
                 partyDto.getHostUserName(),
                 partyDto.getHostFileName() == null ||
@@ -101,6 +105,7 @@ public class PartyRes {
                 partyTotalDto.getContactType(),
                 partyTotalDto.getUseProgram(),
                 partyTotalDto.getOnlineUrl(),
+                partyTotalDto.getPartyStateType(),
                 partyTotalDto.getHostUserPriKey(),
                 partyTotalDto.getHostUserName(),
                 partyTotalDto.getHostFileName() == null ||

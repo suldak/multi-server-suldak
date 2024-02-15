@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.party;
 
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
@@ -21,6 +22,7 @@ public class PartyDto {
     String contactType;
     String useProgram;
     String onlineUrl;
+    PartyStateType partyStateType;
     Long hostUserPriKey;
     String hostUserName;
     String hostFileName;
@@ -43,6 +45,7 @@ public class PartyDto {
             String contactType,
             String useProgram,
             String onlineUrl,
+            PartyStateType partyStateType,
             Long hostUserPriKey,
             Long tagPriKey
     ) {
@@ -57,6 +60,7 @@ public class PartyDto {
                 contactType,
                 useProgram,
                 onlineUrl,
+                partyStateType,
                 hostUserPriKey,
                 null,
                 null,
@@ -86,6 +90,7 @@ public class PartyDto {
                 contactType,
                 useProgram,
                 onlineUrl,
+                partyStateType,
                 user,
                 fileBase,
                 partyTag

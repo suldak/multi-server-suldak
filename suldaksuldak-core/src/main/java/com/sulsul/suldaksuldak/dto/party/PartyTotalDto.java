@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import lombok.Value;
 
@@ -18,6 +19,7 @@ public class PartyTotalDto {
     String contactType;
     String useProgram;
     String onlineUrl;
+    PartyStateType partyStateType;
     Long hostUserPriKey;
     String hostUserName;
     String hostFileName;
