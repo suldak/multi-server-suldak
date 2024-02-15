@@ -37,6 +37,15 @@ public class StToLiRepositoryImpl implements StToLiRepositoryCustom, BridgeInter
     }
 
     @Override
+    public Boolean deleteByLiquorPriKey(Long liquorPriKey) {
+        jpaQueryFactory
+                .delete(stToLi)
+                .where(stToLi.liquor.id.eq(liquorPriKey))
+                .execute();
+        return true;
+    }
+
+    @Override
     public List<Long> findLiquorPriKeyByTagPriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys

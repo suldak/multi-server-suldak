@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.bridge.*;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
@@ -69,6 +70,11 @@ public class Liquor extends BaseEntity {
     @ManyToOne
     private LiquorName liquorName;
 
+    @OneToOne
+    @Setter
+    @JoinColumn(name = "file_base_nm")
+    private FileBase fileBase;
+
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
@@ -121,7 +127,8 @@ public class Liquor extends BaseEntity {
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
-            LiquorName liquorName
+            LiquorName liquorName,
+            FileBase fileBase
     ) {
         this.id = id;
         this.name = name;
@@ -134,6 +141,7 @@ public class Liquor extends BaseEntity {
         this.liquorDetail = liquorDetail;
         this.drinkingCapacity = drinkingCapacity;
         this.liquorName = liquorName;
+        this.fileBase = fileBase;
     }
 
     public static Liquor of (
@@ -147,7 +155,8 @@ public class Liquor extends BaseEntity {
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
-            LiquorName liquorName
+            LiquorName liquorName,
+            FileBase fileBase
     ) {
         return new Liquor(
                 id,
@@ -160,7 +169,8 @@ public class Liquor extends BaseEntity {
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,
-                liquorName
+                liquorName,
+                fileBase
         );
     }
 }

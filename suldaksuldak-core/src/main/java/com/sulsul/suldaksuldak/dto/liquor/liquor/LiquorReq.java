@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "술 Request")
 public class LiquorReq {
-    @ApiModelProperty(value = "술 기본키 (생략하면 생성)")
-    Long id;
+//    @ApiModelProperty(value = "술 기본키 (생략하면 생성)")
+//    Long id;
     @ApiModelProperty(value = "술 이름", required = true)
     String name;
     @ApiModelProperty(value = "술의 요약 설명", required = true)
@@ -49,9 +49,11 @@ public class LiquorReq {
     @ApiModelProperty(value = "맛 기본키 리스트")
     List<Long> tastePriKeys;
 
-    public LiquorDto toDto() {
+    public LiquorDto toDto(
+            Long priKey
+    ) {
         return LiquorDto.of(
-                id,
+                priKey,
                 name,
                 summaryExplanation,
                 detailExplanation,

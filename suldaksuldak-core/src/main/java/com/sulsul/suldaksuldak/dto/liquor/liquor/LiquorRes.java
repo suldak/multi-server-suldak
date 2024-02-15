@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
@@ -29,6 +30,8 @@ public class LiquorRes {
     Long liquorDetailId;
     @ApiModelProperty(value = "추천 주량 기본키")
     Long drinkingCapacityId;
+    @ApiModelProperty(value = "술 사진 URL")
+    String liquorPictureUrl;
     @ApiModelProperty(value = "생성 일시")
     LocalDateTime createdAt;
     @ApiModelProperty(value = "수정 일시")
@@ -46,6 +49,8 @@ public class LiquorRes {
                 liquorDto.getLiquorAbvId(),
                 liquorDto.getLiquorDetailId(),
                 liquorDto.getDrinkingCapacityId(),
+                liquorDto.getLiquorFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + liquorDto.getLiquorFileNm(),
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );

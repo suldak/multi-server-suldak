@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import static com.sulsul.suldaksuldak.domain.file.QFileBase.fileBase;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
         return Optional.ofNullable(
                 getLiquorDtoQuery()
                         .from(liquor)
+                        .leftJoin(liquor.fileBase, fileBase)
                         .where(priKeyEq(priKey))
                         .fetchFirst()
         );
@@ -51,6 +53,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorAbv.id.eq(liquorAbv.id) :
                                 liquor.liquorAbv.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .where(
                         priKeyIn(liquorPriKeys)
                 )
@@ -70,6 +73,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorAbv.id.eq(liquorAbv.id) :
                                 liquor.liquorAbv.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .fetch();
     }
 
@@ -87,6 +91,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorDetail.id.eq(liquorDetail.id) :
                                 liquor.liquorDetail.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .where(
                         priKeyIn(liquorPriKeys)
                 )
@@ -106,6 +111,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorDetail.id.eq(liquorDetail.id) :
                                 liquor.liquorDetail.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .fetch();
     }
 
@@ -123,6 +129,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.drinkingCapacity.id.eq(drinkingCapacity.id) :
                                 liquor.drinkingCapacity.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .where(
                         priKeyIn(liquorPriKeys)
                 )
@@ -142,6 +149,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.drinkingCapacity.id.eq(drinkingCapacity.id) :
                                 liquor.drinkingCapacity.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .fetch();
     }
 
@@ -159,6 +167,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorName.id.eq(liquorName.id) :
                                 liquor.liquorName.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .where(
                         priKeyIn(liquorPriKeys)
                 )
@@ -178,6 +187,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorName.id.eq(liquorName.id) :
                                 liquor.liquorName.id.in(tagPriKeys)
                 )
+                .leftJoin(liquor.fileBase, fileBase)
                 .fetch();
     }
 
@@ -186,6 +196,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
         return jpaQueryFactory
                 .select(liquor.id)
                 .from(liquor)
+                .leftJoin(liquor.fileBase, fileBase)
                 .where(searchTagLike(searchTag))
                 .orderBy(liquor.name.asc())
                 .fetch();
@@ -199,6 +210,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 jpaQueryFactory
                         .select(liquor.id)
                         .from(liquor)
+                        .leftJoin(liquor.fileBase, fileBase)
                         .orderBy(liquor.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
@@ -220,6 +232,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
         JPAQuery<LiquorDto> selectQuery =
                 getLiquorDtoQuery()
                         .from(liquor)
+                        .leftJoin(liquor.fileBase, fileBase)
 //                        .leftJoin(liquor.liquorAbv, liquorAbv)
 //                        .on(liquor.liquorAbv.id.eq(liquorAbv.id))
 //                        .leftJoin(liquor.liquorDetail, liquorDetail)
@@ -251,6 +264,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
         return jpaQueryFactory
                 .select(liquor.id)
                 .from(liquor)
+                .leftJoin(liquor.fileBase, fileBase)
                 .fetch();
     }
 
@@ -270,6 +284,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorDetail.id,
                                 liquor.drinkingCapacity.id,
                                 liquor.liquorName.id,
+                                liquor.fileBase.fileNm,
                                 liquor.createdAt,
                                 liquor.modifiedAt
                         )

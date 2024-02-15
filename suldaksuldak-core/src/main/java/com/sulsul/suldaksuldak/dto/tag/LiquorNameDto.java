@@ -10,7 +10,7 @@ import lombok.*;
 @Getter
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "1차 분류 Request")
 public class LiquorNameDto {
@@ -20,6 +20,16 @@ public class LiquorNameDto {
     String name;
     @ApiModelProperty(value = "파일 경로", hidden = true)
     String fileBaseNm;
+
+    public LiquorNameDto (
+            Long id,
+            String name,
+            String fileBaseNm
+    ) {
+        this.id = id;
+        this.name = name;
+        this.fileBaseNm = fileBaseNm == null ? null : FileUrl.FILE_DOWN_URL.getUrl() + fileBaseNm;
+    }
 
 
     public static LiquorNameDto of (LiquorName liquorName) {

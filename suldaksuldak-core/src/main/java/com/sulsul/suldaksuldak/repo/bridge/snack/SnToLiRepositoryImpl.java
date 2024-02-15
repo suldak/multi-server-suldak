@@ -37,6 +37,15 @@ public class SnToLiRepositoryImpl implements SnToLiRepositoryCustom, BridgeInter
     }
 
     @Override
+    public Boolean deleteByLiquorPriKey(Long liquorPriKey) {
+        jpaQueryFactory
+                .delete(snToLi)
+                .where(snToLi.liquor.id.eq(liquorPriKey))
+                .execute();
+        return true;
+    }
+
+    @Override
     public List<Long> findLiquorPriKeyByTagPriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys

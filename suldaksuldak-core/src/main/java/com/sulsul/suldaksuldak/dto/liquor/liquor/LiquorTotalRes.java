@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
@@ -28,6 +29,8 @@ public class LiquorTotalRes {
     String liquorRecipe;
     @ApiModelProperty(value = "술의 정확한 도수")
     Double detailAbv;
+    @ApiModelProperty(value = "술 사진 URL")
+    String liquorPictureUrl;
     // 도수
     LiquorAbvDto liquorAbvDto;
     // 2차 분류
@@ -72,6 +75,8 @@ public class LiquorTotalRes {
                 liquorDto.getDetailExplanation(),
                 liquorDto.getLiquorRecipe(),
                 liquorDto.getDetailAbv(),
+                liquorDto.getLiquorFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + liquorDto.getLiquorFileNm(),
                 liquorAbvDto,
                 liquorDetailDto,
                 drinkingCapacityDto,
@@ -105,6 +110,8 @@ public class LiquorTotalRes {
                 liquorDto.getDetailExplanation(),
                 liquorDto.getLiquorRecipe(),
                 liquorDto.getDetailAbv(),
+                liquorDto.getLiquorFileNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + liquorDto.getLiquorFileNm(),
                 liquorAbvDto.orElse(null),
                 liquorDetailDto.orElse(null),
                 drinkingCapacityDto.orElse(null),

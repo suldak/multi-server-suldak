@@ -1,16 +1,18 @@
 package com.sulsul.suldaksuldak.controller.liquor;
 
-import com.sulsul.suldaksuldak.service.liquor.LiquorAddService;
-import com.sulsul.suldaksuldak.service.liquor.LiquorTagService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorReq;
+import com.sulsul.suldaksuldak.service.liquor.LiquorAddService;
+import com.sulsul.suldaksuldak.service.liquor.LiquorTagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,14 +24,47 @@ public class LiquorAddController {
     private final LiquorTagService liquorTagService;
 
     @ApiOperation(
-            value = "술 저장",
-            notes = "술 데이터를 생성하거나 수정합니다."
+            value = "술 생성",
+            notes = "술 데이터를 생성합니다."
     )
-    @PostMapping(value = "/liquor")
+    @PostMapping(
+            value = "/liquor",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ApiDataResponse<Boolean> createLiquor(
-            @RequestBody LiquorReq liquorReq
+            @RequestPart("liquorReq") LiquorReq liquorReq,
+            @RequestPart(value = "file") MultipartFile file
     ) {
-        Long saveLiquorPriKey = liquorAddService.createLiquor(liquorReq.toDto());
+        Long saveLiquorPriKey = liquorAddService.createLiquor(
+                liquorReq.toDto(null),
+                file
+        );
+        return ApiDataResponse.of(
+                liquorTagService.createLiquorTag(
+                        liquorReq.toTotalReq(
+                                saveLiquorPriKey
+                        )
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "술 수정",
+            notes = "술 데이터를 수정합니다."
+    )
+    @PutMapping(
+            value = "/liquor/{priKey:[0-9]+}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ApiDataResponse<Boolean> modifiedLiquor(
+            @PathVariable Long priKey,
+            @RequestPart("liquorReq") LiquorReq liquorReq,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) {
+        Long saveLiquorPriKey = liquorAddService.createLiquor(
+                liquorReq.toDto(priKey),
+                file
+        );
         return ApiDataResponse.of(
                 liquorTagService.createLiquorTag(
                         liquorReq.toTotalReq(

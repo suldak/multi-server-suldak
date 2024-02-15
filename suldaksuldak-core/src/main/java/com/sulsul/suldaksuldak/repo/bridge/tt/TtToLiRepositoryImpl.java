@@ -37,6 +37,15 @@ public class TtToLiRepositoryImpl implements TtToLiRepositoryCustom, BridgeInter
     }
 
     @Override
+    public Boolean deleteByLiquorPriKey(Long liquorPriKey) {
+        jpaQueryFactory
+                .delete(ttToLi)
+                .where(ttToLi.liquor.id.eq(liquorPriKey))
+                .execute();
+        return true;
+    }
+
+    @Override
     public List<Long> findLiquorPriKeyByTagPriKey(
             List<Long> liquorPriKeys,
             List<Long> tagPriKeys

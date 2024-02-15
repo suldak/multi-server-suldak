@@ -240,62 +240,67 @@ public class LiquorTagService {
     public Boolean createLiquorTag(LiquorTotalReq liquorTotalReq) {
         try {
             Liquor liquor = getLiquorDto(liquorTotalReq.getId());
+            snToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getSnackPriKeys() != null) {
                 // 추천 안주 연결
                 for (Long snackPriKey: liquorTotalReq.getSnackPriKeys()) {
                     createLiquorToSnack(liquor, snackPriKey);
                 }
             }
+            slToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getSellPriKeys() != null) {
                 // 판매처 연결
                 for (Long sellPriKey: liquorTotalReq.getSellPriKeys()) {
                     createLiquorToSell(liquor, sellPriKey);
                 }
             }
+            mtToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getMaterialPriKeys() != null) {
                 // 재료 연결
                 for (Long materialPriKey: liquorTotalReq.getMaterialPriKeys()) {
                     createLiquorToMaterial(liquor, materialPriKey);
                 }
             }
+            stToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getStatePriKeys() != null) {
                 // 기분 연결
                 for (Long statePriKey: liquorTotalReq.getStatePriKeys()) {
                     createLiquorToState(liquor, statePriKey);
                 }
             }
+            ttToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getTastePriKeys() != null) {
                 // 맛 연결
                 for (Long tastePriKey: liquorTotalReq.getTastePriKeys()) {
                     createLiquorToTaste(liquor, tastePriKey);
                 }
             }
-            Optional<LiquorAbv> liquorAbv = Optional.empty();
-            Optional<LiquorDetail> liquorDetail = Optional.empty();
-            Optional<DrinkingCapacity> drinkingCapacity = Optional.empty();
-            Optional<LiquorName> liquorName = Optional.empty();
-            if (liquorTotalReq.getLiquorAbvId() != null) {
-                liquorAbv = liquorAbvRepository.findById(liquorTotalReq.getLiquorAbvId());
-            }
-            if (liquorTotalReq.getLiquorDetailId() != null) {
-                liquorDetail = liquorDetailRepository.findById(liquorTotalReq.getLiquorDetailId());
-            }
-            if (liquorTotalReq.getDrinkingCapacityId() != null) {
-                drinkingCapacity = drinkingCapacityRepository.findById(liquorTotalReq.getDrinkingCapacityId());
-            }
-            if (liquorTotalReq.getLiquorNameId() != null) {
-                liquorName = liquorNameRepository.findById(liquorTotalReq.getLiquorNameId());
-            }
-            liquorRepository.save(
-                    LiquorDto.of(liquor)
-                            .updateEntity(
-                                    liquor,
-                                    liquorAbv.orElse(null),
-                                    liquorDetail.orElse(null),
-                                    drinkingCapacity.orElse(null),
-                                    liquorName.orElse(null)
-                            )
-            );
+//            Optional<LiquorAbv> liquorAbv = Optional.empty();
+//            Optional<LiquorDetail> liquorDetail = Optional.empty();
+//            Optional<DrinkingCapacity> drinkingCapacity = Optional.empty();
+//            Optional<LiquorName> liquorName = Optional.empty();
+//            if (liquorTotalReq.getLiquorAbvId() != null) {
+//                liquorAbv = liquorAbvRepository.findById(liquorTotalReq.getLiquorAbvId());
+//            }
+//            if (liquorTotalReq.getLiquorDetailId() != null) {
+//                liquorDetail = liquorDetailRepository.findById(liquorTotalReq.getLiquorDetailId());
+//            }
+//            if (liquorTotalReq.getDrinkingCapacityId() != null) {
+//                drinkingCapacity = drinkingCapacityRepository.findById(liquorTotalReq.getDrinkingCapacityId());
+//            }
+//            if (liquorTotalReq.getLiquorNameId() != null) {
+//                liquorName = liquorNameRepository.findById(liquorTotalReq.getLiquorNameId());
+//            }
+//            liquorRepository.save(
+//                    LiquorDto.of(liquor)
+//                            .updateEntity(
+//                                    liquor,
+//                                    liquorAbv.orElse(null),
+//                                    liquorDetail.orElse(null),
+//                                    drinkingCapacity.orElse(null),
+//                                    liquorName.orElse(null)
+//                            )
+//            );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

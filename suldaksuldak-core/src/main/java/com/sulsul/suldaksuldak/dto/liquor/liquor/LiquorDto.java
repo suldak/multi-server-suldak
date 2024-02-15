@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
@@ -22,6 +23,7 @@ public class LiquorDto {
     Long liquorDetailId;
     Long drinkingCapacityId;
     Long liquorNameId;
+    String liquorFileNm;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -51,6 +53,7 @@ public class LiquorDto {
                 drinkingCapacityId,
                 liquorNameId,
                 null,
+                null,
                 null
         );
     }
@@ -70,6 +73,7 @@ public class LiquorDto {
                 liquor.getLiquorDetail() != null ? liquor.getLiquorDetail().getId() : null,
                 liquor.getDrinkingCapacity() != null ? liquor.getDrinkingCapacity().getId() : null,
                 liquor.getLiquorName() != null ? liquor.getLiquorName().getId(): null,
+                liquor.getFileBase() == null ? null : liquor.getFileBase().getFileNm(),
                 liquor.getCreatedAt(),
                 liquor.getModifiedAt()
         );
@@ -79,7 +83,8 @@ public class LiquorDto {
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
-            LiquorName liquorName
+            LiquorName liquorName,
+            FileBase fileBase
     ) {
         return Liquor.of(
                 id,
@@ -92,7 +97,8 @@ public class LiquorDto {
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,
-                liquorName
+                liquorName,
+                fileBase
         );
     }
 
@@ -113,6 +119,32 @@ public class LiquorDto {
         if (drinkingCapacity != null) liquor.setDrinkingCapacity(drinkingCapacity);
         if (liquorName != null) liquor.setLiquorName(liquorName);
 
+        return liquor;
+    }
+
+    public Liquor updateEntity(
+            Liquor liquor,
+            LiquorAbv liquorAbv,
+            LiquorDetail liquorDetail,
+            DrinkingCapacity drinkingCapacity,
+            LiquorName liquorName,
+            FileBase fileBase
+    ) {
+        if (name != null) liquor.setName(name);
+        if (summaryExplanation != null) liquor.setSummaryExplanation(summaryExplanation);
+        if (detailExplanation != null) liquor.setDetailExplanation(detailExplanation);
+        if (searchTag != null) liquor.setSearchTag(searchTag);
+        if (liquorRecipe != null) liquor.setLiquorRecipe(liquorRecipe);
+//        if (liquorAbv != null) liquor.setLiquorAbv(liquorAbv);
+        liquor.setLiquorAbv(liquorAbv);
+//        if (liquorDetail != null) liquor.setLiquorDetail(liquorDetail);
+        liquor.setLiquorDetail(liquorDetail);
+//        if (drinkingCapacity != null) liquor.setDrinkingCapacity(drinkingCapacity);
+        liquor.setDrinkingCapacity(drinkingCapacity);
+//        if (liquorName != null) liquor.setLiquorName(liquorName);
+        liquor.setLiquorName(liquorName);
+//        if (fileBase != null) liquor.setFileBase(fileBase);
+        liquor.setFileBase(fileBase);
         return liquor;
     }
 
