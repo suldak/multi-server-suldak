@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.repo.party.guest;
 
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
+import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,11 @@ public interface PartyGuestRepositoryCustom {
             List<Long> partyTagPriList,
             Long partyPriKey,
             Long userPriKey,
+            GuestType confirm
+    );
+
+    List<PartyGuest> findByPartyPriKey(
+            Long partyPriKey,
             GuestType confirm
     );
 }

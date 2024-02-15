@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
+import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -55,6 +56,22 @@ public class PartyGuestRepositoryImpl
                         confirmEq(confirm)
                 )
                 .orderBy(partyGuest.createdAt.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<PartyGuest> findByPartyPriKey(
+            Long partyPriKey,
+            GuestType confirm
+    ) {
+        return jpaQueryFactory
+                .selectFrom(partyGuest)
+                .innerJoin(partyGuest.party, party)
+                .on(partyGuest.party.id.eq(partyPriKey))
+                .innerJoin(partyGuest.user, user)
+                .on(partyGuest.user.id.eq(user.id))
+                .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
+                .where(confirmEq(confirm))
                 .fetch();
     }
 
