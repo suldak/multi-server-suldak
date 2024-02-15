@@ -86,33 +86,42 @@ public class TagAddController {
     }
 
     @ApiOperation(
-            value = "1차 분류 저장",
-//            notes = "1차 분류를 생성하거나 수정합니다. (파일 업로드 테스트는 Postman으로... 키 값은 \"file\")"
-            notes = "1차 분류를 생성하거나 수정합니다."
+            value = "1차 분류 생성",
+            notes = "1차 분류를 생성합니다."
     )
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "priKey", value = "태그 기본키 (없으면 생성)", dataTypeClass = Long.class, paramType="query"),
-//            @ApiImplicitParam(name = "name", value = "태그 이름", dataTypeClass = Long.class, paramType="query"),
-//            @ApiImplicitParam(name = "file", value = "이미지 파일", dataTypeClass = MultipartFile.class, paramType="query")
-//    })
     @PostMapping(value = "/liquor-name", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiDataResponse<Boolean> createLiquorName (
-//            @RequestParam(value = "file", required = false) MultipartFile file,
-//            @RequestParam(value = "priKey", required = false) Long priKey,
-//            @RequestParam(value = "name", required = false) String name
-//            @RequestBody LiquorNameDto liquorNameDto
-            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "file") MultipartFile file,
             @RequestPart(value = "liquorNameDto") LiquorNameDto liquorNameDto
     ) {
-        log.info(liquorNameDto.toString());
         return ApiDataResponse.of(
                 tagAddService.createLiquorName(
-                        liquorNameDto.getId(),
+                        null,
                         liquorNameDto.getName(),
                         file
                 )
         );
     }
+
+    @ApiOperation(
+            value = "1차 분류 수정",
+            notes = "1차 분류를 수정합니다."
+    )
+    @PutMapping(value = "/liquor-name/{priKey:[0-9]+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ApiDataResponse<Boolean> modifiedLiquorName (
+            @PathVariable Long priKey,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart(value = "liquorNameDto") LiquorNameDto liquorNameDto
+    ) {
+        return ApiDataResponse.of(
+                tagAddService.createLiquorName(
+                        priKey,
+                        liquorNameDto.getName(),
+                        file
+                )
+        );
+    }
+
     @ApiOperation(
             value = "판매처 저장",
             notes = "판매처를 생성하거나 수정합니다."

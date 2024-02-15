@@ -188,14 +188,13 @@ public class TagAddService {
                                 entity -> {
                                     if (name != null)
                                         entity.setName(name);
-                                    if (file != null) {
-                                        FileBase fileBase = fileService.saveFile(file);
-                                        if (entity.getFileBase() != null) {
-                                            fileService.deleteFile(entity.getFileBase().getFileNm());
-                                        }
-                                        entity.setFileBase(fileBase);
-                                    }
+
+                                    FileBase oriFileBase = entity.getFileBase();
+                                    FileBase fileBase = fileService.saveFile(file);
+                                    entity.setFileBase(fileBase);
                                     liquorNameRepository.save(entity);
+                                    if (oriFileBase != null)
+                                        fileService.deleteFile(oriFileBase.getFileNm());
                                 },
                                 () -> {
                                     throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND ENTITY");
