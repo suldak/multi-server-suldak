@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PartyGuestController {
     private final PartyGuestService partyGuestService;
 
-    @PostMapping("/enter/{partyPriKey:[0-9]+}")
+    @PutMapping("/enter/{partyPriKey:[0-9]+}")
     @ApiOperation(
             value = "모임 참가 신청",
             notes = "해당 모임의 자신이 참가를 신청합니다."
@@ -54,7 +54,7 @@ public class PartyGuestController {
         );
     }
 
-    @PostMapping("/cancel/{priKey}")
+    @PutMapping("/cancel/{priKey}")
     @ApiOperation(
             value = "모임 참가 취소",
             notes = "해당 모임 참가를 취소합니다. (본인만 취소 가능)"
