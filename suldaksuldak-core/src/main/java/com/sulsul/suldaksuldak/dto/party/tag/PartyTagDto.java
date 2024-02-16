@@ -11,9 +11,9 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel(value = "파티 태그 Request")
+@ApiModel(value = "모임 태그 Request")
 public class PartyTagDto {
-    @ApiModelProperty(value = "파티 TAG 기본키 (생략하면 생성)")
+    @ApiModelProperty(value = "모임 TAG 기본키 (생략하면 생성)")
     Long id;
     @ApiModelProperty(value = "태그 이름", required = true)
     String name;
