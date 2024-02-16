@@ -1,32 +1,47 @@
 package com.sulsul.suldaksuldak.service.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
+import com.sulsul.suldaksuldak.domain.party.PartyFeedback;
+import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.domain.user.UserPartyFeedback;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
+import com.sulsul.suldaksuldak.dto.user.party.UserPartyFeedbackReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.party.UserPartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
+import com.sulsul.suldaksuldak.repo.party.feedback.PartyFeedbackRepository;
+import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.file.FileService;
+import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class PartyService {
+    private final CheckPriKeyService checkPriKeyService;
     private final FileService fileService;
     private final UserRepository userRepository;
     private final PartyRepository partyRepository;
     private final PartyTagRepository partyTagRepository;
+    private final PartyGuestRepository partyGuestRepository;
+    private final PartyFeedbackRepository partyFeedbackRepository;
+    private final UserPartyFeedbackRepository userPartyFeedbackRepository;
 
     /**
      * 모임 생성
@@ -64,11 +79,20 @@ public class PartyService {
                         "주최자를 찾지 못했습니다."
                 );
             FileBase fileBase = fileService.saveFile(file);
-            partyRepository.save(
+            Party party = partyRepository.save(
                     partyDto.toEntity(
                             user.get(),
                             fileBase,
                             partyTag.get()
+                    )
+            );
+            String dateStr = UtilTool.getLocalDateTimeString();
+            partyGuestRepository.save(
+                    PartyGuest.of(
+                            dateStr + "_" + party.getId() + "_" + user.get().getId(),
+                            party,
+                            user.get(),
+                            GuestType.CONFIRM
                     )
             );
             return true;
@@ -198,5 +222,82 @@ public class PartyService {
                     "이미 취소된 모임입니다."
             );
         return party;
+    }
+
+    /**
+     * 모임 피드백 저장
+     */
+    public Boolean createUserPartyFeedback(
+            Long writerUserPriKey,
+            Long partyPriKey,
+            List<UserPartyFeedbackReq.FeedbackObj> feedbackObjs
+    ) {
+        try {
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
+
+            if (!party.getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임이 완료된 모임이 아닙니다."
+                );
+
+            PartyGuest partyGuest =
+                    checkPriKeyService.checkAndGetPartyGuest(
+                            writerUserPriKey,
+                            partyPriKey
+                    );
+            if (!partyGuest.getParty().getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임이 완료된 모임이 아닙니다."
+                );
+            if (!partyGuest.getConfirm().equals(GuestType.COMPLETE_WAIT))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "완료 대기상태가 아닙니다."
+                );
+
+            for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
+                try {
+                    User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
+                    if (user.getId().equals(writerUserPriKey)) continue;
+                    for (Long feedbackPriKey: feedbackObj.getPartyFeedbackPriKeyList()) {
+                        Optional<PartyFeedback> partyFeedback =
+                                partyFeedbackRepository.findById(feedbackPriKey);
+                        if (partyFeedback.isEmpty()) continue;
+                        userPartyFeedbackRepository.save(
+                                UserPartyFeedback.of(
+                                        null,
+                                        user,
+                                        partyFeedback.get()
+                                )
+                        );
+                        if (user.getLevel() + partyFeedback.get().getScore() >= 100) {
+                            user.setLevel(100);
+                        } else if (user.getLevel() + partyFeedback.get().getScore() < 0) {
+                            user.setLevel(0);
+                        } else {
+                            user.setLevel(user.getLevel() + partyFeedback.get().getScore());
+                        }
+                        userRepository.save(user);
+                    }
+                } catch (Exception ignore) {}
+            }
+
+            partyGuest.setConfirm(GuestType.COMPLETE);
+            partyGuestRepository.save(partyGuest);
+
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
     }
 }

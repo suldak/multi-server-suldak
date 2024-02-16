@@ -60,6 +60,12 @@ public class PartyHostService {
                         ErrorCode.BAD_REQUEST,
                         "해당 모임의 호스트가 아닙니다."
                 );
+            if (hostPriKey.equals(partyGuest.get().getUser().getId()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "자신이 호스트인 모임입니다."
+                );
+
             if (
                     confirm.equals(GuestType.CONFIRM) &&
                     !partyGuestService.checkPartyPersonnel(partyGuest.get().getParty())
