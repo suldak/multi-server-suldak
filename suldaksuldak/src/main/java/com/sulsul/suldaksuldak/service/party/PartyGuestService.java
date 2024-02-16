@@ -140,15 +140,15 @@ public class PartyGuestService {
                         ErrorCode.BAD_REQUEST,
                         "자신이 호스트인 모임입니다."
                 );
-            if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "이미 모집이 종료된 모임입니다."
-                );
             if (!partyGuest.get().getUser().getId().equals(guestPriKey))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "본인만 모임을 취소할 수 있습니다."
+                );
+            if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 모집이 종료된 모임입니다."
                 );
             if (
                     partyGuest.get().getConfirm().equals(GuestType.COMPLETE) ||

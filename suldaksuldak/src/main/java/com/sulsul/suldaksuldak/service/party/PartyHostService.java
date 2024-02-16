@@ -60,7 +60,10 @@ public class PartyHostService {
                         ErrorCode.BAD_REQUEST,
                         "해당 모임의 호스트가 아닙니다."
                 );
-            if (!partyGuestService.checkPartyPersonnel(partyGuest.get().getParty()))
+            if (
+                    confirm.equals(GuestType.CONFIRM) &&
+                    !partyGuestService.checkPartyPersonnel(partyGuest.get().getParty())
+            )
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "인원이 모두 모집되었습니다."
@@ -91,6 +94,11 @@ public class PartyHostService {
     ) {
         try {
             Party party = partyService.checkParty(partyPriKey, false);
+            if (partyGuestService.getPartyConfirmCnt(party.getId()) < 3)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "승인된 인원이 최소 3명 부터 모집을 종료할 수 있습니다."
+                );
             if (!party.getUser().getId().equals(hostPriKey))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,

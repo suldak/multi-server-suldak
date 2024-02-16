@@ -36,6 +36,11 @@ public class PartyService {
             MultipartFile file
     ) {
         try {
+            if (partyDto.getPersonnel() < 3)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임의 최소 인원은 3명입니다."
+                );
             if (partyDto.getHostUserPriKey() == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,

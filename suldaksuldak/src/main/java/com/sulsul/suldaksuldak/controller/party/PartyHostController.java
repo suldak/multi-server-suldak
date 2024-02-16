@@ -39,26 +39,25 @@ public class PartyHostController {
             @PathVariable String priKey,
             GuestType confirm
     ) {
-        if (confirm.equals(GuestType.CONFIRM) || confirm.equals(GuestType.REFUSE)) {
-            Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
-            if (requestUserPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "유저 정보가 없습니다."
-                );
-            return ApiDataResponse.of(
-                    partyHostService.modifiedPartyGuest(
-                            requestUserPriKey,
-                            priKey,
-                            confirm
-                    )
-            );
-        } else {
+        if (!confirm.equals(GuestType.CONFIRM) && !confirm.equals(GuestType.REFUSE)) {
             throw new GeneralException(
                     ErrorCode.BAD_REQUEST,
                     "CONFIRM(승인) 이나 REFUSE(거절) 중 하나를 입력해주세요."
             );
         }
+        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (requestUserPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
+        return ApiDataResponse.of(
+                partyHostService.modifiedPartyGuest(
+                        requestUserPriKey,
+                        priKey,
+                        confirm
+                )
+        );
     }
 
     @PutMapping("/recruitment-end/{partyPriKey:[0-9]+}")
