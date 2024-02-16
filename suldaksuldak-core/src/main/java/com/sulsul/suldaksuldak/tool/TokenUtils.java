@@ -2,7 +2,7 @@ package com.sulsul.suldaksuldak.tool;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.auth.TokenMap;
-import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;

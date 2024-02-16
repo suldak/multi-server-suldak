@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.user;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;

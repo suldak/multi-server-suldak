@@ -8,7 +8,7 @@ import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.user.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;

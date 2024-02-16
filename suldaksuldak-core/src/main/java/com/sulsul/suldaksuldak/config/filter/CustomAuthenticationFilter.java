@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

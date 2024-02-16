@@ -12,7 +12,7 @@ import com.sulsul.suldaksuldak.dto.question.UserSelectReq.QuestionAnswerObj;
 import com.sulsul.suldaksuldak.dto.question.UserSelectRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.user.UserRepository;
 import com.sulsul.suldaksuldak.repo.question.answer.LiquorAnswerRepository;
 import com.sulsul.suldaksuldak.repo.question.question.LiquorQuestionRepository;
 import com.sulsul.suldaksuldak.repo.question.user.UserSelectRepository;

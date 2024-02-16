@@ -3,7 +3,7 @@ package com.sulsul.suldaksuldak.service.user;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.cut.CutOffUserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.user.UserRepository;
 import com.sulsul.suldaksuldak.repo.cut.CutOffUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

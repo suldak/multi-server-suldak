@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

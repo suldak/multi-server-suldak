@@ -1,7 +1,7 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.auth.UserRes;
+import com.sulsul.suldaksuldak.dto.user.UserRes;
 import com.sulsul.suldaksuldak.dto.search.UserSearchReq;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import io.swagger.annotations.Api;

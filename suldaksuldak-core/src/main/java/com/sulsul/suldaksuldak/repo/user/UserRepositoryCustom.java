@@ -1,8 +1,8 @@
-package com.sulsul.suldaksuldak.repo.auth;
+package com.sulsul.suldaksuldak.repo.user;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
-import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.user.UserDto;
 
 import java.util.List;
 import java.util.Optional;

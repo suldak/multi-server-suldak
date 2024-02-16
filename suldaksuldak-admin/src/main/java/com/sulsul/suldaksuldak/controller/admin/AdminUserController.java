@@ -2,7 +2,7 @@ package com.sulsul.suldaksuldak.controller.admin;
 
 import com.sulsul.suldaksuldak.service.admin.AdminUserService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.auth.UserReq;
+import com.sulsul.suldaksuldak.dto.user.UserReq;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

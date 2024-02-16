@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.auth;
+package com.sulsul.suldaksuldak.repo.user;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -8,7 +8,7 @@ import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
-import com.sulsul.suldaksuldak.dto.auth.UserDto;
+import com.sulsul.suldaksuldak.dto.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;

@@ -1,10 +1,11 @@
-package com.sulsul.suldaksuldak.dto.auth;
+package com.sulsul.suldaksuldak.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.dto.admin.user.SocialUserDto;
+import com.sulsul.suldaksuldak.dto.auth.TokenRes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;

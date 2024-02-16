@@ -5,7 +5,7 @@ import com.sulsul.suldaksuldak.domain.search.SearchText;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.search.SearchTextDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.user.UserRepository;
 import com.sulsul.suldaksuldak.repo.search.text.SearchTextRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
