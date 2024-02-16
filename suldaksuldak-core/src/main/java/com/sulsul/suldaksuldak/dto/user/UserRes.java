@@ -28,7 +28,7 @@ public class UserRes {
     @ApiModelProperty(value = "가입 방법")
     Registration registration;
     @ApiModelProperty(value = "유저 레벨")
-    Integer level;
+    Double level;
     @ApiModelProperty(value = "신고 누적")
     Integer warningCnt;
     @ApiModelProperty(value = "활성화 여부")

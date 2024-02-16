@@ -27,8 +27,8 @@ public class PartyFeedback {
     private String feedBackText;
 
     @Setter
-    @Column(nullable = false, columnDefinition = "INTEGER")
-    private Integer score;
+    @Column(nullable = false, columnDefinition = "DOUBLE")
+    private Double score;
 
     @ToString.Exclude
     @OrderBy("id")
@@ -41,7 +41,7 @@ public class PartyFeedback {
     protected PartyFeedback (
             Long id,
             String feedBackText,
-            Integer score
+            Double score
     ) {
         this.id = id;
         this.feedBackText = feedBackText;
@@ -51,7 +51,7 @@ public class PartyFeedback {
     public static PartyFeedback of (
             Long id,
             String feedBackText,
-            Integer score
+            Double score
     ) {
         return new PartyFeedback(
                 id,

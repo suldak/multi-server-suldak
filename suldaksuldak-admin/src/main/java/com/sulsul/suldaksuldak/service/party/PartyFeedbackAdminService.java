@@ -20,7 +20,7 @@ public class PartyFeedbackAdminService {
     public Boolean createPartyFeedback(
             Long id,
             String feedBackText,
-            Integer score
+            Double score
     ) {
         try {
             if (id == null) {

@@ -273,9 +273,9 @@ public class PartyService {
                                 )
                         );
                         if (user.getLevel() + partyFeedback.get().getScore() >= 100) {
-                            user.setLevel(100);
+                            user.setLevel(100.0);
                         } else if (user.getLevel() + partyFeedback.get().getScore() < 0) {
-                            user.setLevel(0);
+                            user.setLevel(0.0);
                         } else {
                             user.setLevel(user.getLevel() + partyFeedback.get().getScore());
                         }

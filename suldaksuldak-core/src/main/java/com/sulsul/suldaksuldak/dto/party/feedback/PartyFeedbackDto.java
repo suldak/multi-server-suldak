@@ -18,7 +18,7 @@ public class PartyFeedbackDto {
     @ApiModelProperty(value = "모임 피드백 내용", required = true)
     String feedBackText;
     @ApiModelProperty(value = "가감할 점수", required = true)
-    Integer score;
+    Double score;
 
     public static PartyFeedbackDto of (
             PartyFeedback partyFeedback

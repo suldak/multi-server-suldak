@@ -33,7 +33,7 @@ public class UserReq {
     @ApiModelProperty(value = "가입 방법", required = true)
     Registration registration;
     @ApiModelProperty(value = "유저 레빌")
-    Integer level;
+    Double level;
     @ApiModelProperty(value = "유저 신고 누적")
     Integer warningCnt;
     @ApiModelProperty(value = "유저 활성화 여부")
@@ -55,7 +55,7 @@ public class UserReq {
             Long userPriKey,
             String nickname,
             String selfIntroduction,
-            Integer level,
+            Double level,
             Integer warningCnt,
             Boolean isActive
     ) {
@@ -116,7 +116,7 @@ public class UserReq {
                     gender,
                     birthdayYear,
                     registration,
-                    0,
+                    0.0,
                     0,
                     true,
                     selfIntroduction,

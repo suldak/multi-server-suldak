@@ -23,7 +23,7 @@ public class UserDto {
     Gender gender;
     Integer birthdayYear;
     Registration registration;
-    Integer level;
+    Double level;
     Integer warningCnt;
     Boolean isActive;
     String selfIntroduction;
@@ -44,7 +44,7 @@ public class UserDto {
             Gender gender,
             Integer birthdayYear,
             Registration registration,
-            Integer level,
+            Double level,
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
@@ -107,7 +107,7 @@ public class UserDto {
      */
     public static User updateUserLevel(
             User user,
-            Integer level
+            Double level
     ) {
         user.setLevel(level);
         return user;

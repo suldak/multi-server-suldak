@@ -55,9 +55,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Registration registration;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DOUBLE")
     @Setter
-    private Integer level;
+    private Double level;
 
     @Column(nullable = false)
     @Setter
@@ -166,7 +166,7 @@ public class User extends BaseEntity {
             Gender gender,
             Integer birthdayYear,
             Registration registration,
-            Integer level,
+            Double level,
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
@@ -204,7 +204,7 @@ public class User extends BaseEntity {
             Gender gender,
             Integer birthdayYear,
             Registration registration,
-            Integer level,
+            Double level,
             Integer warningCnt,
             Boolean isActive,
             String selfIntroduction,
