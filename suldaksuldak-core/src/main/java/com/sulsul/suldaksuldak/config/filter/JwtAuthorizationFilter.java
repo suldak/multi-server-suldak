@@ -8,7 +8,7 @@ import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.ApiErrorResponse;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;

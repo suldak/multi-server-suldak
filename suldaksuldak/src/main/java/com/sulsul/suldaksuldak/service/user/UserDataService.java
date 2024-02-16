@@ -5,7 +5,7 @@ import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

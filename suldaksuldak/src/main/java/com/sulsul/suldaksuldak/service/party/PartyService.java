@@ -8,7 +8,7 @@ import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;

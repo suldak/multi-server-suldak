@@ -12,7 +12,7 @@ import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;

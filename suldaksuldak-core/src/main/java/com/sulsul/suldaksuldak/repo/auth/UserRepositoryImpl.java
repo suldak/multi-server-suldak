@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.user;
+package com.sulsul.suldaksuldak.repo.auth;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

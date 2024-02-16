@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.user;
+package com.sulsul.suldaksuldak.repo.auth;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;

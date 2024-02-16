@@ -8,7 +8,7 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

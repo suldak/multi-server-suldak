@@ -7,7 +7,7 @@ import com.sulsul.suldaksuldak.dto.auth.TokenMap;
 import com.sulsul.suldaksuldak.dto.auth.TokenRes;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.dto.user.UserRes;
-import com.sulsul.suldaksuldak.repo.user.UserRepository;
+import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
