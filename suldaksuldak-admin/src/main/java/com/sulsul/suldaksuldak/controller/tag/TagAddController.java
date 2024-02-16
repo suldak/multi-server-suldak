@@ -86,8 +86,8 @@ public class TagAddController {
     }
 
     @ApiOperation(
-            value = "1차 분류 생성",
-            notes = "1차 분류를 생성합니다."
+            value = "1차 분류 저장",
+            notes = "1차 분류를 생성하거나 수정합니다."
     )
     @PostMapping(value = "/liquor-name", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiDataResponse<Boolean> createLiquorName (
@@ -96,31 +96,31 @@ public class TagAddController {
     ) {
         return ApiDataResponse.of(
                 tagAddService.createLiquorName(
-                        null,
+                        liquorNameDto.getId(),
                         liquorNameDto.getName(),
                         file
                 )
         );
     }
 
-    @ApiOperation(
-            value = "1차 분류 수정",
-            notes = "1차 분류를 수정합니다."
-    )
-    @PutMapping(value = "/liquor-name/{priKey:[0-9]+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ApiDataResponse<Boolean> modifiedLiquorName (
-            @PathVariable Long priKey,
-            @RequestPart(value = "file", required = false) MultipartFile file,
-            @RequestPart(value = "liquorNameDto") LiquorNameDto liquorNameDto
-    ) {
-        return ApiDataResponse.of(
-                tagAddService.createLiquorName(
-                        priKey,
-                        liquorNameDto.getName(),
-                        file
-                )
-        );
-    }
+//    @ApiOperation(
+//            value = "1차 분류 수정",
+//            notes = "1차 분류를 수정합니다."
+//    )
+//    @PutMapping(value = "/liquor-name/{priKey:[0-9]+}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ApiDataResponse<Boolean> modifiedLiquorName (
+//            @PathVariable Long priKey,
+//            @RequestPart(value = "file", required = false) MultipartFile file,
+//            @RequestPart(value = "liquorNameDto") LiquorNameDto liquorNameDto
+//    ) {
+//        return ApiDataResponse.of(
+//                tagAddService.createLiquorName(
+//                        priKey,
+//                        liquorNameDto.getName(),
+//                        file
+//                )
+//        );
+//    }
 
     @ApiOperation(
             value = "판매처 저장",
