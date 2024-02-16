@@ -9,6 +9,7 @@ public enum GuestType {
     WAIT,
     CONFIRM,
     REFUSE,
+    ON_GOING,
     COMPLETE,
     COMPLETE_WAIT,
     CANCEL

@@ -182,6 +182,11 @@ public class PartyService {
                     ErrorCode.BAD_REQUEST,
                     "이미 삭제된 모임입니다."
             );
+        if (party.getPartyStateType().equals(PartyStateType.ON_GOING))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "모임이 진행 중 입니다."
+            );
         if (party.getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
             throw new GeneralException(
                     ErrorCode.BAD_REQUEST,

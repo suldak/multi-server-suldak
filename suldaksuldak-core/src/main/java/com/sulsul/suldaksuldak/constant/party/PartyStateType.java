@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum PartyStateType {
     RECRUITING,
     RECRUITMENT_END,
+    ON_GOING,
     MEETING_COMPLETE,
     MEETING_CANCEL,
     MEETING_DELETE
