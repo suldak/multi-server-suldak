@@ -24,4 +24,9 @@ public interface PartyGuestRepositoryCustom {
             Long partyPriKey,
             GuestType confirm
     );
+
+    Optional<PartyGuest> findByUserPriKeyAndPartyPriKey(
+            Long userPriKey,
+            Long partyPriKey
+    );
 }

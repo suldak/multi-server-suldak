@@ -69,17 +69,12 @@ public class PartyGuestService {
                         ErrorCode.BAD_REQUEST,
                         "인원이 모두 모집되었습니다."
                 );
-            List<PartyGuestDto> partyGuestDtos =
-                    partyGuestRepository.findByOptions(
-                            null,
-                            null,
-                            null,
-                            null,
-                            partyOptional.get().getId(),
+            Optional<PartyGuest> partyGuest =
+                    partyGuestRepository.findByUserPriKeyAndPartyPriKey(
                             user.get().getId(),
-                            null
+                            partyOptional.get().getId()
                     );
-            if (!partyGuestDtos.isEmpty())
+            if (partyGuest.isPresent())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "이미 신청한 모임입니다."

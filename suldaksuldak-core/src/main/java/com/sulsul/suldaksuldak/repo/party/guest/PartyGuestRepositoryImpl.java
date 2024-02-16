@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
 import static com.sulsul.suldaksuldak.domain.party.QPartyGuest.partyGuest;
@@ -73,6 +74,23 @@ public class PartyGuestRepositoryImpl
                 .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
                 .where(confirmEq(confirm))
                 .fetch();
+    }
+
+    @Override
+    public Optional<PartyGuest> findByUserPriKeyAndPartyPriKey(
+            Long userPriKey,
+            Long partyPriKey
+    ) {
+        return Optional.ofNullable(
+                jpaQueryFactory
+                        .selectFrom(partyGuest)
+                        .innerJoin(partyGuest.party, party)
+                        .on(partyGuest.party.id.eq(partyPriKey))
+                        .innerJoin(partyGuest.user, user)
+                        .on(partyGuest.user.id.eq(userPriKey))
+                        .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
+                        .fetchFirst()
+        );
     }
 
     private JPAQuery<PartyGuestDto> getPartyGuestDtoQuery() {
