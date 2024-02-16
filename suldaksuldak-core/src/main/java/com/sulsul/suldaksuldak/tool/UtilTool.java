@@ -69,6 +69,8 @@ public class UtilTool {
             return type.cast(Long.parseLong(value));
         } else if (type.equals(String.class)) {
             return type.cast(value);
+        } else if (type.equals(Double.class)) {
+            return type.cast(Double.parseDouble(value));
         } else {
             throw new GeneralException(ErrorCode.INTERNAL_ERROR, "원하는 자료형으로 변환할 수 없습니다.");
         }

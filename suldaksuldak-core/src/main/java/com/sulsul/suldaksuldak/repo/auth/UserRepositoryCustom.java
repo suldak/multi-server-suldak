@@ -27,7 +27,7 @@ public interface UserRepositoryCustom {
             Integer startYear,
             Integer endYear,
             Registration registration,
-            List<Integer> levelList,
+            List<Double> levelList,
             List<Integer> warningCntList,
             Boolean isActive
     );

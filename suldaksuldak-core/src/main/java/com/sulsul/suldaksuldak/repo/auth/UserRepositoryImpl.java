@@ -74,7 +74,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Integer startYear,
             Integer endYear,
             Registration registration,
-            List<Integer> levelList,
+            List<Double> levelList,
             List<Integer> warningCntList,
             Boolean isActive
     ) {
@@ -192,7 +192,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     private BooleanExpression levelListIn(
-            List<Integer> levelList
+            List<Double> levelList
     ) {
         return levelList == null || levelList.isEmpty() ?
                 null : user.level.in(levelList);
