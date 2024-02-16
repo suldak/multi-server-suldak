@@ -105,3 +105,12 @@ project(':suldaksuldak-admin') {
 		implementation project(':suldaksuldak-core')
 	}
 }
+
+project(':suldaksuldak-batch') {
+	bootJar { enabled = true }
+	jar { enabled = false }
+
+	dependencies {
+		implementation project(':suldaksuldak-core')
+	}
+}
