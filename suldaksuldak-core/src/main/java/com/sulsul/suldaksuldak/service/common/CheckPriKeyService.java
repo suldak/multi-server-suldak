@@ -130,7 +130,7 @@ public class CheckPriKeyService {
             if (partyGuest.isEmpty())
                 throw new GeneralException(
                         ErrorCode.NOT_FOUND,
-                        "해당 모임 인월 정보를 찾을 수 없습니다."
+                        "해당 모임 인원 정보를 찾을 수 없습니다."
                 );
             return partyGuest.get();
         } catch (GeneralException e) {

@@ -151,6 +151,11 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private Set<UserPartyFeedback> userPartyFeedbacks = new LinkedHashSet<>();
+
     protected User () {}
 
     protected User (

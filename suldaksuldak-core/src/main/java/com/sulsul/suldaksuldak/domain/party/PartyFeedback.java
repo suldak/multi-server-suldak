@@ -1,10 +1,13 @@
 package com.sulsul.suldaksuldak.domain.party;
 
+import com.sulsul.suldaksuldak.domain.user.UserPartyFeedback;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -26,6 +29,12 @@ public class PartyFeedback {
     @Setter
     @Column(nullable = false, columnDefinition = "INTEGER")
     private Integer score;
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "partyFeedback", cascade = CascadeType.REMOVE)
+    private Set<UserPartyFeedback> userPartyFeedbacks = new LinkedHashSet<>();
+
 
     protected PartyFeedback () {}
 
