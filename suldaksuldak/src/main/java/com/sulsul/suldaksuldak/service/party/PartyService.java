@@ -228,13 +228,11 @@ public class PartyService {
     ) {
         try {
             Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
-
             if (!party.getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "모임이 완료된 모임이 아닙니다."
                 );
-
             PartyGuest partyGuest =
                     checkPriKeyService.checkAndGetPartyGuest(
                             writerUserPriKey,
@@ -251,36 +249,22 @@ public class PartyService {
                         "완료 대기상태가 아닙니다."
                 );
 
-//            for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
-//                try {
-//                    User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
-//                    if (user.getId().equals(writerUserPriKey)) continue;
-//                    for (Long feedbackPriKey: feedbackObj.getPartyFeedbackPriKeyList()) {
-//                        Optional<PartyFeedback> partyFeedback =
-//                                partyFeedbackRepository.findById(feedbackPriKey);
-//                        if (partyFeedback.isEmpty()) continue;
-//                        userPartyFeedbackRepository.save(
-//                                UserPartyFeedback.of(
-//                                        null,
-//                                        user,
-//                                        partyFeedback.get()
-//                                )
-//                        );
-//                        if (user.getLevel() + partyFeedback.get().getScore() >= 100) {
-//                            user.setLevel(100.0);
-//                        } else if (user.getLevel() + partyFeedback.get().getScore() < 0) {
-//                            user.setLevel(0.0);
-//                        } else {
-//                            user.setLevel(user.getLevel() + partyFeedback.get().getScore());
-//                        }
-//                        userRepository.save(user);
-//                    }
-//                } catch (Exception ignore) {}
-//            }
-//
-//            partyGuest.setConfirm(GuestType.COMPLETE);
-//            partyGuestRepository.save(partyGuest);
-
+            for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
+                try {
+                    User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
+                    if (user.getId().equals(writerUserPriKey)) continue;
+                    if (user.getLevel() + feedbackObj.getFeedbackScore() >= 100) {
+                        user.setLevel(100.0);
+                    } else if (user.getLevel() + feedbackObj.getFeedbackScore() < 0) {
+                        user.setLevel(0.0);
+                    } else {
+                        user.setLevel(user.getLevel() + feedbackObj.getFeedbackScore());
+                    }
+                    userRepository.save(user);
+                } catch (Exception ignore) {}
+            }
+            partyGuest.setConfirm(GuestType.COMPLETE);
+            partyGuestRepository.save(partyGuest);
             return true;
         } catch (GeneralException e) {
             throw new GeneralException(

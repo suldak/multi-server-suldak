@@ -26,7 +26,7 @@ public class UserPartyFeedbackReq {
     public static class FeedbackObj {
         @ApiModelProperty(value = "상대방(User)의 기본키", required = true)
         Long userPriKey;
-        @ApiModelProperty(value = "모임 피드백 내용 기본키", required = true)
-        List<Long> partyFeedbackPriKeyList;
+        @ApiModelProperty(value = "상대방에게 줄 점수", required = true)
+        Double feedbackScore;
     }
 }
