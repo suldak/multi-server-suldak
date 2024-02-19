@@ -295,6 +295,7 @@ public class LiquorViewService {
             Pageable pageable
     ) {
         try {
+            // TODO 병렬화
             HashMap<Long, Integer> liquorAbvPriKeyList =
                     UtilTool.generateCountedHashMap(
                             liquorPriKeyList

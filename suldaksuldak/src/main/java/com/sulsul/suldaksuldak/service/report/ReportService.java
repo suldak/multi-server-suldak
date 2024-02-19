@@ -8,12 +8,11 @@ import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
-import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
 import com.sulsul.suldaksuldak.repo.report.party.comment.ReportPartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.reason.party.ReportPartyReasonRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class ReportService {
-    private final UserRepository userRepository;
-    private final PartyRepository partyRepository;
+    private final CheckPriKeyService checkPriKeyService;
     private final PartyCommentRepository partyCommentRepository;
     private final ReportPartyReasonRepository reportPartyReasonRepository;
     private final ReportPartyRepository reportPartyRepository;
@@ -40,27 +38,13 @@ public class ReportService {
             Long reasonPriKey
     ) {
         try {
-            if (
-                    userPriKey == null ||
-                    partyPriKey == null ||
-                    reasonPriKey == null
-            )
+            if (reasonPriKey == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
-                        "기본키가 누락되었습니다."
+                        "신고 이유에 대한 기본키가 누락되었습니다."
                 );
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "유저 정보를 찾을 수 없습니다."
-                );
-            Optional<Party> party = partyRepository.findById(partyPriKey);
-            if (party.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "모임 정보를 찾을 수 없습니다."
-                );
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
             Optional<ReportPartyReason> reportPartyReason =
                     reportPartyReasonRepository.findById(reasonPriKey);
             if (reportPartyReason.isEmpty())
@@ -72,8 +56,8 @@ public class ReportService {
                     ReportParty.of(
                             null,
                             reportPartyReason.get(),
-                            user.get(),
-                            party.get(),
+                            user,
+                            party,
                             false
                     )
             );
@@ -101,17 +85,7 @@ public class ReportService {
                         ErrorCode.BAD_REQUEST,
                         "댓글 기본키가 누락되었습니다."
                 );
-            if (userPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "사용자 정보가 누락되었습니다."
-                );
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "사용자 정보를 찾을 수 없습니다."
-                );
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
             Optional<PartyComment> partyComment =
                     partyCommentRepository.findById(commentPriKey);
             if (partyComment.isEmpty())
@@ -119,15 +93,15 @@ public class ReportService {
                         ErrorCode.NOT_FOUND,
                         "댓글 정보를 찾을 수 없습니다."
                 );
-            if (user.get().getId().equals(partyComment.get().getUser().getId()))
+            if (user.getId().equals(partyComment.get().getUser().getId()))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
-                        "자신의 댓글입니다."
+                        "자신의 댓글은 신고할 수 없습니다."
                 );
             reportPartyCommentRepository.save(
                     ReportPartyComment.of(
                             null,
-                            user.get(),
+                            user,
                             partyComment.get()
                     )
             );

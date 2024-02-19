@@ -25,6 +25,7 @@ import com.sulsul.suldaksuldak.repo.tag.material.LiquorMaterialRepository;
 import com.sulsul.suldaksuldak.repo.tag.sell.LiquorSellRepository;
 import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorTagService {
+    private final CheckPriKeyService checkPriKeyService;
     private final LiquorRepository liquorRepository;
     // 도수
     private final LiquorAbvRepository liquorAbvRepository;
@@ -65,20 +67,20 @@ public class LiquorTagService {
     private final TasteTypeRepository tasteTypeRepository;
     private final TtToLiRepository ttToLiRepository;
 
-    private Liquor getLiquorDto(
-            Long liquorPriKey
-    ) {
-        try {
-            Optional<Liquor> liquor = liquorRepository.findById(liquorPriKey);
-            if (liquor.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
-            return liquor.get();
-        } catch (GeneralException e) {
-            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
-        }
-    }
+//    private Liquor getLiquorDto(
+//            Long liquorPriKey
+//    ) {
+//        try {
+//            Optional<Liquor> liquor = liquorRepository.findById(liquorPriKey);
+//            if (liquor.isEmpty())
+//                throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
+//            return liquor.get();
+//        } catch (GeneralException e) {
+//            throw new GeneralException(e.getErrorCode(), e.getErrorCode());
+//        } catch (Exception e) {
+//            throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+//        }
+//    }
 
     private void createLiquorToSnack(
             Liquor liquor,
@@ -239,7 +241,7 @@ public class LiquorTagService {
 
     public Boolean createLiquorTag(LiquorTotalReq liquorTotalReq) {
         try {
-            Liquor liquor = getLiquorDto(liquorTotalReq.getId());
+            Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorTotalReq.getId());
             snToLiRepository.deleteByLiquorPriKey(liquor.getId());
             if (liquorTotalReq.getSnackPriKeys() != null) {
                 // 추천 안주 연결

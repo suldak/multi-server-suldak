@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.service.stats;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.stats.TagType;
+import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
@@ -12,11 +13,10 @@ import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
-import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class StatsService {
-    private final UserRepository userRepository;
-    private final LiquorRepository liquorRepository;
+    private final CheckPriKeyService checkPriKeyService;
     private final UserLiquorRepository userLiquorRepository;
     private final LiquorSearchLogRepository liquorSearchLogRepository;
     private final UserTagRepository userTagRepository;
@@ -50,42 +49,32 @@ public class StatsService {
             Long liquorId
     ) {
         try {
-            Optional<UserLiquorDto> dto = userLiquorRepository.findByUserPriKeyAndLiquorPriKey(userId, liquorId);
+            Optional<UserLiquorDto> dto =
+                    userLiquorRepository.findByUserPriKeyAndLiquorPriKey(userId, liquorId);
             if (dto.isEmpty()) {
-                userRepository.findById(userId)
-                        .ifPresent(
-                                findUser -> {
-                                    liquorRepository.findById(liquorId)
-                                            .ifPresent(
-                                                    findLiquor -> {
-                                                        userLiquorRepository.save(
-                                                                UserLiquorDto
-                                                                        .of(null, userId, liquorId, 0.1)
-                                                                        .toEntity(findUser, findLiquor)
-                                                        );
-                                                    }
-                                            );
-                                }
-                        );
+                User user = checkPriKeyService.checkAndGetUser(userId);
+                Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorId);
+                userLiquorRepository.save(
+                        UserLiquorDto
+                                .of(null, userId, liquorId, 0.1)
+                                .toEntity(user, liquor)
+                );
             } else {
                 userLiquorRepository.findById(dto.get().getId())
-                        .ifPresentOrElse(
+                        .ifPresent(
                                 findEntity -> {
                                     userLiquorRepository.save(
                                             UserLiquorDto.addSearchCnt(findEntity)
                                     );
-                                },
-                                () -> {
-                                    throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND DATA");
                                 }
                         );
             }
+            return true;
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
-        return true;
     }
 
     /**
@@ -95,26 +84,22 @@ public class StatsService {
             Long liquorPriKey
     ) {
         try {
-            if (liquorPriKey == null) throw new GeneralException(ErrorCode.BAD_REQUEST, "Liquor Key is Null");
-            String priKey = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
+            Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorPriKey);
+            String priKey =
+                    LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
                     + "_" + liquorPriKey;
-            liquorRepository.findById(liquorPriKey)
-                    .ifPresent(
-                            findLiquor -> {
-                                liquorSearchLogRepository.save(
-                                        LiquorSearchLog.of(
-                                                priKey,
-                                                findLiquor
-                                        )
-                                );
-                            }
-                    );
+            liquorSearchLogRepository.save(
+                    LiquorSearchLog.of(
+                            priKey,
+                            liquor
+                    )
+            );
+            return true;
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
-        return true;
     }
 
     /**
@@ -258,10 +243,8 @@ public class StatsService {
             Long liquorPriKey
     ) {
         try {
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND USER");
-            return countSearchTagCnt(user.get(), liquorPriKey);
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            return countSearchTagCnt(user, liquorPriKey);
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -277,7 +260,6 @@ public class StatsService {
             Long liquorPriKey
     ) {
         try {
-            Long userPriKey = user.getId();
             LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey);
             HashMap<TagType, List<Long>> tagMap = new HashMap<>();
             LiquorAbvDto liquorAbvDto = liquorTotalRes.getLiquorAbvDto();

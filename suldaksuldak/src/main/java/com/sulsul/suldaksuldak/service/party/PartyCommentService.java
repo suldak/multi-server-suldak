@@ -7,9 +7,8 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentDto;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
-import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyCommentService {
-    private final UserRepository userRepository;
-    private final PartyRepository partyRepository;
+    private final CheckPriKeyService checkPriKeyService;
     private final PartyCommentRepository partyCommentRepository;
 
     /**
@@ -38,36 +36,21 @@ public class PartyCommentService {
             String comment
     ) {
         try {
-            if (userPriKey == null || partyPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "기본키를 찾을 수 없습니다."
-                );
             if (comment == null || comment.isBlank())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "comment는 NULL이 될 수 없습니다."
                 );
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "해당 유저를 찾을 수 없습니다."
-                );
-            Optional<Party> party = partyRepository.findById(partyPriKey);
-            if (party.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "해당 모임을 찾을 수 없습니다."
-                );
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
             String dateStr = UtilTool.getLocalDateTimeString();
-            String priKey = dateStr + "_" + party.get().getId() + "_" + user.get().getId();
+            String priKey = dateStr + "_" + party.getId() + "_" + user.getId();
             partyCommentRepository.save(
                     PartyComment.of(
                             priKey,
                             comment,
-                            user.get(),
-                            party.get(),
+                            user,
+                            party,
                             priKey,
                             0,
                             false,
@@ -98,50 +81,29 @@ public class PartyCommentService {
             String comment
     ) {
         try {
-            if (userPriKey == null || partyPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "기본키를 찾을 수 없습니다."
-                );
             if (comment == null || comment.isBlank())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "comment는 NULL이 될 수 없습니다."
                 );
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "해당 유저를 찾을 수 없습니다."
-                );
-            Optional<Party> party = partyRepository.findById(partyPriKey);
-            if (party.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "해당 모임을 찾을 수 없습니다."
-                );
-            Optional<PartyComment> partyComment = partyCommentRepository.findById(commentPriKey);
-            if (partyComment.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "댓글 정보를 찾을 수 없습니다."
-                );
-            if (partyComment.get().getIsDelete())
+            PartyComment partyComment = checkAndGetPartyComment(commentPriKey);
+            if (partyComment.getIsDelete())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
-                        "이미 삭제된 댓글 입니다."
+                        "이미 삭제된 댓글에는 댓글을 작성할 수 없습니다."
                 );
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
             String dateStr = UtilTool.getLocalDateTimeString();
-            String priKey = dateStr + "_" + party.get().getId() + "_" + user.get().getId();
-            // 먼저 대댓글 저장
+            String priKey = dateStr + "_" + party.getId() + "_" + user.getId();
             partyCommentRepository.save(
                     PartyComment.of(
                             priKey,
                             comment,
-                            user.get(),
-                            party.get(),
-                            partyComment.get().getId(),
-                            partyComment.get().getCommentDep() + 1,
+                            user,
+                            party,
+                            partyComment.getId(),
+                            partyComment.getCommentDep() + 1,
                             false,
                             false
                     )
@@ -169,35 +131,25 @@ public class PartyCommentService {
             String comment
     ) {
         try {
-            if (commentPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "기본키가 누락되었습니다."
-                );
             if (comment == null || comment.isBlank())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "comment가 NULL 입니다."
                 );
-            Optional<PartyComment> partyComment = partyCommentRepository.findById(commentPriKey);
-            if (partyComment.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "댓글 정보를 찾을 수 없습니다."
-                );
-            if (partyComment.get().getIsDelete())
+            PartyComment partyComment = checkAndGetPartyComment(commentPriKey);
+            if (partyComment.getIsDelete())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "이미 삭제된 댓글 입니다."
                 );
-            if (!userPriKey.equals(partyComment.get().getUser().getId()))
+            if (!userPriKey.equals(partyComment.getUser().getId()))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "댓글은 작성한 유저만 수정할 수 있습니다."
                 );
-            partyComment.get().setComment(comment);
-            partyComment.get().setIsModified(true);
-            partyCommentRepository.save(partyComment.get());
+            partyComment.setComment(comment);
+            partyComment.setIsModified(true);
+            partyCommentRepository.save(partyComment);
             return true;
         } catch (GeneralException e) {
             throw new GeneralException(
@@ -220,29 +172,19 @@ public class PartyCommentService {
             String commentPriKey
     ) {
         try {
-            if (commentPriKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "기본키가 누락되었습니다."
-                );
-            Optional<PartyComment> partyComment = partyCommentRepository.findById(commentPriKey);
-            if (partyComment.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "댓글 정보를 찾을 수 없습니다."
-                );
-            if (!userPriKey.equals(partyComment.get().getUser().getId()))
+            PartyComment partyComment = checkAndGetPartyComment(commentPriKey);
+            if (!userPriKey.equals(partyComment.getUser().getId()))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "댓글은 작성한 유저만 삭제할 수 있습니다."
                 );
-            if (partyComment.get().getIsDelete())
+            if (partyComment.getIsDelete())
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "이미 삭제된 댓글 입니다."
                 );
-            partyComment.get().setIsDelete(true);
-            partyCommentRepository.save(partyComment.get());
+            partyComment.setIsDelete(true);
+            partyCommentRepository.save(partyComment);
             return true;
         } catch (GeneralException e) {
             throw new GeneralException(
@@ -313,6 +255,36 @@ public class PartyCommentService {
                     groupComment,
                     commentDep
             );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    private PartyComment checkAndGetPartyComment(
+            String priKey
+    ) {
+        try {
+            if (priKey == null || priKey.isBlank())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "댓글 기본키가 누락되었습니다."
+                );
+            Optional<PartyComment> partyComment =
+                    partyCommentRepository.findById(priKey);
+            if (partyComment.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "해당 댓글 정보를 찾을 수 없습니다."
+                );
+            return partyComment.get();
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

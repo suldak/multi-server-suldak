@@ -8,6 +8,7 @@ import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyHostService {
+    private final CheckPriKeyService checkPriKeyService;
     private final PartyService partyService;
     private final PartyGuestService partyGuestService;
     private final PartyRepository partyRepository;
@@ -32,35 +34,24 @@ public class PartyHostService {
             GuestType confirm
     ) {
         try {
-            if (priKey == null)
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "기본키를 찾지 못했습니다."
-                );
             if (confirm == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "confirm 값이 NULL 입니다."
                 );
-            Optional<PartyGuest> partyGuest =
-                    partyGuestRepository.findById(priKey);
-            if (partyGuest.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.BAD_REQUEST,
-                        "해당 모임을 찾을 수 없습니다."
-                );
-            Party party = partyService.checkParty(partyGuest.get().getParty());
+            PartyGuest partyGuest = checkPriKeyService.checkAndGetPartyGuest(priKey);
+            Party party = partyService.checkParty(partyGuest.getParty());
             if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "모집이 종료된 모임은 수정할 수 없습니다."
                 );
-            if (!hostPriKey.equals(partyGuest.get().getParty().getUser().getId()))
+            if (!hostPriKey.equals(partyGuest.getParty().getUser().getId()))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "해당 모임의 호스트가 아닙니다."
                 );
-            if (hostPriKey.equals(partyGuest.get().getUser().getId()))
+            if (hostPriKey.equals(partyGuest.getUser().getId()))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "자신이 호스트인 모임입니다."
@@ -68,14 +59,14 @@ public class PartyHostService {
 
             if (
                     confirm.equals(GuestType.CONFIRM) &&
-                    !partyGuestService.checkPartyPersonnel(partyGuest.get().getParty())
+                    !partyGuestService.checkPartyPersonnel(partyGuest.getParty())
             )
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "인원이 모두 모집되었습니다."
                 );
-            partyGuest.get().setConfirm(confirm);
-            partyGuestRepository.save(partyGuest.get());
+            partyGuest.setConfirm(confirm);
+            partyGuestRepository.save(partyGuest);
             return true;
         } catch (GeneralException e) {
             throw new GeneralException(

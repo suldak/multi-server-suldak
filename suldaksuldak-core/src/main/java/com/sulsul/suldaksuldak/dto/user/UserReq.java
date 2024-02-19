@@ -116,7 +116,7 @@ public class UserReq {
                     gender,
                     birthdayYear,
                     registration,
-                    0.0,
+                    25.0,
                     0,
                     true,
                     selfIntroduction,

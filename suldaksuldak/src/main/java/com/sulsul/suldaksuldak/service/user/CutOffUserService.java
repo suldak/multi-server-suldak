@@ -1,10 +1,11 @@
 package com.sulsul.suldaksuldak.service.user;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.cut.CutOffUserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.cut.CutOffUserRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class CutOffUserService {
-    private final UserRepository userRepository;
+    private final CheckPriKeyService checkPriKeyService;
     private final CutOffUserRepository cutOffUserRepository;
 
     /**
@@ -27,38 +28,21 @@ public class CutOffUserService {
     ) {
         try {
             if (userId == null || cutUserId == null) {
-                throw new GeneralException(ErrorCode.BAD_REQUEST, "PriKey is NULL");
+                throw new GeneralException(ErrorCode.BAD_REQUEST, "기본키 정보가 누락되었습니다.");
             }
             List<Long> findCutOffUserList = cutOffUserRepository.findByUserIdAndCutUserId(
                     userId,
                     cutUserId
             );
             if (!findCutOffUserList.isEmpty()) return true;
-            userRepository.findById(userId)
-                    .ifPresentOrElse(
-                            findUser -> {
-                                userRepository.findById(cutUserId)
-                                        .ifPresentOrElse(
-                                                findCutUser -> {
-                                                    cutOffUserRepository.save(
-                                                            CutOffUserDto.toEntity(
-                                                                    findUser,
-                                                                    findCutUser
-                                                            )
-                                                    );
-                                                },
-                                                () -> {
-                                                    throw new GeneralException(
-                                                            ErrorCode.NOT_FOUND,
-                                                            "차단 할 유저를 찾지 못했습니다."
-                                                    );
-                                                }
-                                        );
-                            },
-                            () -> {
-                                throw new GeneralException(ErrorCode.NOT_FOUND, "유저를 찾지 못했습니다.");
-                            }
-                    );
+            User user = checkPriKeyService.checkAndGetUser(userId);
+            User cutUser = checkPriKeyService.checkAndGetUser(cutUserId);
+            cutOffUserRepository.save(
+                    CutOffUserDto.toEntity(
+                            user,
+                            cutUser
+                    )
+            );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

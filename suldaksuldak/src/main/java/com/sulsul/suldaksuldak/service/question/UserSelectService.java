@@ -12,12 +12,12 @@ import com.sulsul.suldaksuldak.dto.question.UserSelectReq.QuestionAnswerObj;
 import com.sulsul.suldaksuldak.dto.question.UserSelectRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.question.answer.LiquorAnswerRepository;
 import com.sulsul.suldaksuldak.repo.question.question.LiquorQuestionRepository;
 import com.sulsul.suldaksuldak.repo.question.user.UserSelectRepository;
 import com.sulsul.suldaksuldak.repo.question.weight.AnswerWeightRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.stats.StatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,28 +30,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserSelectService {
+    private final CheckPriKeyService checkPriKeyService;
     private final UserSelectRepository userSelectRepository;
-    private final UserRepository userRepository;
     private final LiquorQuestionRepository liquorQuestionRepository;
     private final LiquorAnswerRepository liquorAnswerRepository;
     private final AnswerWeightRepository answerWeightRepository;
     private final UserTagRepository userTagRepository;
     private final StatsService statsService;
 
+    /**
+     * 사용자의 취향 질문 답변 생성
+     */
     public Boolean createUserSelectData (
             Long userPriKey,
             UserSelectReq userSelectReq
     ) {
         try {
-            // 유저 기본키가 없으면 오류 발생
-            if (userPriKey == null)
-                throw new GeneralException(ErrorCode.BAD_REQUEST, "USER PRI KEY NULL");
-
-            // 유저를 기본키로 찾고, 찾지 못하면 오류 발생
-            Optional<User> user = userRepository.findById(userPriKey);
-            if (user.isEmpty())
-                throw new GeneralException(ErrorCode.BAD_REQUEST, "NOT FOUND USER DATA");
-
+            // 유저가 있는지 체크
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
             // 해당 유저에 이미 있던 답변 가중치 조회 및 감소
             List<UserSelectDto> userSelectDtos = userSelectRepository
                     .findByUserPriKey(userPriKey);
@@ -63,7 +59,7 @@ public class UserSelectService {
                 for (AnswerWeightDto weightDto: answerWeightDtos) {
                     Optional<UserTagDto> userTagDto =
                             userTagRepository.findByUserPriKeyAndTagTypeAndTagId(
-                                    user.get().getId(),
+                                    user.getId(),
                                     weightDto.getTagType(),
                                     weightDto.getTagId()
                             );
@@ -100,7 +96,7 @@ public class UserSelectService {
                             .equals(liquorAnswer.get().getLiquorQuestion().getId()))
                     {
                         String priKey =
-                                user.get().getId() + "_" +
+                                user.getId() + "_" +
                                         liquorQuestion.get().getId() + "_" +
                                         liquorAnswer.get().getId();
                         userSelectRepository.save(
@@ -108,7 +104,7 @@ public class UserSelectService {
                                         priKey,
                                         liquorQuestion.get(),
                                         liquorAnswer.get(),
-                                        user.get()
+                                        user
                                 )
                         );
                         // 답변의 가중치에 맞게 유저의 가중치 증가
@@ -118,7 +114,7 @@ public class UserSelectService {
                                 );
                         for (AnswerWeightDto weightDto: answerWeightDtos) {
                             statsService.countTagCnt(
-                                    user.get(),
+                                    user,
                                     weightDto.getTagType(),
                                     weightDto.getTagId(),
                                     weightDto.getWeight()

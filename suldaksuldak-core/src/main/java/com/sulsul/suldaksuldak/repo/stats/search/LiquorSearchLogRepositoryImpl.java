@@ -43,7 +43,15 @@ public class LiquorSearchLogRepositoryImpl implements LiquorSearchLogRepositoryC
                         .limit(pageable.getPageSize())
                         .fetch();
 
-        JPAQuery<LiquorSearchLog> countQuery = jpaQueryFactory.selectFrom(liquorSearchLog);
+        JPAQuery<Long> countQuery =
+//                jpaQueryFactory.selectFrom(liquorSearchLog);
+                jpaQueryFactory
+                        .select(liquorSearchLog.liquor.id)
+                        .from(liquorSearchLog)
+                        .innerJoin(liquorSearchLog.liquor, liquor)
+                        .on(liquorSearchLog.liquor.id.eq(liquor.id))
+                        .where(searchAtBetween(startAt, endAt))
+                        .groupBy(liquorSearchLog.liquor.id);
 
         return PageableExecutionUtils.getPage(
                 liquorPriKeyList, pageable,

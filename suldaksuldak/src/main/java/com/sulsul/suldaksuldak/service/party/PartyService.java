@@ -66,16 +66,11 @@ public class PartyService {
                         ErrorCode.BAD_REQUEST,
                         "해당 모임 태그를 찾을 수 없습니다."
                 );
-            Optional<User> user = userRepository.findById(partyDto.getHostUserPriKey());
-            if (user.isEmpty())
-                throw new GeneralException(
-                        ErrorCode.NOT_FOUND,
-                        "주최자를 찾지 못했습니다."
-                );
+            User user = checkPriKeyService.checkAndGetUser(partyDto.getHostUserPriKey());
             FileBase fileBase = fileService.saveFile(file);
             Party party = partyRepository.save(
                     partyDto.toEntity(
-                            user.get(),
+                            user,
                             fileBase,
                             partyTag.get()
                     )
@@ -83,9 +78,9 @@ public class PartyService {
             String dateStr = UtilTool.getLocalDateTimeString();
             partyGuestRepository.save(
                     PartyGuest.of(
-                            dateStr + "_" + party.getId() + "_" + user.get().getId(),
+                            dateStr + "_" + party.getId() + "_" + user.getId(),
                             party,
-                            user.get(),
+                            user,
                             GuestType.CONFIRM
                     )
             );
@@ -171,54 +166,6 @@ public class PartyService {
     }
 
     /**
-     * 모임 기본키로 모임이 있는지 검사하고, 추가로 모임의 삭제 여부와 완료 여부를 검사합니다.
-     */
-    public Party checkParty(Long priKey, Boolean checkDetail) {
-        if (priKey == null)
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "기본키가 NULL 입니다."
-            );
-        Optional<Party> party = partyRepository.findById(priKey);
-        if (party.isEmpty())
-            throw new GeneralException(
-                    ErrorCode.NOT_FOUND,
-                    "해당 모임 정보를 찾을 수 없습니다."
-            );
-        if (checkDetail)
-            return checkParty(party.get());
-        else
-            return party.get();
-    }
-
-    /**
-     * 모임의 삭제 여부와 완료 여부를 검사합니다.
-     */
-    public Party checkParty(Party party) {
-        if (party.getPartyStateType().equals(PartyStateType.MEETING_DELETE))
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "이미 삭제된 모임입니다."
-            );
-        if (party.getPartyStateType().equals(PartyStateType.ON_GOING))
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "모임이 진행 중 입니다."
-            );
-        if (party.getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "이미 완료된 모임입니다."
-            );
-        if (party.getPartyStateType().equals(PartyStateType.MEETING_CANCEL))
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "이미 취소된 모임입니다."
-            );
-        return party;
-    }
-
-    /**
      * 모임 피드백 저장
      */
     public Boolean createUserPartyFeedback(
@@ -277,5 +224,43 @@ public class PartyService {
                     e.getMessage()
             );
         }
+    }
+
+    /**
+     * 모임 기본키로 모임이 있는지 검사하고, 추가로 모임의 삭제 여부와 완료 여부를 검사합니다.
+     */
+    public Party checkParty(Long priKey, Boolean checkDetail) {
+        Party party = checkPriKeyService.checkAndGetParty(priKey);
+        if (checkDetail)
+            return checkParty(party);
+        else
+            return party;
+    }
+
+    /**
+     * 모임의 삭제 여부와 완료 여부를 검사합니다.
+     */
+    public Party checkParty(Party party) {
+        if (party.getPartyStateType().equals(PartyStateType.MEETING_DELETE))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "이미 삭제된 모임입니다."
+            );
+        if (party.getPartyStateType().equals(PartyStateType.ON_GOING))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "모임이 진행 중 입니다."
+            );
+        if (party.getPartyStateType().equals(PartyStateType.MEETING_COMPLETE))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "이미 완료된 모임입니다."
+            );
+        if (party.getPartyStateType().equals(PartyStateType.MEETING_CANCEL))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "이미 취소된 모임입니다."
+            );
+        return party;
     }
 }

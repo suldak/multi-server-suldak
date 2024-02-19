@@ -48,9 +48,11 @@ public class LiquorController {
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (userPriKey != null) {
-            statsService.countSearchTagCnt(userPriKey, liquorPriKey);
-            statsService.countSearchCnt(userPriKey, liquorPriKey);
-            statsService.createLiquorSearchLog(liquorPriKey);
+            try {
+                statsService.countSearchTagCnt(userPriKey, liquorPriKey);
+                statsService.countSearchCnt(userPriKey, liquorPriKey);
+                statsService.createLiquorSearchLog(liquorPriKey);
+            } catch (Exception e) {e.printStackTrace();}
         }
         return ApiDataResponse.of(
                 liquorDataService.getLiquorTotalData(liquorPriKey)
