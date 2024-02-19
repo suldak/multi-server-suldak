@@ -5,18 +5,14 @@ import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
-import com.sulsul.suldaksuldak.domain.party.PartyFeedback;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
-import com.sulsul.suldaksuldak.domain.user.UserPartyFeedback;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.user.party.UserPartyFeedbackReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
-import com.sulsul.suldaksuldak.repo.auth.party.UserPartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
-import com.sulsul.suldaksuldak.repo.party.feedback.PartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
@@ -40,8 +36,6 @@ public class PartyService {
     private final PartyRepository partyRepository;
     private final PartyTagRepository partyTagRepository;
     private final PartyGuestRepository partyGuestRepository;
-    private final PartyFeedbackRepository partyFeedbackRepository;
-    private final UserPartyFeedbackRepository userPartyFeedbackRepository;
 
     /**
      * 모임 생성
@@ -257,35 +251,35 @@ public class PartyService {
                         "완료 대기상태가 아닙니다."
                 );
 
-            for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
-                try {
-                    User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
-                    if (user.getId().equals(writerUserPriKey)) continue;
-                    for (Long feedbackPriKey: feedbackObj.getPartyFeedbackPriKeyList()) {
-                        Optional<PartyFeedback> partyFeedback =
-                                partyFeedbackRepository.findById(feedbackPriKey);
-                        if (partyFeedback.isEmpty()) continue;
-                        userPartyFeedbackRepository.save(
-                                UserPartyFeedback.of(
-                                        null,
-                                        user,
-                                        partyFeedback.get()
-                                )
-                        );
-                        if (user.getLevel() + partyFeedback.get().getScore() >= 100) {
-                            user.setLevel(100.0);
-                        } else if (user.getLevel() + partyFeedback.get().getScore() < 0) {
-                            user.setLevel(0.0);
-                        } else {
-                            user.setLevel(user.getLevel() + partyFeedback.get().getScore());
-                        }
-                        userRepository.save(user);
-                    }
-                } catch (Exception ignore) {}
-            }
-
-            partyGuest.setConfirm(GuestType.COMPLETE);
-            partyGuestRepository.save(partyGuest);
+//            for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
+//                try {
+//                    User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
+//                    if (user.getId().equals(writerUserPriKey)) continue;
+//                    for (Long feedbackPriKey: feedbackObj.getPartyFeedbackPriKeyList()) {
+//                        Optional<PartyFeedback> partyFeedback =
+//                                partyFeedbackRepository.findById(feedbackPriKey);
+//                        if (partyFeedback.isEmpty()) continue;
+//                        userPartyFeedbackRepository.save(
+//                                UserPartyFeedback.of(
+//                                        null,
+//                                        user,
+//                                        partyFeedback.get()
+//                                )
+//                        );
+//                        if (user.getLevel() + partyFeedback.get().getScore() >= 100) {
+//                            user.setLevel(100.0);
+//                        } else if (user.getLevel() + partyFeedback.get().getScore() < 0) {
+//                            user.setLevel(0.0);
+//                        } else {
+//                            user.setLevel(user.getLevel() + partyFeedback.get().getScore());
+//                        }
+//                        userRepository.save(user);
+//                    }
+//                } catch (Exception ignore) {}
+//            }
+//
+//            partyGuest.setConfirm(GuestType.COMPLETE);
+//            partyGuestRepository.save(partyGuest);
 
             return true;
         } catch (GeneralException e) {
