@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.repo.question.user;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.dto.question.UserSelectDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -31,6 +32,7 @@ public class UserSelectRepositoryImpl
                 .on(userSelect.liquorQuestion.id.eq(liquorQuestion.id))
                 .innerJoin(userSelect.liquorAnswer, liquorAnswer)
                 .on(userSelect.liquorAnswer.id.eq(liquorAnswer.id))
+                .leftJoin(userSelect.user.fileBase, QFileBase.fileBase)
                 .fetch();
     }
 
@@ -47,6 +49,7 @@ public class UserSelectRepositoryImpl
                 .on(userSelect.liquorQuestion.id.eq(questionPriKey))
                 .innerJoin(userSelect.liquorAnswer, liquorAnswer)
                 .on(userSelect.liquorAnswer.id.eq(liquorAnswer.id))
+                .leftJoin(userSelect.user.fileBase, QFileBase.fileBase)
                 .fetch();
     }
 
@@ -56,9 +59,15 @@ public class UserSelectRepositoryImpl
                         Projections.constructor(
                                 UserSelectDto.class,
                                 userSelect.id,
+                                userSelect.liquorQuestion.qIndex,
+                                userSelect.liquorQuestion.qText,
                                 userSelect.liquorQuestion.id,
+                                userSelect.liquorAnswer.aIndex,
+                                userSelect.liquorAnswer.aText,
                                 userSelect.liquorAnswer.id,
-                                userSelect.user.id
+                                userSelect.user.id,
+                                userSelect.user.nickname,
+                                userSelect.user.fileBase.fileNm
                         )
                 );
     }

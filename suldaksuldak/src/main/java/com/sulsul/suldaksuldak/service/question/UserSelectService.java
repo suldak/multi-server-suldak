@@ -131,15 +131,13 @@ public class UserSelectService {
         return true;
     }
 
-    public UserSelectRes getUserSelectRes (
+    public List<UserSelectDto> getUserSelectRes (
             Long userPriKey
     ) {
         try {
             if (userPriKey == null)
                 throw new GeneralException(ErrorCode.BAD_REQUEST, "User PriKey NULL");
-            List<UserSelectDto> userSelectDtos =
-                    userSelectRepository.findByUserPriKey(userPriKey);
-            return UserSelectRes.of(userSelectDtos);
+            return userSelectRepository.findByUserPriKey(userPriKey);
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

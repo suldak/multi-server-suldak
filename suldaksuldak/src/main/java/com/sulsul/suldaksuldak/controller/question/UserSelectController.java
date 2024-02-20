@@ -1,8 +1,10 @@
 package com.sulsul.suldaksuldak.controller.question;
 
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.question.UserSelectReq;
 import com.sulsul.suldaksuldak.dto.question.UserSelectRes;
+import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.question.UserSelectService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
@@ -33,6 +35,11 @@ public class UserSelectController {
             @RequestBody UserSelectReq userSelectReq
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
         return ApiDataResponse.of(
                 userSelectService.createUserSelectData(
                         userPriKey,
@@ -45,17 +52,18 @@ public class UserSelectController {
             value = "유저의 프로필 질문 답변 조회",
             notes = "유저가 선택한 프로필 질문의 답변들을 조회합니다."
     )
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "userPriKey", value = "유저의 기본키", required = true, dataTypeClass = Long.class)
-//    })
     @GetMapping(value = "/user-select")
     public ApiDataResponse<UserSelectRes> getUserSelectRes(
             HttpServletRequest request
-//            Long userPriKey
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
         return ApiDataResponse.of(
-                userSelectService.getUserSelectRes(userPriKey)
+                UserSelectRes.from(userSelectService.getUserSelectRes(userPriKey))
         );
     }
 }

@@ -9,23 +9,15 @@ import lombok.Value;
 @Value
 public class UserSelectDto {
     String id;
+    Integer liquorQuestionIndex;
+    String liquorQuestionText;
     Long liquorQuestionId;
+    Integer liquorAnswerIndex;
+    String liquorAnswerText;
     Long liquorAnswerId;
     Long userId;
-
-    public static UserSelectDto of (
-            String id,
-            Long liquorQuestionId,
-            Long liquorAnswerId,
-            Long userId
-    ) {
-        return new UserSelectDto(
-                id,
-                liquorQuestionId,
-                liquorAnswerId,
-                userId
-        );
-    }
+    String userNickname;
+    String userFileNm;
 
     public UserSelect toEntity(
             LiquorQuestion liquorQuestion,
