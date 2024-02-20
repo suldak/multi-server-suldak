@@ -1,13 +1,11 @@
 package com.sulsul.suldaksuldak.service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
-import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.bridge.*;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
-import com.sulsul.suldaksuldak.domain.liquor.LiquorSnack;
+import com.sulsul.suldaksuldak.domain.tag.LiquorSnack;
 import com.sulsul.suldaksuldak.domain.tag.*;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.bridge.mt.MtToLiRepository;

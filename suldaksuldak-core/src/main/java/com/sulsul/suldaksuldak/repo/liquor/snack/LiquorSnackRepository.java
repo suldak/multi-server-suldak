@@ -1,7 +1,7 @@
 package com.sulsul.suldaksuldak.repo.liquor.snack;
 
-import com.sulsul.suldaksuldak.domain.liquor.LiquorSnack;
-import com.sulsul.suldaksuldak.domain.liquor.QLiquorSnack;
+import com.sulsul.suldaksuldak.domain.tag.LiquorSnack;
+import com.sulsul.suldaksuldak.domain.tag.QLiquorSnack;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;

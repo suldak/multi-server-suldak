@@ -1,7 +1,6 @@
-package com.sulsul.suldaksuldak.domain.liquor;
+package com.sulsul.suldaksuldak.domain.tag;
 
 import com.sulsul.suldaksuldak.domain.bridge.SnToLi;
-import com.sulsul.suldaksuldak.domain.tag.TagEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

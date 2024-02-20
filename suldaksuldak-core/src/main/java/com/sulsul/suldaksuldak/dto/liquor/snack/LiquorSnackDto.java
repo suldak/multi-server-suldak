@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.dto.liquor.snack;
 
-import com.sulsul.suldaksuldak.domain.liquor.LiquorSnack;
+import com.sulsul.suldaksuldak.domain.tag.LiquorSnack;
 import lombok.Value;
 
 @Value

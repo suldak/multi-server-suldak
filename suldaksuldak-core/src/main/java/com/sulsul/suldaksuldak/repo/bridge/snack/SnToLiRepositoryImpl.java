@@ -13,7 +13,8 @@ import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.bridge.QSnToLi.snToLi;
 import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
-import static com.sulsul.suldaksuldak.domain.liquor.QLiquorSnack.liquorSnack;
+import static com.sulsul.suldaksuldak.domain.tag.QLiquorSnack.liquorSnack;
+
 
 @Repository
 @RequiredArgsConstructor

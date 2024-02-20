@@ -1,8 +1,7 @@
 package com.sulsul.suldaksuldak.domain.bridge;
 
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
-import com.sulsul.suldaksuldak.domain.liquor.LiquorSnack;
-import com.sulsul.suldaksuldak.domain.tag.StateType;
+import com.sulsul.suldaksuldak.domain.tag.LiquorSnack;
 import lombok.Getter;
 import lombok.ToString;
 
