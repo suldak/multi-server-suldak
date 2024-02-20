@@ -4,9 +4,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.sulsul.suldaksuldak.domain.file.QFileBase.fileBase;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
-import com.sulsul.suldaksuldak.dto.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sulsul.suldaksuldak.domain.file.QFileBase.fileBase;
 import static com.sulsul.suldaksuldak.domain.liquor.QLiquor.liquor;
 import static com.sulsul.suldaksuldak.domain.tag.QDrinkingCapacity.drinkingCapacity;
 import static com.sulsul.suldaksuldak.domain.tag.QLiquorAbv.liquorAbv;

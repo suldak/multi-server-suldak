@@ -2,8 +2,8 @@ package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
-import com.sulsul.suldaksuldak.dto.liquor.LiquorDto;
-import com.sulsul.suldaksuldak.dto.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;

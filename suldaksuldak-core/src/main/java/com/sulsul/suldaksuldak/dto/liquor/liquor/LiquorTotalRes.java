@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.liquor;
+package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;

@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.repo.liquor.liquor;
 
-import com.sulsul.suldaksuldak.dto.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

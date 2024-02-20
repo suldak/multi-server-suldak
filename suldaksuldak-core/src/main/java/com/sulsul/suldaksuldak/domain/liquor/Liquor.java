@@ -12,6 +12,8 @@ import com.sulsul.suldaksuldak.domain.tag.LiquorName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -78,6 +80,7 @@ public class Liquor extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SlToLi> slToLis = new LinkedHashSet<>();
 
 //    @ToString.Exclude
@@ -87,31 +90,37 @@ public class Liquor extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<MtToLi> mtToLis = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<StToLi> stToLis = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<TtToLi> ttToLis = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SnToLi> snToLis = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserLiquor> userLiquors = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<LiquorSearchLog> liquorSearchLogs = new LinkedHashSet<>();
 
     protected Liquor () {}

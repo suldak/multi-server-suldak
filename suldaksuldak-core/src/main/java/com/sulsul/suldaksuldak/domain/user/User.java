@@ -16,6 +16,8 @@ import com.sulsul.suldaksuldak.domain.stats.UserTag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -99,56 +101,67 @@ public class User extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<CutOffUser> cutOffUsers = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<CutOffUser> cutOffCutUsers = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserLiquor> userLiquors = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserSelect> userSelects = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserTag> userTags = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SearchText> searchTexts = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Party> parties = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartyGuest> partyGuests = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartyComment> partyComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportParty> reportParties = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
 
     protected User () {}

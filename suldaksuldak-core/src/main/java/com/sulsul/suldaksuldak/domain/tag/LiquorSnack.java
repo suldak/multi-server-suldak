@@ -5,6 +5,8 @@ import com.sulsul.suldaksuldak.domain.file.FileBase;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -30,6 +32,7 @@ public class LiquorSnack implements TagEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquorSnack", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SnToLi> snToLis = new LinkedHashSet<>();
 
     @OneToOne

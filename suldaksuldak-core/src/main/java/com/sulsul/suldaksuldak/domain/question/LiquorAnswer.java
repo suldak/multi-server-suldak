@@ -3,6 +3,8 @@ package com.sulsul.suldaksuldak.domain.question;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -35,11 +37,13 @@ public class LiquorAnswer {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquorAnswer", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserSelect> userSelects = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquorAnswer", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<AnswerWeight> answerWeights = new LinkedHashSet<>();
 
     protected LiquorAnswer() {}

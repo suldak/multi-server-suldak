@@ -6,6 +6,8 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -61,6 +63,7 @@ public class PartyComment extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "partyComment", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
 
     protected PartyComment() {}

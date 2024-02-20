@@ -4,6 +4,8 @@ import com.sulsul.suldaksuldak.domain.bridge.SlToLi;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -29,6 +31,7 @@ public class LiquorSell implements TagEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "liquorSell", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SlToLi> slToLis = new LinkedHashSet<>();
 
     protected LiquorSell() {}

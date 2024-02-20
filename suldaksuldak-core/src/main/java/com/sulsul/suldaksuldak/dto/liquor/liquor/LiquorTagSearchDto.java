@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.liquor;
+package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.LiquorMaterialDto;

@@ -9,6 +9,8 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -83,16 +85,19 @@ public class Party extends BaseEntity {
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartyGuest> partyGuests = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartyComment> partyComments = new LinkedHashSet<>();
 
     @ToString.Exclude
     @OrderBy("id")
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportParty> reportParties = new LinkedHashSet<>();
 
     protected Party () {}
