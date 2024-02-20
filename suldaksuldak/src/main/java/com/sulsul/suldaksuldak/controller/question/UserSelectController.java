@@ -8,8 +8,6 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.question.UserSelectService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +25,26 @@ public class UserSelectController {
 
     @ApiOperation(
             value = "유저의 프로필 질문 생성 및 수정",
-            notes = "유저가 프로필 질문에 대한 답변을 생성하거나 수정합니다."
+//            notes = "유저가 프로필 질문에 대한 답변을 생성하거나 수정합니다."
+            notes = """
+                    유저가 프로필 질문에 대한 답변을 생성하거나 수정합니다.\n
+                    REQ >>\n
+                        questionAnswerMap: [\n
+                            {\n
+                                // 질문 기본키\n
+                                questionPriKey: 1,\n
+                                // 딥변 기본키 리스트\n
+                                answerPriKeyList: [1, 4]\n
+                            },\n
+                            {\n
+                                // 질문 기본키\n
+                                questionPriKey: 2,\n
+                                // 딥변 기본키 리스트\n
+                                answerPriKeyList: [3]\n
+                            },\n
+                            ...\n
+                        ]\n
+                    """
     )
     @PostMapping("/user-select")
     public ApiDataResponse<Boolean> createUserSelect(
