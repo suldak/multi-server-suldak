@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 @Value
 @ApiModel(value = "유저가 선택한 질문 답변 Res")
 public class UserSelectRes {
-    @ApiModelProperty(value = "유저 선택에 대한 기본키")
-    String id;
     @ApiModelProperty(value = "유저 기본키")
     Long userPriKey;
     @ApiModelProperty(value = "유저 닉네임")
@@ -105,7 +103,6 @@ public class UserSelectRes {
             );
         }
         return new UserSelectRes(
-                userSelectDtos.get(0).getId(),
                 userSelectDtos.get(0).getUserId(),
                 userSelectDtos.get(0).getUserNickname(),
                 userSelectDtos.get(0).getUserFileNm() == null ? null :
