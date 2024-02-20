@@ -17,9 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,16 +33,42 @@ public class LiquorController {
     private final StatsService statsService;
 
     @ApiOperation(
+            value = "유저의 술 즐겨찾기 추가 및 삭제 (App 개발자 분들 피드백 부탁드립니다...)",
+            notes = """
+                    유저가 술에 대해서 즐겨찾기를 등록하거나, 이미 즐겨찾기 상태이면 삭제합니다.\n
+                    (이 API를 등록 따로 삭제 따로 만드는 것이 좋은지, 이렇게 하나의 API로 하는게 좋은지 피드백 부탁드립니다.)
+                    """
+    )
+    @PostMapping("/like/{liquorPriKey:[0-9]+}")
+    public ApiDataResponse<Boolean> userLiquorLike(
+            HttpServletRequest request,
+            @PathVariable Long liquorPriKey
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey == null)
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "유저 정보가 없습니다."
+            );
+        return ApiDataResponse.of(
+                liquorDataService.createOrDeleteLiquorLike(
+                        userPriKey,
+                        liquorPriKey
+                )
+        );
+    }
+
+    @ApiOperation(
             value = "술에 관한 모든 정보 조회 (집계)",
             notes = "술에 관한 모든 태그와 정보를 조회합니다. 유저가 해당 술을 검색했다고 판단하여 집계합니다. (유저 인증 Token 필요)"
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "liquorPriKey", value = "술의 기본키", required = true, dataTypeClass = Long.class)
     })
-    @GetMapping(value = "/liquor")
+    @GetMapping(value = "/{liquorPriKey:[0-9]+}")
     public ApiDataResponse<LiquorTotalRes> getLiquorTotalData (
             HttpServletRequest request,
-            Long liquorPriKey
+            @PathVariable Long liquorPriKey
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (userPriKey != null) {

@@ -2,14 +2,18 @@ package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
+import com.sulsul.suldaksuldak.domain.liquor.Liquor;
+import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
+import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
-import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
+import com.sulsul.suldaksuldak.repo.liquor.like.LiquorLikeRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
 import com.sulsul.suldaksuldak.repo.liquor.snack.LiquorSnackRepository;
@@ -32,6 +36,7 @@ import java.util.concurrent.Executors;
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorDataService {
+    private final CheckPriKeyService checkPriKeyService;
     private final LiquorRepository liquorRepository;
     private final LiquorAbvRepository liquorAbvRepository;
     private final LiquorDetailRepository liquorDetailRepository;
@@ -42,6 +47,47 @@ public class LiquorDataService {
     private final LiquorMaterialRepository liquorMaterialRepository;
     private final StateTypeRepository stateTypeRepository;
     private final TasteTypeRepository tasteTypeRepository;
+    private final LiquorLikeRepository liquorLikeRepository;
+
+    /**
+     * 술 즐겨 찾기 설정 및 해제
+     */
+    public Boolean createOrDeleteLiquorLike(
+            Long userPriKey,
+            Long liquorPriKey
+    ) {
+        try {
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorPriKey);
+            Optional<LiquorLike> liquorLike =
+                    liquorLikeRepository.findByByUserPriKeyAndLiquorPriKey(
+                            userPriKey,
+                            liquorPriKey
+                    );
+            if (liquorLike.isEmpty()) {
+                liquorLikeRepository.save(
+                        LiquorLike.of(
+                                null,
+                                user,
+                                liquor
+                        )
+                );
+            } else {
+                liquorLikeRepository.deleteById(liquorLike.get().getId());
+            }
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
 
     /**
      * 술에 관련된 모든 데이터 조회
