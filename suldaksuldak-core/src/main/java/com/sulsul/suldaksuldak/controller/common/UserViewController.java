@@ -1,14 +1,18 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.user.UserRes;
 import com.sulsul.suldaksuldak.dto.search.UserSearchReq;
+import com.sulsul.suldaksuldak.dto.user.UserRes;
+import com.sulsul.suldaksuldak.dto.user.UserTotalRes;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,4 +45,21 @@ public class UserViewController {
         );
     }
 
+    @ApiOperation(
+            value = "유저 단일 조회",
+            notes = "유저의 기본키를 이용해 유저 단일 조회"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userPriKey", value = "유저 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @GetMapping(value = "/user/{userPriKey:[0-9]+}")
+    public ApiDataResponse<UserTotalRes> getUserDataList(
+            @PathVariable Long userPriKey
+    ) {
+        return ApiDataResponse.of(
+                userService.getUserTotalDto(
+                        userPriKey
+                        ).orElse(null)
+        );
+    }
 }

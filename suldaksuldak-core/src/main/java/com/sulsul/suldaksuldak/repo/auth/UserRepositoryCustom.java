@@ -31,4 +31,6 @@ public interface UserRepositoryCustom {
             List<Integer> warningCntList,
             Boolean isActive
     );
+
+    Optional<UserDto> findTotalByPriKey(Long priKey);
 }

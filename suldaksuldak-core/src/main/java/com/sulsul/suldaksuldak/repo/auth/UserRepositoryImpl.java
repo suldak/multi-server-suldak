@@ -4,8 +4,6 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import static com.sulsul.suldaksuldak.domain.user.QUser.user;
-
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
@@ -15,6 +13,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+
+import static com.sulsul.suldaksuldak.domain.question.QUserSelect.userSelect;
+import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -93,6 +94,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 )
                 .orderBy(user.id.asc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<UserDto> findTotalByPriKey(Long priKey) {
+        return Optional.of(
+                getUserDtoQuery()
+                        .from(user)
+                        .leftJoin(user.userSelects, userSelect)
+                        .on(userSelect.user.id.eq(priKey))
+                        .where(user.id.eq(priKey))
+                        .fetchFirst()
+        );
     }
 
     private JPAQuery<UserDto> getUserDtoQuery() {

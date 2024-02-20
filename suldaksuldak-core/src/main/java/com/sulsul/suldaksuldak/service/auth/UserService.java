@@ -3,10 +3,12 @@ package com.sulsul.suldaksuldak.service.auth;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
-import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.dto.search.UserSearchReq;
+import com.sulsul.suldaksuldak.dto.user.UserDto;
+import com.sulsul.suldaksuldak.dto.user.UserTotalRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.question.user.UserSelectRepository;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserSelectRepository userSelectRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -141,6 +144,29 @@ public class UserService implements UserDetailsService {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public Optional<UserTotalRes> getUserTotalDto(
+            Long userPriKey
+    ) {
+        try {
+            Optional<UserDto> optionalUserDto =
+                    userRepository.findTotalByPriKey(userPriKey);
+            return optionalUserDto.map(userDto -> UserTotalRes.from(
+                    userDto,
+                    userSelectRepository.findByUserPriKey(userPriKey)
+            ));
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
         }
     }
 }
