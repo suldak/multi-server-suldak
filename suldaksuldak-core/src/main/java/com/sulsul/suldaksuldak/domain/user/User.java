@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
+import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyComment;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
@@ -163,6 +164,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportPartyComment> reportPartyComments = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<LiquorLike> liquorLikes = new LinkedHashSet<>();
 
     protected User () {}
 

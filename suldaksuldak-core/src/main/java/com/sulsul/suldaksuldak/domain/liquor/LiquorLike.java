@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.domain.search;
+package com.sulsul.suldaksuldak.domain.liquor;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,52 +16,55 @@ import java.time.LocalDateTime;
 @Getter
 @ToString
 @Table(
-        name = "tb_search_text"
+        name = "tb_liquor_like"
 )
-@Entity(name = "searchText")
-public class SearchText {
+@EntityListeners(AutoCloseable.class)
+@Entity(name = "liquorLike")
+public class LiquorLike {
     @Id
-    private String id;
-
-    @Column(nullable = false)
-    private String content;
-
-    @ManyToOne(optional = false)
-    private User user;
+    @Column(columnDefinition = "BIGINT UNSIGNED")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @CreatedDate
     @Column(nullable = false, columnDefinition = "TIMESTAMP")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime searchAt;
+    private LocalDateTime likeTime;
+
+    @ManyToOne(optional = false)
+    private User user;
+
+    @ManyToOne(optional = false)
+    private Liquor liquor;
 
     @PrePersist
     public void prePersist() {
-        this.searchAt = LocalDateTime.now();
+        this.likeTime = LocalDateTime.now();
     }
 
-    protected SearchText () {}
+    protected LiquorLike () {}
 
-    protected SearchText (
-            String id,
-            String content,
-            User user
+    protected LiquorLike (
+            Long id,
+            User user,
+            Liquor liquor
     ) {
         this.id = id;
-        this.content = content;
         this.user = user;
+        this.liquor = liquor;
     }
 
-    public static SearchText of (
-            String id,
-            String content,
-            User user
+    public static LiquorLike of (
+            Long id,
+            User user,
+            Liquor liquor
     ) {
-        return new SearchText(
+        return new LiquorLike(
                 id,
-                content,
-                user
+                user,
+                liquor
         );
     }
 }

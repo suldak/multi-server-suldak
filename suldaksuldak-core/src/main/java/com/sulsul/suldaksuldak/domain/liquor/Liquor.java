@@ -123,6 +123,12 @@ public class Liquor extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<LiquorSearchLog> liquorSearchLogs = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "liquor", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<LiquorLike> liquorLikes = new LinkedHashSet<>();
+
     protected Liquor () {}
 
     protected Liquor (
