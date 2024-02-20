@@ -6,7 +6,7 @@ import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.tag.LiquorSnack;
 import com.sulsul.suldaksuldak.domain.tag.*;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalReq;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTotalReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.bridge.mt.MtToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.sell.SlToLiRepository;

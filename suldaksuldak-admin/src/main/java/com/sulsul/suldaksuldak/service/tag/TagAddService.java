@@ -4,7 +4,7 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.tag.*;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;
@@ -141,19 +141,27 @@ public class TagAddService {
      */
     public Boolean createLiquorMaterial(
             Long id,
-            String name
+            String name,
+            MultipartFile file
     ) {
         try {
             if (id == null) {
+                FileBase fileBase = fileService.saveFile(file);
                 liquorMaterialRepository.save(
-                        LiquorMaterial.of(null, name)
+                        LiquorMaterial.of(null, name, fileBase)
                 );
             } else {
                 liquorMaterialRepository.findById(id)
                         .ifPresentOrElse(
-                                entity -> {
-                                    entity.setName(name);
-                                    liquorMaterialRepository.save(entity);
+                                findEntity -> {
+                                    if (name != null)
+                                        findEntity.setName(name);
+                                    FileBase oriFileBase = findEntity.getFileBase();
+                                    FileBase fileBase = fileService.saveFile(file);
+                                    findEntity.setFileBase(fileBase);
+                                    liquorMaterialRepository.save(findEntity);
+                                    if (oriFileBase != null)
+                                        fileService.deleteFile(oriFileBase.getFileNm());
                                 },
                                 () -> {
                                     throw new GeneralException(ErrorCode.NOT_FOUND, "NOT FOUND ENTITY");
@@ -311,16 +319,24 @@ public class TagAddService {
      * 추천 안주 생성 및 수정
      */
     public Boolean createLiquorSnack(
-            LiquorSnackDto liquorSnackDto
+            LiquorSnackDto liquorSnackDto,
+            MultipartFile file
     ) {
         try {
             if (liquorSnackDto.getId() == null) {
-                liquorSnackRepository.save(liquorSnackDto.toEntity());
+                FileBase fileBase = fileService.saveFile(file);
+                liquorSnackRepository.save(liquorSnackDto.toEntity(fileBase));
             } else {
                 liquorSnackRepository.findById(liquorSnackDto.getId())
                         .ifPresentOrElse(
                                 findEntity -> {
-                                    liquorSnackRepository.save(liquorSnackDto.updateEntity(findEntity));
+                                    FileBase oriFileBase = findEntity.getFileBase();
+                                    FileBase fileBase = fileService.saveFile(file);
+                                    liquorSnackRepository.save(
+                                            liquorSnackDto.updateEntity(findEntity, fileBase)
+                                    );
+                                    if (oriFileBase != null)
+                                        fileService.deleteFile(oriFileBase.getFileNm());
                                 },
                                 () -> {
                                     throw new GeneralException(

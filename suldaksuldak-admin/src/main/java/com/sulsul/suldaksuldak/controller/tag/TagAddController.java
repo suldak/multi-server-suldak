@@ -2,7 +2,7 @@ package com.sulsul.suldaksuldak.controller.tag;
 
 import com.sulsul.suldaksuldak.service.tag.TagAddService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackReq;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackReq;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -73,14 +73,16 @@ public class TagAddController {
             value = "재료 저장",
             notes = "재료를 생성하거나 수정합니다."
     )
-    @PostMapping(value = "/liquor-material")
+    @PostMapping(value = "/liquor-material", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiDataResponse<Boolean> createLiquorMaterial (
-            @RequestBody LiquorMaterialDto liquorMaterialDto
+            @RequestPart(value = "file") MultipartFile file,
+            @RequestPart(value = "liquorMaterialDto") LiquorMaterialDto liquorMaterialDto
     ) {
         return ApiDataResponse.of(
                 tagAddService.createLiquorMaterial(
                         liquorMaterialDto.getId(),
-                        liquorMaterialDto.getName()
+                        liquorMaterialDto.getName(),
+                        file
                 )
         );
     }
@@ -174,12 +176,13 @@ public class TagAddController {
             value = "추천 안주 저장",
             notes = "추천 안주를 생성하거나 수정합니다."
     )
-    @PostMapping(value = "/liquor-snack")
+    @PostMapping(value = "/liquor-snack", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiDataResponse<Boolean> createLiquorSnackRecipe(
-            @RequestBody LiquorSnackReq liquorSnackReq
+            @RequestPart(value = "file") MultipartFile file,
+            @RequestPart(value = "liquorNameDto") LiquorSnackReq liquorSnackReq
     ) {
         return ApiDataResponse.of(
-                tagAddService.createLiquorSnack(liquorSnackReq.toDto())
+                tagAddService.createLiquorSnack(liquorSnackReq.toDto(), file)
         );
     }
 }

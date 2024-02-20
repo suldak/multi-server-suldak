@@ -1,8 +1,8 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchReq;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTagSearchReq;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
 import com.sulsul.suldaksuldak.service.stats.StatsService;

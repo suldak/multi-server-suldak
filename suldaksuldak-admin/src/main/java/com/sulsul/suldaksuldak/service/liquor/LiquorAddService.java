@@ -7,7 +7,7 @@ import com.sulsul.suldaksuldak.domain.tag.DrinkingCapacity;
 import com.sulsul.suldaksuldak.domain.tag.LiquorAbv;
 import com.sulsul.suldaksuldak.domain.tag.LiquorDetail;
 import com.sulsul.suldaksuldak.domain.tag.LiquorName;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.abv.LiquorAbvRepository;
 import com.sulsul.suldaksuldak.repo.liquor.detail.LiquorDetailRepository;

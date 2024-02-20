@@ -1,15 +1,14 @@
-package com.sulsul.suldaksuldak.dto.liquor.liquor;
+package com.sulsul.suldaksuldak.dto.liquor;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

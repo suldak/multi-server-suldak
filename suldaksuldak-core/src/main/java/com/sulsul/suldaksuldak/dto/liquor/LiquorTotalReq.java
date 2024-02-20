@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.liquor.liquor;
+package com.sulsul.suldaksuldak.dto.liquor;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

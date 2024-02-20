@@ -1,5 +1,6 @@
-package com.sulsul.suldaksuldak.dto.liquor.snack;
+package com.sulsul.suldaksuldak.dto.tag.snack;
 
+import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -17,13 +18,17 @@ public class LiquorSnackRes {
     Long id;
     @ApiModelProperty(value = "안주 이름")
     String name;
+    @ApiModelProperty(value = "안주 사진 Url")
+    String fileBaseNm;
 
     public static LiquorSnackRes from (
             LiquorSnackDto liquorSnackDto
     ) {
         return new LiquorSnackRes(
                 liquorSnackDto.getId(),
-                liquorSnackDto.getName()
+                liquorSnackDto.getName(),
+                liquorSnackDto.getFileBaseNm() == null ? null :
+                        FileUrl.FILE_DOWN_URL.getUrl() + liquorSnackDto.getFileBaseNm()
         );
     }
 }

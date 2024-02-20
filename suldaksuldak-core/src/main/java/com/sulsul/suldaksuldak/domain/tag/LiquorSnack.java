@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.domain.tag;
 
 import com.sulsul.suldaksuldak.domain.bridge.SnToLi;
+import com.sulsul.suldaksuldak.domain.file.FileBase;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,23 +32,32 @@ public class LiquorSnack implements TagEntity {
     @OneToMany(mappedBy = "liquorSnack", cascade = CascadeType.REMOVE)
     private Set<SnToLi> snToLis = new LinkedHashSet<>();
 
+    @OneToOne
+    @Setter
+    @JoinColumn(name = "file_base_nm")
+    private FileBase fileBase;
+
     protected LiquorSnack() {}
 
     protected LiquorSnack(
             Long id,
-            String name
+            String name,
+            FileBase fileBase
     ) {
         this.id = id;
         this.name = name;
+        this.fileBase = fileBase;
     }
 
     public static LiquorSnack of (
             Long id,
-            String name
+            String name,
+            FileBase fileBase
     ) {
         return new LiquorSnack(
                 id,
-                name
+                name,
+                fileBase
         );
     }
 }

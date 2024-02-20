@@ -1,10 +1,10 @@
 package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorDto;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTagSearchDto;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.tag.StateTypeDto;
 import com.sulsul.suldaksuldak.dto.tag.TasteTypeDto;

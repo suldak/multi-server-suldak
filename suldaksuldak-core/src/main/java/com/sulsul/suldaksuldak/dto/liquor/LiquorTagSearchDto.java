@@ -1,6 +1,6 @@
-package com.sulsul.suldaksuldak.dto.liquor.liquor;
+package com.sulsul.suldaksuldak.dto.liquor;
 
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackRes;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.LiquorMaterialDto;
 import com.sulsul.suldaksuldak.dto.tag.LiquorSellDto;
 import com.sulsul.suldaksuldak.dto.tag.StateTypeDto;

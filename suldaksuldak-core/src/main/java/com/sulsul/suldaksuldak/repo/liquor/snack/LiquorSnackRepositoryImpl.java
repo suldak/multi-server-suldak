@@ -4,14 +4,15 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 import static com.sulsul.suldaksuldak.domain.bridge.QSnToLi.snToLi;
-import static com.sulsul.suldaksuldak.domain.liquor.QLiquorSnack.liquorSnack;
+import static com.sulsul.suldaksuldak.domain.file.QFileBase.fileBase;
+import static com.sulsul.suldaksuldak.domain.tag.QLiquorSnack.liquorSnack;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
     public List<LiquorSnackDto> findAllLiquorSnack() {
         return getLiquorSnackDtoQuery()
                 .from(liquorSnack)
+                .leftJoin(liquorSnack.fileBase, fileBase)
                 .orderBy(liquorSnack.name.asc())
                 .fetch();
     }
@@ -32,6 +34,7 @@ public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
                 .from(liquorSnack)
                 .innerJoin(liquorSnack.snToLis, snToLi)
                 .on(snToLi.liquor.id.eq(liquorPriKey))
+                .leftJoin(liquorSnack.fileBase, fileBase)
                 .fetch();
     }
 
@@ -41,7 +44,8 @@ public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
                         Projections.constructor(
                                 LiquorSnackDto.class,
                                 liquorSnack.id,
-                                liquorSnack.name
+                                liquorSnack.name,
+                                liquorSnack.fileBase.fileNm
                         )
                 );
     }

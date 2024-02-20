@@ -2,8 +2,8 @@ package com.sulsul.suldaksuldak.controller.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
-import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTagSearchDto;
+import com.sulsul.suldaksuldak.dto.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;

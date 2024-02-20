@@ -1,6 +1,6 @@
 package com.sulsul.suldaksuldak.repo.liquor.snack;
 
-import com.sulsul.suldaksuldak.dto.liquor.snack.LiquorSnackDto;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 
 import java.util.List;
 

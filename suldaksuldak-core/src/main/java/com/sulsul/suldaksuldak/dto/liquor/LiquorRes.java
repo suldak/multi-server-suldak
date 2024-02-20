@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.liquor.liquor;
+package com.sulsul.suldaksuldak.dto.liquor;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import io.swagger.annotations.ApiModel;

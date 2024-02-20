@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.sulsul.suldaksuldak.domain.bridge.QMtToLi.mtToLi;
+import static com.sulsul.suldaksuldak.domain.file.QFileBase.fileBase;
 import static com.sulsul.suldaksuldak.domain.tag.QLiquorMaterial.liquorMaterial;
 
 @Repository
@@ -23,6 +24,7 @@ public class LiquorMaterialRepositoryImpl implements LiquorMaterialRepositoryCus
                 .from(liquorMaterial)
                 .innerJoin(liquorMaterial.mtToLis, mtToLi)
                 .on(mtToLi.liquor.id.eq(liquorPriKey))
+                .leftJoin(liquorMaterial.fileBase, fileBase)
                 .fetch();
     }
 
@@ -32,7 +34,8 @@ public class LiquorMaterialRepositoryImpl implements LiquorMaterialRepositoryCus
                         Projections.constructor(
                                 LiquorMaterialDto.class,
                                 liquorMaterial.id,
-                                liquorMaterial.name
+                                liquorMaterial.name,
+                                liquorMaterial.fileBase.fileNm
                         )
                 );
     }

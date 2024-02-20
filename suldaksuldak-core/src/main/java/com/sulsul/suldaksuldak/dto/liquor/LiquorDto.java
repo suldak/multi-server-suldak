@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.dto.liquor.liquor;
+package com.sulsul.suldaksuldak.dto.liquor;
 
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
