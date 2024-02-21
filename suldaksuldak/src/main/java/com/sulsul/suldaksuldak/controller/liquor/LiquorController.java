@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.like.LiquorLikeDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
@@ -191,6 +192,36 @@ public class LiquorController {
         } else {
             throw new GeneralException(ErrorCode.BAD_REQUEST, "TAG / LIQUOR 중 입력해주세요.");
         }
+    }
+
+    @ApiOperation(
+            value = "유저 별 즐겨찾기 된 술 조회",
+            notes = "유저 별 즐겨찾기가 등록된 술 목록을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
+    })
+    @GetMapping("/user-like")
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByLike(
+            HttpServletRequest request,
+            Integer pageNum,
+            Integer recordSize
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        Page<LiquorLikeDto> liquorLikeDtos = liquorDataService.getLiquorLikeList(
+                null,
+                userPriKey,
+                null,
+                null,
+                UtilTool.getPageable(pageNum, recordSize)
+        );
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorListByLike(
+                        liquorLikeDtos,
+                        userPriKey
+                )
+        );
     }
 
     /**

@@ -5,6 +5,7 @@ import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.liquor.like.LiquorLikeDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
@@ -24,8 +25,11 @@ import com.sulsul.suldaksuldak.repo.tag.state.StateTypeRepository;
 import com.sulsul.suldaksuldak.repo.tag.taste.TasteTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -114,6 +118,34 @@ public class LiquorDataService {
         }
     }
 
+    public Page<LiquorLikeDto> getLiquorLikeList(
+            Long liquorPriKey,
+            Long userPriKey,
+            LocalDateTime startAt,
+            LocalDateTime endAt,
+            Pageable pageable
+    ) {
+        try {
+            return liquorLikeRepository.findByLiquorPriKeyWithUserPriKey(
+                    liquorPriKey,
+                    userPriKey,
+                    startAt,
+                    endAt,
+                    pageable
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
     /**
      * 술에 관련된 모든 데이터 조회
      */
@@ -129,8 +161,6 @@ public class LiquorDataService {
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
-            log.info("liquorPriKey >> {}", liquorPriKey);
-            log.info("userPriKey >> {}", userPriKey);
             return getLiquorTotalData(
                     liquorDto.get(),
                     userPriKey

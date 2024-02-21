@@ -1,13 +1,14 @@
 package com.sulsul.suldaksuldak.service.common;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.dto.liquor.like.LiquorLikeDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
-import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.tag.StateTypeDto;
 import com.sulsul.suldaksuldak.dto.tag.TasteTypeDto;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.bridge.mt.MtToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.sell.SlToLiRepository;
@@ -453,6 +454,38 @@ public class LiquorViewService {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public Page<LiquorTotalRes> getLiquorListByLike(
+            Page<LiquorLikeDto> liquorLikeDtos,
+            Long userPriKey
+    ) {
+        try {
+            List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
+            for (LiquorLikeDto dto: liquorLikeDtos.getContent()) {
+                liquorTotalRes.add(
+                        liquorDataService.getLiquorTotalData(
+                                dto.getLiquorPriKey(),
+                                userPriKey
+                        )
+                );
+            }
+            return new PageImpl<>(
+                    liquorTotalRes,
+                    liquorLikeDtos.getPageable(),
+                    liquorLikeDtos.getTotalElements()
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
         }
     }
 }

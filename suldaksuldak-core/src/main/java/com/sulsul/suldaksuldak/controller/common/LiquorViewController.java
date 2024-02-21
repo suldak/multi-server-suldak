@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.controller.common;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.liquor.like.LiquorLikeDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
@@ -125,6 +126,45 @@ public class LiquorViewController {
                         liquorTotalRes,
                         liquorPriKeyList.getPageable(),
                         liquorPriKeyList.getTotalElements()
+                )
+        );
+    }
+
+    @ApiOperation(
+            value = "즐겨찾기가 많은 순으로 술 목록 조회",
+            notes = "유저가 즐겨찾기를 많이 등록한 술 순서대로 목록을 조회합니다. (Pageable)"
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
+            @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10"),
+            @ApiImplicitParam(name = "startAt", value = "검색 시작 일시 (yyyy-MM-dd'T'HH:mm:ss)", dataTypeClass = String.class, example = "2023-10-05T00:00:00"),
+            @ApiImplicitParam(name = "endAt", value = "검색 끝 일시 (yyyy-MM-dd'T'HH:mm:ss)", dataTypeClass = String.class, example = "2023-10-06T00:00:00", defaultValue = "LocalDateTime.now()")
+    })
+    @GetMapping("/liquor-like")
+    public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByLike(
+            HttpServletRequest request,
+            Integer pageNum,
+            Integer recordSize,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+            LocalDateTime startAt,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+            LocalDateTime endAt
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        Page<LiquorLikeDto> liquorLikeDtos = liquorDataService.getLiquorLikeList(
+                null,
+                null,
+                startAt,
+                endAt,
+                UtilTool.getPageable(
+                        pageNum,
+                        recordSize
+                )
+        );
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorListByLike(
+                        liquorLikeDtos,
+                        userPriKey
                 )
         );
     }
