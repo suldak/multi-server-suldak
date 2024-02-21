@@ -59,11 +59,7 @@ public class LiquorDataService {
         try {
             User user = checkPriKeyService.checkAndGetUser(userPriKey);
             Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorPriKey);
-            Optional<LiquorLike> liquorLike =
-                    liquorLikeRepository.findByByUserPriKeyAndLiquorPriKey(
-                            userPriKey,
-                            liquorPriKey
-                    );
+            Optional<LiquorLike> liquorLike = getLiquorLikeUser(userPriKey, liquorPriKey);
             if (liquorLike.isEmpty()) {
                 liquorLikeRepository.save(
                         LiquorLike.of(
@@ -90,10 +86,40 @@ public class LiquorDataService {
     }
 
     /**
+     * 유저가 해당 술에 즐겨찾기를 등록했는지 여부
+     */
+    public Optional<LiquorLike> getLiquorLikeUser(
+            Long userPriKey,
+            Long liquorPriKey
+    ) {
+        try {
+            if (userPriKey == null)
+                return Optional.empty();
+            return liquorLikeRepository.findByByUserPriKeyAndLiquorPriKey(
+                    userPriKey,
+                    liquorPriKey
+            );
+        } catch (GeneralException e) {
+            e.printStackTrace();
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
      * 술에 관련된 모든 데이터 조회
      */
     public LiquorTotalRes getLiquorTotalData(
-            Long liquorPriKey
+            Long liquorPriKey,
+            Long userPriKey
     ) {
         try {
             if (liquorPriKey == null) {
@@ -103,22 +129,28 @@ public class LiquorDataService {
             Optional<LiquorDto> liquorDto = liquorRepository.findByPriKey(liquorPriKey);
             if (liquorDto.isEmpty())
                 throw new GeneralException(ErrorCode.NOT_FOUND, ErrorMessage.NOT_FOUND_LIQUOR_DATA);
+            log.info("liquorPriKey >> {}", liquorPriKey);
+            log.info("userPriKey >> {}", userPriKey);
             return getLiquorTotalData(
-                    liquorDto.get()
+                    liquorDto.get(),
+                    userPriKey
             );
         } catch (GeneralException e) {
+            e.printStackTrace();
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
     }
 
     public LiquorTotalRes getLiquorTotalData(
-            LiquorDto liquorDto
+            LiquorDto liquorDto,
+            Long userPriKey
     ) {
         try {
             long startTime = System.currentTimeMillis();
-            ExecutorService executor = Executors.newFixedThreadPool(9);
+            ExecutorService executor = Executors.newFixedThreadPool(10);
 
             CompletableFuture<Optional<LiquorAbvDto>> liquorAbvCompletableFuture =
                     CompletableFuture.supplyAsync(() ->
@@ -164,6 +196,10 @@ public class LiquorDataService {
                     CompletableFuture.supplyAsync(() ->
                             getTasteTypeDtoList(liquorDto.getId()), executor
                     );
+            CompletableFuture<Optional<LiquorLike>> liquorLikeCompletableFuture =
+                    CompletableFuture.supplyAsync(() ->
+                            getLiquorLikeUser(userPriKey, liquorDto.getId()), executor
+                    );
 
             CompletableFuture<Void> allOf = CompletableFuture.allOf(
                     liquorAbvCompletableFuture,
@@ -174,7 +210,8 @@ public class LiquorDataService {
                     liquorSellCompletableFuture,
                     liquorMtCompletableFuture,
                     liquorStateCompletableFuture,
-                    liquorTasteCompletableFuture
+                    liquorTasteCompletableFuture,
+                    liquorLikeCompletableFuture
             );
 
             allOf.get();
@@ -188,10 +225,12 @@ public class LiquorDataService {
             List<LiquorMaterialDto> liquorMaterialDtos = liquorMtCompletableFuture.get();
             List<StateTypeDto> stateTypeDtos = liquorStateCompletableFuture.get();
             List<TasteTypeDto> tasteTypeDtos = liquorTasteCompletableFuture.get();
+            Optional<LiquorLike> liquorLike = liquorLikeCompletableFuture.get();
 
             log.info("[{} 조회] >> {}", liquorDto.getName(), (System.currentTimeMillis() - startTime) / 1000.0);
             return LiquorTotalRes.of(
                     liquorDto,
+                    liquorLike,
                     liquorAbvDto,
                     liquorDetailDto,
                     drinkingCapacityDto,
@@ -203,8 +242,10 @@ public class LiquorDataService {
                     tasteTypeDtos
             );
         } catch (GeneralException e) {
+            e.printStackTrace();
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
     }

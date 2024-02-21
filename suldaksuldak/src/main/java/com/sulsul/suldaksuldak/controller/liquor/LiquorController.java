@@ -79,7 +79,10 @@ public class LiquorController {
             } catch (Exception e) {e.printStackTrace();}
         }
         return ApiDataResponse.of(
-                liquorDataService.getLiquorTotalData(liquorPriKey)
+                liquorDataService.getLiquorTotalData(
+                        liquorPriKey,
+                        userPriKey
+                )
         );
     }
 
@@ -99,24 +102,9 @@ public class LiquorController {
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (userPriKey == null) {
-            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)));
+            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize), null));
         }
-        List<UserLiquorTagDto> liquorPriKeyList =
-                statsService.getLiquorPriKeyByUserStats(userPriKey, 5);
-
-        if (liquorPriKeyList.isEmpty()) {
-            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)));
-        }
-
-        return ApiDataResponse.of(
-                liquorViewService.getLiquorListByLiquor(
-                        liquorPriKeyList,
-                        UtilTool.getPageable(
-                                pageNum,
-                                recordSize
-                        )
-                )
-        );
+        return getLiquorListByLiquorData(pageNum, recordSize, userPriKey);
     }
 
     @ApiOperation(
@@ -135,22 +123,23 @@ public class LiquorController {
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (userPriKey == null) {
-            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)));
+            return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize), null));
         }
-        LiquorTagSearchDto liquorTagSearchDto =
-                statsService.getTagListByUserPriKey(
-                        userPriKey,
-                        5,
-                        pageNum,
-                        recordSize
-                );
-        return ApiDataResponse.of(
-                liquorViewService.getLiquorByTag(
-                        userPriKey,
-                        liquorTagSearchDto,
-                        UtilTool.getPageable(pageNum, recordSize)
-                )
-        );
+//        LiquorTagSearchDto liquorTagSearchDto =
+//                statsService.getTagListByUserPriKey(
+//                        userPriKey,
+//                        5,
+//                        pageNum,
+//                        recordSize
+//                );
+//        return ApiDataResponse.of(
+//                liquorViewService.getLiquorByTag(
+//                        userPriKey,
+//                        liquorTagSearchDto,
+//                        UtilTool.getPageable(pageNum, recordSize)
+//                )
+//        );
+        return getLiquorListByTagData(pageNum, recordSize, userPriKey);
     }
 
     @ApiOperation(
@@ -177,45 +166,96 @@ public class LiquorController {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (userPriKey == null) {
             return ApiDataResponse.of(
-                    liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize))
+                    liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize), null)
             );
         }
 
         if (searchType.equals("TAG")) {
-            LiquorTagSearchDto liquorTagSearchDto =
-                    statsService.getTagListByUserPriKey(
-                            userPriKey,
-                            5,
-                            pageNum,
-                            recordSize
-                    );
-            return ApiDataResponse.of(
-                    liquorViewService.getLiquorByTag(
-                            userPriKey,
-                            liquorTagSearchDto,
-                            UtilTool.getPageable(pageNum, recordSize)
-                    )
-            );
+//            LiquorTagSearchDto liquorTagSearchDto =
+//                    statsService.getTagListByUserPriKey(
+//                            userPriKey,
+//                            5,
+//                            pageNum,
+//                            recordSize
+//                    );
+//            return ApiDataResponse.of(
+//                    liquorViewService.getLiquorByTag(
+//                            userPriKey,
+//                            liquorTagSearchDto,
+//                            UtilTool.getPageable(pageNum, recordSize)
+//                    )
+//            );
+            return getLiquorListByTagData(pageNum, recordSize, userPriKey);
         } else if (searchType.equals("LIQUOR")) {
-            List<UserLiquorTagDto> liquorPriKeyList =
-                    statsService.getLiquorPriKeyByUserStats(userPriKey, 5);
-
-            if (liquorPriKeyList.isEmpty()) {
-                return ApiDataResponse.of(liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize)));
-            }
-
-            return ApiDataResponse.of(
-                    liquorViewService.getLiquorListByLiquor(
-                            liquorPriKeyList,
-                            UtilTool.getPageable(
-                                    pageNum,
-                                    recordSize
-                            )
-                    )
-            );
+            return getLiquorListByLiquorData(pageNum, recordSize, userPriKey);
         } else {
             throw new GeneralException(ErrorCode.BAD_REQUEST, "TAG / LIQUOR 중 입력해주세요.");
         }
     }
 
+    /**
+     * 사용자가 술을 검색한 로그를 바탕으로 술 추천
+     */
+    private ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByLiquorData(
+            Integer pageNum,
+            Integer recordSize,
+            Long userPriKey
+    ) {
+        List<UserLiquorTagDto> liquorPriKeyList =
+                statsService.getLiquorPriKeyByUserStats(userPriKey, 5);
+
+        if (liquorPriKeyList.isEmpty()) {
+            return ApiDataResponse.of(
+                    liquorViewService.getLatestLiquor(
+                            UtilTool.getPageable(pageNum, recordSize),
+                            userPriKey
+                    ));
+        }
+
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorListByLiquor(
+                        liquorPriKeyList,
+                        UtilTool.getPageable(
+                                pageNum,
+                                recordSize
+                        ),
+                        userPriKey
+                )
+        );
+    }
+
+    /**
+     * 사용자가 술의 태그를 검색한 로그를 바탕으로 술 추천
+     */
+    private ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByTagData(
+            Integer pageNum,
+            Integer recordSize,
+            Long userPriKey
+    ) {
+        List<UserLiquorTagDto> liquorPriKeyList =
+                statsService.getLiquorPriKeyByUserStats(userPriKey, 5);
+
+        if (liquorPriKeyList.isEmpty()) {
+            return ApiDataResponse.of(
+                    liquorViewService.getLatestLiquor(
+                            UtilTool.getPageable(pageNum, recordSize),
+                            userPriKey
+                    ));
+        }
+
+        LiquorTagSearchDto liquorTagSearchDto =
+                statsService.getTagListByUserPriKey(
+                        userPriKey,
+                        5,
+                        pageNum,
+                        recordSize
+                );
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorByTag(
+                        userPriKey,
+                        liquorTagSearchDto,
+                        UtilTool.getPageable(pageNum, recordSize)
+                )
+        );
+    }
 }

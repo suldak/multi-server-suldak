@@ -260,7 +260,7 @@ public class StatsService {
             Long liquorPriKey
     ) {
         try {
-            LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey);
+            LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey, user.getId());
             HashMap<TagType, List<Long>> tagMap = new HashMap<>();
             LiquorAbvDto liquorAbvDto = liquorTotalRes.getLiquorAbvDto();
             if (liquorAbvDto != null) tagMap.put(TagType.LIQUOR_ABV, List.of(liquorAbvDto.getId()));

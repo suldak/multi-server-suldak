@@ -251,7 +251,7 @@ public class LiquorViewService {
             );
             List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
             for (LiquorDto res: liquorDto.getContent()) {
-                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res));
+                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res, userPriKey));
             }
             return new PageImpl<>(
                     liquorTotalRes,
@@ -267,13 +267,14 @@ public class LiquorViewService {
     }
 
     public Page<LiquorTotalRes> getLatestLiquor(
-            Pageable pageable
+            Pageable pageable,
+            Long userPriKey
     ) {
         try {
             Page<Long> liquorDtos = liquorRepository.findByCreatedLatest(pageable);
             List<LiquorTotalRes> resultContent = new ArrayList<>();
             for (Long liquorPriKey: liquorDtos.getContent()) {
-                resultContent.add(liquorDataService.getLiquorTotalData(liquorPriKey));
+                resultContent.add(liquorDataService.getLiquorTotalData(liquorPriKey, userPriKey));
             }
             return new PageImpl<>(
                     resultContent,
@@ -292,7 +293,8 @@ public class LiquorViewService {
      */
     public Page<LiquorTotalRes> getLiquorListByLiquor(
             List<UserLiquorTagDto> liquorPriKeyList,
-            Pageable pageable
+            Pageable pageable,
+            Long userPriKey
     ) {
         try {
             // TODO 병렬화
@@ -440,7 +442,7 @@ public class LiquorViewService {
             );
             List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
             for (LiquorDto res: liquorDto.getContent()) {
-                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res));
+                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res, userPriKey));
             }
             return new PageImpl<>(
                     liquorTotalRes,

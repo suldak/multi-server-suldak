@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.liquor.liquor;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
+import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
@@ -50,6 +51,8 @@ public class LiquorTotalRes {
     // 맛
     List<TasteTypeDto> tasteTypeDtos;
 
+    @ApiModelProperty(value = "검색한 유저의 해당 술 즐겨찾기 여부")
+    Boolean isLike;
     @ApiModelProperty(value = "술 생성 일자")
     LocalDateTime createdAt;
     @ApiModelProperty(value = "술 수정 일자")
@@ -57,6 +60,7 @@ public class LiquorTotalRes {
 
     public static LiquorTotalRes of (
             LiquorDto liquorDto,
+            Boolean isLike,
             LiquorAbvDto liquorAbvDto,
             LiquorDetailDto liquorDetailDto,
             DrinkingCapacityDto drinkingCapacityDto,
@@ -85,6 +89,7 @@ public class LiquorTotalRes {
                 liquorMaterialDtos,
                 stateTypeDtos,
                 tasteTypeDtos,
+                isLike,
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );
@@ -92,6 +97,7 @@ public class LiquorTotalRes {
 
     public static LiquorTotalRes of (
             LiquorDto liquorDto,
+            Optional<LiquorLike> isLike,
             Optional<LiquorAbvDto> liquorAbvDto,
             Optional<LiquorDetailDto> liquorDetailDto,
             Optional<DrinkingCapacityDto> drinkingCapacityDto,
@@ -120,6 +126,7 @@ public class LiquorTotalRes {
                 liquorMaterialDtos,
                 stateTypeDtos,
                 tasteTypeDtos,
+                isLike.isPresent(),
                 liquorDto.getCreatedAt(),
                 liquorDto.getModifiedAt()
         );

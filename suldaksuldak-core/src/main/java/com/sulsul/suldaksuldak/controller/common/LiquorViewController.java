@@ -70,11 +70,13 @@ public class LiquorViewController {
     })
     @GetMapping(value = "/liquor-latest")
     public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListLatest(
+            HttpServletRequest request,
             Integer pageNum,
             Integer recordSize
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         return ApiDataResponse.of(
-                liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize))
+                liquorViewService.getLatestLiquor(UtilTool.getPageable(pageNum, recordSize), userPriKey)
         );
     }
 
@@ -90,6 +92,7 @@ public class LiquorViewController {
     })
     @GetMapping(value = "/liquor-date-range")
     public ApiDataResponse<Page<LiquorTotalRes>> getLiquorListByDateRange(
+            HttpServletRequest request,
             Integer pageNum,
             Integer recordSize,
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -97,6 +100,7 @@ public class LiquorViewController {
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime endAt
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         Page<Long> liquorPriKeyList =
                 statsService.getLiquorDataByLogStats(
                         startAt,
@@ -114,7 +118,7 @@ public class LiquorViewController {
         }
         List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
         for (Long liquorPriKey: liquorPriKeyList.getContent()) {
-            liquorTotalRes.add(liquorDataService.getLiquorTotalData(liquorPriKey));
+            liquorTotalRes.add(liquorDataService.getLiquorTotalData(liquorPriKey, userPriKey));
         }
         return ApiDataResponse.of(
                 new PageImpl<>(
