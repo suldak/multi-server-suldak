@@ -41,9 +41,11 @@ public class TokenUtils {
 //                .compact();
 
         String refreshUUIDToken = getUUIDStr();
+        Claims refToken = Jwts.claims().setSubject(refreshUUIDToken);
+        refToken.put("id", userDTO.getId());
 
         String refreshToken = Jwts.builder()
-                .setClaims(Jwts.claims().setSubject(refreshUUIDToken)) // 정보 저장
+                .setClaims(refToken) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setHeader(createHeader())
 //                .setExpiration(createRefreshDate()) // set Expire Time
@@ -104,7 +106,8 @@ public class TokenUtils {
             if (jwtRefreshMap.containsKey(refreshToken)) {
                 return Optional.of(jwtRefreshMap.get(refreshToken));
             } else {
-                return Optional.empty();
+                return Optional.of(UserDto.idOnly(getUserIdFromToken(refreshToken)));
+//                return Optional.empty();
             }
         } else {
             return Optional.empty();
@@ -155,6 +158,15 @@ public class TokenUtils {
             return header.split(" ")[1];
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.REFRESH_TOKEN_EXPIRATION, e.getMessage());
+        }
+    }
+
+    public static Boolean createJwtRefreshMap (String token, UserDto userDto) {
+        try {
+            jwtRefreshMap.put(token, userDto);
+            return true;
+        } catch (Exception ignore) {
+            return false;
         }
     }
 
@@ -247,9 +259,16 @@ public class TokenUtils {
      * @param token : 토큰
      * @return String : 사용자 아이디
      */
-    private static String getUserIdFromToken(String token) {
-        Claims claims = getClaimsFormToken(token);
-        return claims.getSubject();
+    private static Long getUserIdFromToken(String token) {
+//        Claims claims = getClaimsFormToken(token);
+//        return claims.getSubject();
+        try {
+            Claims claims = getClaimsFormToken(token);
+            Integer id = (Integer) claims.get("id");
+            return Long.parseLong(id.toString());
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static void removeRefreshToken(String refreshToken) {

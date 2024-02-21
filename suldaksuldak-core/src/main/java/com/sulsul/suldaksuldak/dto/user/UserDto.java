@@ -36,6 +36,32 @@ public class UserDto {
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
+    public static UserDto idOnly(
+            Long priKey
+    ) {
+        return new UserDto(
+                priKey,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
     public static UserDto of (
             Long id,
             String userEmail,

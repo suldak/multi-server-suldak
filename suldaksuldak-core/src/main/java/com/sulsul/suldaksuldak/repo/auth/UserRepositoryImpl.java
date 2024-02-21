@@ -97,7 +97,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserDto> findTotalByPriKey(Long priKey) {
+    public Optional<UserDto> findByPriKey(Long priKey) {
         return Optional.of(
                 getUserDtoQuery()
                         .from(user)

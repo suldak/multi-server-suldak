@@ -147,12 +147,30 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public Optional<UserDto> getUserDto(
+            Long userPriKey
+    ) {
+        try {
+            return userRepository.findByPriKey(userPriKey);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
     public Optional<UserTotalRes> getUserTotalDto(
             Long userPriKey
     ) {
         try {
             Optional<UserDto> optionalUserDto =
-                    userRepository.findTotalByPriKey(userPriKey);
+                    userRepository.findByPriKey(userPriKey);
             return optionalUserDto.map(userDto -> UserTotalRes.from(
                     userDto,
                     userSelectRepository.findByUserPriKey(userPriKey)

@@ -8,7 +8,6 @@ import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.ApiErrorResponse;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.service.auth.UserService;
 import com.sulsul.suldaksuldak.tool.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -30,11 +29,10 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private UserService userService;
     @Value("${jwt.key}")
@@ -124,6 +122,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 request.setAttribute(SDTokken.ADMIN.getText(), "USER");
                 UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
                 request.setAttribute(SDTokken.USER_PRI_KEY.getText(), userDto.getId());
+                if (userDto.getUserEmail() == null) {
+                    Optional<UserDto> searchUser = userService.getUserDto(
+                            userDto.getId()
+                    );
+                    if (searchUser.isEmpty())
+                        throw new GeneralException(
+                                ErrorCode.BUSINESS_EXCEPTION_ERROR,
+                                "유저 정보를 찾을 수 없습니다."
+                        );
+                    TokenUtils.createJwtRefreshMap(
+                            TokenUtils.getTokenFromHeader(refreshHeader),
+                            searchUser.get()
+                    );
+                }
             }
             if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
                 chain.doFilter(request, response);

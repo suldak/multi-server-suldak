@@ -32,5 +32,5 @@ public interface UserRepositoryCustom {
             Boolean isActive
     );
 
-    Optional<UserDto> findTotalByPriKey(Long priKey);
+    Optional<UserDto> findByPriKey(Long priKey);
 }
