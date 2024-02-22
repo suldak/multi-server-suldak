@@ -48,7 +48,7 @@ public class TokenUtils {
                 .setClaims(refToken) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setHeader(createHeader())
-//                .setExpiration(createRefreshDate()) // set Expire Time
+                .setExpiration(createRefreshDate()) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, jwtSecretKey)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
@@ -194,7 +194,8 @@ public class TokenUtils {
         // TODO: 여기서 RefreshToken 만료시간 관리
 //        c.add(Calendar.DATE, 30);
 //        c.add(Calendar.HOUR, 3);
-        c.add(Calendar.MINUTE, 30);
+//        c.add(Calendar.MINUTE, 30);
+        c.add(Calendar.MONTH, 3);
         // c.add(Calendar.DATE, 1);         // 1일
         return c.getTime();
     }
