@@ -3,16 +3,18 @@ package com.sulsul.suldaksuldak.service.stats;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
+import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
-import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
+import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.liquor.like.LiquorLikeRepository;
 import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
 import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
@@ -40,6 +42,7 @@ public class StatsService {
     private final LiquorSearchLogRepository liquorSearchLogRepository;
     private final UserTagRepository userTagRepository;
     private final LiquorDataService liquorDataService;
+    private final LiquorLikeRepository liquorLikeRepository;
 
     /**
      * 유저 - 술 집게 Table에 집계
@@ -244,7 +247,7 @@ public class StatsService {
     ) {
         try {
             User user = checkPriKeyService.checkAndGetUser(userPriKey);
-            return countSearchTagCnt(user, liquorPriKey);
+            return countSearchTagCnt(user, liquorPriKey, 0.1);
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
@@ -257,7 +260,8 @@ public class StatsService {
      */
     public Boolean countSearchTagCnt(
             User user,
-            Long liquorPriKey
+            Long liquorPriKey,
+            Double weight
     ) {
         try {
             LiquorTotalRes liquorTotalRes = liquorDataService.getLiquorTotalData(liquorPriKey, user.getId());
@@ -297,7 +301,7 @@ public class StatsService {
                             user,
                             tagType,
                             tagId,
-                            0.1
+                            weight == null ?  0.1 : weight
                     );
                 }
             }
@@ -307,5 +311,47 @@ public class StatsService {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
         return true;
+    }
+
+    /**
+     * 술 즐겨 찾기 설정 및 해제
+     */
+    public Boolean createOrDeleteLiquorLike(
+            Long userPriKey,
+            Long liquorPriKey
+    ) {
+        try {
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorPriKey);
+            Optional<LiquorLike> liquorLike =
+                    liquorDataService.getLiquorLikeUser(userPriKey, liquorPriKey);
+            if (liquorLike.isEmpty()) {
+                liquorLikeRepository.save(
+                        LiquorLike.of(
+                                null,
+                                user,
+                                liquor
+                        )
+                );
+            } else {
+                liquorLikeRepository.deleteById(liquorLike.get().getId());
+            }
+            countSearchTagCnt(
+                    user,
+                    liquorPriKey,
+                    liquorLike.isEmpty() ? 3.0 : -3.0
+            );
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
     }
 }

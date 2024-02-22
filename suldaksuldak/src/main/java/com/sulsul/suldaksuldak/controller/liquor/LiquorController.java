@@ -52,7 +52,7 @@ public class LiquorController {
                     "유저 정보가 없습니다."
             );
         return ApiDataResponse.of(
-                liquorDataService.createOrDeleteLiquorLike(
+                statsService.createOrDeleteLiquorLike(
                         userPriKey,
                         liquorPriKey
                 )
