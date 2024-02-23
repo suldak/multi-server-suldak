@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum JobKey {
+public enum BasicJobKey {
     PARTY_PRI_KEY("id"),
     PARTY_BATCH_TYPE("partyBatchType")
     ;
