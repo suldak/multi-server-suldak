@@ -9,12 +9,12 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
+import com.sulsul.suldaksuldak.service.common.PartyCommonService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +24,7 @@ public class PartyGuestService {
     private final CheckPriKeyService checkPriKeyService;
     private final PartyService partyService;
     private final PartyGuestRepository partyGuestRepository;
+    private final PartyCommonService partyCommonService;
 
     /**
      * 모임 참가 신청
@@ -45,7 +46,7 @@ public class PartyGuestService {
                         ErrorCode.BAD_REQUEST,
                         "자신이 호스트인 모임입니다."
                 );
-            if (!checkPartyPersonnel(party))
+            if (!partyCommonService.checkPartyPersonnel(party))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "인원이 모두 모집되었습니다."
@@ -130,127 +131,5 @@ public class PartyGuestService {
                     e.getMessage()
             );
         }
-    }
-
-    public Integer getPartyConfirmCnt(
-            Long partyPriKey
-    ) {
-        try {
-            return partyGuestRepository.findByPartyPriKey(
-                    partyPriKey,
-                    GuestType.CONFIRM
-            ).size();
-        } catch (GeneralException e) {
-            throw new GeneralException(
-                    e.getErrorCode(),
-                    e.getMessage()
-            );
-        } catch (Exception e) {
-            throw new GeneralException(
-                    ErrorCode.DATA_ACCESS_ERROR,
-                    e.getMessage()
-            );
-        }
-    }
-
-    /**
-     * 모임 신청 상태가 대기인 사람들을 거절로 수정
-     */
-    public Boolean setPartyGuestTypeRefuse(
-            Long partyPriKey
-    ) {
-        try {
-            List<PartyGuest> partyGuests =
-                    partyGuestRepository.findByPartyPriKey(
-                            partyPriKey,
-                            GuestType.WAIT
-                    );
-            for (PartyGuest partyGuest: partyGuests) {
-                partyGuest.setConfirm(GuestType.REFUSE);
-                partyGuestRepository.save(partyGuest);
-            }
-            return true;
-        } catch (GeneralException e) {
-            throw new GeneralException(
-                    e.getErrorCode(),
-                    e.getMessage()
-            );
-        } catch (Exception e) {
-            throw new GeneralException(
-                    ErrorCode.DATA_ACCESS_ERROR,
-                    e.getMessage()
-            );
-        }
-    }
-
-    /**
-     * 모임 신청 인원들의 상태를 일괄 변환
-     */
-    public Boolean setPartyGuestTypeAll(
-            Long partyPriKey,
-            GuestType guestType
-    ) {
-        try {
-            List<PartyGuest> partyGuests =
-                    partyGuestRepository.findByPartyPriKey(
-                            partyPriKey,
-                            null
-                    );
-            for (PartyGuest partyGuest: partyGuests) {
-                partyGuest.setConfirm(guestType);
-                partyGuestRepository.save(partyGuest);
-            }
-            return true;
-        } catch (GeneralException e) {
-            throw new GeneralException(
-                    e.getErrorCode(),
-                    e.getMessage()
-            );
-        } catch (Exception e) {
-            throw new GeneralException(
-                    ErrorCode.DATA_ACCESS_ERROR,
-                    e.getMessage()
-            );
-        }
-    }
-
-    /**
-     * 모임 신청 상태가 승인인 인원들을 완료 대기로 수정
-     */
-    public Boolean setPartyGuestTypeComplete(
-            Long partyPriKey
-    ) {
-        try {
-            List<PartyGuest> partyGuests =
-                    partyGuestRepository.findByPartyPriKey(
-                            partyPriKey,
-                            GuestType.CONFIRM
-                    );
-            for (PartyGuest partyGuest: partyGuests) {
-                partyGuest.setConfirm(GuestType.COMPLETE_WAIT);
-                partyGuestRepository.save(partyGuest);
-            }
-            return true;
-        } catch (GeneralException e) {
-            throw new GeneralException(
-                    e.getErrorCode(),
-                    e.getMessage()
-            );
-        } catch (Exception e) {
-            throw new GeneralException(
-                    ErrorCode.DATA_ACCESS_ERROR,
-                    e.getMessage()
-            );
-        }
-    }
-
-    /**
-     * 모임 인원이 모두 모집되었는지 확인합니다.
-     */
-    public Boolean checkPartyPersonnel(
-            Party party
-    ) {
-        return getPartyConfirmCnt(party.getId())
-                < party.getPersonnel();
     }
 }
