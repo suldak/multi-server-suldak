@@ -4,6 +4,7 @@ import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
+import com.sulsul.suldaksuldak.domain.party.batch.PartySchedule;
 import com.sulsul.suldaksuldak.domain.report.ReportParty;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Getter;
@@ -99,6 +100,12 @@ public class Party extends BaseEntity {
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<ReportParty> reportParties = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<PartySchedule> partySchedules = new LinkedHashSet<>();
 
     protected Party () {}
 
