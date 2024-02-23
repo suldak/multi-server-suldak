@@ -16,23 +16,35 @@ public class BasicJobListener implements JobListener {
 
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
-        this.startTime = System.currentTimeMillis();
-        log.info(String.format("[%s] 작업시작", context.getJobDetail().getKey().toString()));
+        try {
+            this.startTime = System.currentTimeMillis();
+            log.info(String.format("[%s] 작업시작", context.getJobDetail().getKey().toString()));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void jobExecutionVetoed(JobExecutionContext context) {
-        log.info(String.format("[%s] 작업중단_%.2f 소요",
-                context.getJobDetail().getKey().toString(),
-                (System.currentTimeMillis() - this.startTime) / 1000.0)
-        );
+        try {
+            log.info(String.format("[%s] 작업중단_%.2f 소요",
+                    context.getJobDetail().getKey().toString(),
+                    (System.currentTimeMillis() - this.startTime) / 1000.0)
+            );
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        log.info(String.format("[%s] 작업완료_%.2f 소요",
-                context.getJobDetail().getKey().toString(),
-                (System.currentTimeMillis() - this.startTime) / 1000.0)
-        );
+        try {
+            log.info(String.format("[%s] 작업완료_%.2f 소요",
+                    context.getJobDetail().getKey().toString(),
+                    (System.currentTimeMillis() - this.startTime) / 1000.0)
+            );
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
