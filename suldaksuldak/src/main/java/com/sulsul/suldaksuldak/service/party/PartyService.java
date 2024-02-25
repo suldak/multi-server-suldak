@@ -40,7 +40,7 @@ public class PartyService {
     /**
      * 모임 생성
      */
-    public Boolean createParty(
+    public Long createParty(
             PartyDto partyDto,
             MultipartFile file
     ) {
@@ -84,7 +84,7 @@ public class PartyService {
                             GuestType.CONFIRM
                     )
             );
-            return true;
+            return party.getId();
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

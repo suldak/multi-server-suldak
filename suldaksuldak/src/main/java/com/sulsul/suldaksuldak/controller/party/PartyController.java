@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.controller.party;
 
+import com.sulsul.suldaksuldak.component.batch.ToBatchServer;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/party")
 @Api(tags = "[MAIN] 모임 관리")
 public class PartyController {
+    private final ToBatchServer toBatchServer;
     private final PartyService partyService;
 
     @ApiOperation(
@@ -44,13 +47,17 @@ public class PartyController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
+        Long partyPriKey = partyService.createParty(
+                partyReq.toDto(
+                        userPriKey,
+                        PartyStateType.RECRUITING
+                ),
+                file
+        );
         return ApiDataResponse.of(
-                partyService.createParty(
-                        partyReq.toDto(
-                                userPriKey,
-                                PartyStateType.RECRUITING
-                        ),
-                        file
+                toBatchServer.partyBatchApiToBatchServer(
+                        partyPriKey,
+                        HttpMethod.POST
                 )
         );
     }
@@ -74,13 +81,17 @@ public class PartyController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
+        partyService.modifiedParty(
+                priKey,
+                partyReq.toDto(
+                        userPriKey,
+                        null
+                )
+        );
         return ApiDataResponse.of(
-                partyService.modifiedParty(
+                toBatchServer.partyBatchApiToBatchServer(
                         priKey,
-                        partyReq.toDto(
-                                userPriKey,
-                                null
-                        )
+                        HttpMethod.PUT
                 )
         );
     }

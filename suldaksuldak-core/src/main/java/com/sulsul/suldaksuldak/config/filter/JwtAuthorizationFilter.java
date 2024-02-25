@@ -107,12 +107,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+        String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
     //        String header = request.getHeader(RefreshToken.REFRESH_HEADER);
     //        logger.debug("[+] header Check: " + header);
         try {
-            String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+//            String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
             if (refreshHeader == null || refreshHeader.isBlank() || refreshHeader.equals("null"))
                 throw new GeneralException(ErrorCode.BUSINESS_EXCEPTION_ERROR);
             // admin
@@ -136,10 +141,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                             searchUser.get()
                     );
                 }
-            }
-            if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
-                chain.doFilter(request, response);
-                return;
             }
 //            if (!request.getRequestURI().startsWith("/api/admin")) {
 //                UserDto userDto = userService.checkAccess(TokenUtils.getTokenFromHeader(refreshHeader));
