@@ -44,7 +44,24 @@ public class ToBatchServer {
             HttpMethod httpMethod
     ) {
         try {
-            String localUrl = "http://localhost:8084" + BatchServerUrl.PARTY_SCHEDULE_URL.getUrl() + partyPriKey;
+            return partyBatchApiToBatchServer(
+                    partyPriKey,
+                    BatchServerUrl.PARTY_SCHEDULE_URL,
+                    httpMethod
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Boolean partyBatchApiToBatchServer(
+            Long partyPriKey,
+            BatchServerUrl batchServerUrl,
+            HttpMethod httpMethod
+    ) {
+        try {
+            String localUrl = "http://localhost:8084" + batchServerUrl.getUrl() + partyPriKey;
 
             HttpEntity<JsonNode> requestEntity = getPostHeaderAndBody();
 

@@ -1,5 +1,7 @@
 package com.sulsul.suldaksuldak.controller.party;
 
+import com.sulsul.suldaksuldak.component.batch.ToBatchServer;
+import com.sulsul.suldaksuldak.constant.batch.BatchServerUrl;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
@@ -13,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/api/party/host")
 @Api(tags = "[MAIN] 모임 관리 (호스트 전용)")
 public class PartyHostController {
+    private final ToBatchServer toBatchServer;
     private final PartyHostService partyHostService;
 
     @PutMapping("/confirm/{priKey}")
@@ -78,11 +82,16 @@ public class PartyHostController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
+        partyHostService.modifiedPartyState(
+                partyPriKey,
+                requestUserPriKey,
+                PartyStateType.RECRUITMENT_END
+        );
         return ApiDataResponse.of(
-                partyHostService.modifiedPartyState(
+                toBatchServer.partyBatchApiToBatchServer(
                         partyPriKey,
-                        requestUserPriKey,
-                        PartyStateType.RECRUITMENT_END
+                        BatchServerUrl.PARTY_SCHEDULE_RECRUITMENT_END_URL,
+                        HttpMethod.PUT
                 )
         );
     }
@@ -105,11 +114,15 @@ public class PartyHostController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
+        partyHostService.modifiedPartyState(
+                partyPriKey,
+                requestUserPriKey,
+                PartyStateType.MEETING_CANCEL
+        );
         return ApiDataResponse.of(
-                partyHostService.modifiedPartyState(
+                toBatchServer.partyBatchApiToBatchServer(
                         partyPriKey,
-                        requestUserPriKey,
-                        PartyStateType.MEETING_CANCEL
+                        HttpMethod.DELETE
                 )
         );
     }
@@ -132,11 +145,15 @@ public class PartyHostController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
+        partyHostService.modifiedPartyState(
+                partyPriKey,
+                requestUserPriKey,
+                PartyStateType.MEETING_DELETE
+        );
         return ApiDataResponse.of(
-                partyHostService.modifiedPartyState(
+                toBatchServer.partyBatchApiToBatchServer(
                         partyPriKey,
-                        requestUserPriKey,
-                        PartyStateType.MEETING_DELETE
+                        HttpMethod.DELETE
                 )
         );
     }

@@ -6,7 +6,6 @@ import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.exception.GeneralException;
-import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.PartyCommonService;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class PartyHostService {
     private final CheckPriKeyService checkPriKeyService;
     private final PartyService partyService;
-    private final PartyGuestService partyGuestService;
-    private final PartyRepository partyRepository;
     private final PartyGuestRepository partyGuestRepository;
     private final PartyCommonService partyCommonService;
 
@@ -92,6 +89,11 @@ public class PartyHostService {
     ) {
         try {
             Party party = partyService.checkParty(partyPriKey, false);
+            if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모집이 종료된 모임은 수정할 수 없습니다."
+                );
             if (partyCommonService.getPartyConfirmCnt(party.getId()) < 3)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -102,26 +104,17 @@ public class PartyHostService {
                         ErrorCode.BAD_REQUEST,
                         "호스트만 모임의 상태를 수정할 수 있습니다."
                 );
-            // TODO 해야함
-//            party.setPartyStateType(partyStateType);
-//            partyRepository.save(party);
-//            // 모임 모집 완료 처리
-//            if (partyStateType.equals(PartyStateType.RECRUITMENT_END))
-//                partyCommonService.setPartyGuestTypeRefuse(partyPriKey);
-//            // 모임 완료 처리
-//            else if (partyStateType.equals(PartyStateType.MEETING_COMPLETE))
-//                partyCommonService.setPartyGuestTypeCompleteWait(partyPriKey);
-//            // 모임 취소 처리
-//            // 모임 삭제 처리
-//            else if (
-//                    partyStateType.equals(PartyStateType.MEETING_CANCEL) ||
-//                            partyStateType.equals(PartyStateType.MEETING_DELETE)
-//            )
-//                partyCommonService.setPartyGuestTypeAll(
-//                        partyPriKey,
-//                        GuestType.CANCEL
-//                );
-            return true;
+
+            if (
+                    partyStateType.equals(PartyStateType.MEETING_CANCEL) ||
+                    partyStateType.equals(PartyStateType.MEETING_DELETE)
+            ) {
+                party.setPartyStateType(partyStateType);
+                partyCommonService.modifiedPartyState(party, partyStateType);
+            }
+            return partyCommonService.partyTotalHandler(
+                    party
+            );
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

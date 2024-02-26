@@ -37,7 +37,6 @@ public class PartyScheduleJobController {
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
-            log.info("party >> {}", party.toString());
             // 모집 종료 스케줄
             partyScheduleJobService.addSchedule(
                     scheduler,
@@ -207,6 +206,37 @@ public class PartyScheduleJobController {
                             PartyJobDto.of(
                                     party,
                                     PartyBatchType.SET_GUEST_COMPLETE
+                            )
+                    )
+            );
+            partyScheduleJobService.printScheduleList(scheduler);
+            return ApiDataResponse.of(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return ApiDataResponse.of(false);
+        }
+    }
+
+    @ApiOperation(
+            value = "4. 모임 모집 완료 처리",
+            notes = "호스트가 모임의 모집을 종료하면, 모집 종료 스케줄 취소"
+    )
+    @PutMapping("/recruitment-end/{partyPriKey:[0-9]+}")
+    public ApiDataResponse<Boolean> partyScheduleSetRecruitmentEnd(
+            @PathVariable Long partyPriKey
+    ) {
+        try {
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
+            // 모집 종료 스케줄
+            partyScheduleJobService.deleteJob(
+                    scheduler,
+                    partyScheduleService.deletePartySchedule(
+                            party.getId(),
+                            PartyJobDto.of(
+                                    party,
+                                    PartyBatchType.SET_RECRUITMENT_END
                             )
                     )
             );
