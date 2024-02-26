@@ -9,9 +9,11 @@ import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
 import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
+import com.sulsul.suldaksuldak.dto.report.party.ReportPartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
+import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyViewService {
+    private final ReportPartyRepository reportPartyRepository;
     private final PartyRepository partyRepository;
     private final PartyGuestRepository partyGuestRepository;
 
@@ -33,6 +36,7 @@ public class PartyViewService {
      * 모임 목록 조회
      */
     public Page<PartyRes> getPartyPageList(
+            Long searchUser,
             String name,
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
@@ -45,7 +49,16 @@ public class PartyViewService {
             Pageable pageable
     ) {
         try {
+            List<ReportPartyDto> reportPartyDtos =
+                    reportPartyRepository.findByOption(
+                            searchUser,
+                            null,
+                            null,
+                            null
+                    );
+
             Page<PartyDto> partyDtos = partyRepository.findByOptional(
+                    reportPartyDtos.stream().map(ReportPartyDto::getPartyPriKey).toList(),
                     name,
                     searchStartTime,
                     searchEndTime,

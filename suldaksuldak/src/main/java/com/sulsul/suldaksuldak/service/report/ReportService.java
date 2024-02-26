@@ -7,6 +7,7 @@ import com.sulsul.suldaksuldak.domain.report.ReportParty;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.report.party.ReportPartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +53,18 @@ public class ReportService {
                 throw new GeneralException(
                         ErrorCode.NOT_FOUND,
                         "모임 신고 이유를 찾을 수 없습니다."
+                );
+            List<ReportPartyDto> reportPartyDtos =
+                    reportPartyRepository.findByOption(
+                            userPriKey,
+                            partyPriKey,
+                            null,
+                            null
+                    );
+            if (!reportPartyDtos.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 신고한 모임 입니다."
                 );
             reportPartyRepository.save(
                     ReportParty.of(

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class PartyViewController {
             @ApiImplicitParam(name = "partyTagPriKey", value = "모임 태그들의 기본키 \",\" 로 구분", example = "1,2,6", dataTypeClass = String.class)
     })
     public ApiDataResponse<Page<PartyRes>> getPartyList(
+            HttpServletRequest request,
             String name,
             @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime searchStartTime,
@@ -66,9 +68,11 @@ public class PartyViewController {
             Integer pageNum,
             Integer recordSize
     ) {
+        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
         List<PartyStateType> partyStateTypes = UtilTool.getSplitList(partyStateTypeStr, PartyStateType.class);
         return ApiDataResponse.of(
                 partyViewService.getPartyPageList(
+                        requestUserPriKey,
                         name,
                         searchStartTime,
                         searchEndTime,

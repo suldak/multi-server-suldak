@@ -35,6 +35,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 
     @Override
     public Page<PartyDto> findByOptional(
+            List<Long> notShowParty,
             String name,
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
@@ -62,7 +63,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 personnelEq(personnel),
                                 partyTypeEq(partyType),
                                 partyTagListIn(partyTagPriList),
-                                partyStateTypeEq(partyStateTypes)
+                                partyStateTypeEq(partyStateTypes),
+                                notInPartyPriKey(notShowParty)
                         )
                         .orderBy(
                                 (sortBool == null || sortBool) ?
@@ -89,7 +91,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 personnelEq(personnel),
                                 partyTypeEq(partyType),
                                 partyTagListIn(partyTagPriList),
-                                partyStateTypeEq(partyStateTypes)
+                                partyStateTypeEq(partyStateTypes),
+                                notInPartyPriKey(notShowParty)
                         );
 
         return PageableExecutionUtils.getPage(
@@ -311,5 +314,13 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
         if (partyStateTypes == null || partyStateTypes.isEmpty())
             return null;
         return party.partyStateType.in(partyStateTypes);
+    }
+
+    public BooleanExpression notInPartyPriKey(
+            List<Long> partyPriKey
+    ) {
+        if (partyPriKey == null || partyPriKey.isEmpty())
+            return null;
+        return party.id.notIn(partyPriKey);
     }
 }

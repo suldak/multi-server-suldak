@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface PartyRepositoryCustom {
     Page<PartyDto> findByOptional(
+            List<Long> notShowParty,
             String name,
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
