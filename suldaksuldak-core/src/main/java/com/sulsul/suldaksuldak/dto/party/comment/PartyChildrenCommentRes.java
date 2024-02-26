@@ -3,15 +3,14 @@ package com.sulsul.suldaksuldak.dto.party.comment;
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Setter;
 import lombok.Value;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Value
-@ApiModel(value = "모임 댓글 Res")
-public class PartyCommentRes {
+@ApiModel(value = "모임 대댓글 Res")
+public class PartyChildrenCommentRes {
     @ApiModelProperty(value = "댓글 기본키")
     String id;
     @ApiModelProperty(value = "댓글 내용")
@@ -44,15 +43,12 @@ public class PartyCommentRes {
     LocalDateTime modifiedAt;
     @ApiModelProperty(value = "유저가 댓글을 신고한 여부")
     Boolean isReport;
-    @ApiModelProperty(value = "대댓글 모음")
-    List<PartyChildrenCommentRes> childrenComment;
 
-    public static PartyCommentRes from (
+    public static PartyChildrenCommentRes from (
             PartyCommentDto partyCommentDto,
-            List<PartyChildrenCommentRes> partyCommentDtos,
             List<String> reportCommentPriKeyList
     ) {
-        return new PartyCommentRes(
+        return new PartyChildrenCommentRes(
                 partyCommentDto.getId(),
                 partyCommentDto.getComment(),
                 partyCommentDto.getUserPriKey(),
@@ -70,15 +66,14 @@ public class PartyCommentRes {
                 partyCommentDto.getWarningCnt(),
                 partyCommentDto.getCreatedAt(),
                 partyCommentDto.getModifiedAt(),
-                reportCommentPriKeyList.contains(partyCommentDto.getId()),
-                partyCommentDtos
+                reportCommentPriKeyList.contains(partyCommentDto.getId())
         );
     }
 
-    public static PartyCommentRes from (
+    public static PartyChildrenCommentRes from (
             PartyCommentDto partyCommentDto
     ) {
-        return new PartyCommentRes(
+        return new PartyChildrenCommentRes(
                 partyCommentDto.getId(),
                 partyCommentDto.getComment(),
                 partyCommentDto.getUserPriKey(),
@@ -96,8 +91,7 @@ public class PartyCommentRes {
                 partyCommentDto.getWarningCnt(),
                 partyCommentDto.getCreatedAt(),
                 partyCommentDto.getModifiedAt(),
-                false,
-                List.of()
+                false
         );
     }
 }

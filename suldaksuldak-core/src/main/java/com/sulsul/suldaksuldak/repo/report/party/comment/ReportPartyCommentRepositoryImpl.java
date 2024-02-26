@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
 import static com.sulsul.suldaksuldak.domain.party.QPartyComment.partyComment;
@@ -53,6 +54,26 @@ public class ReportPartyCommentRepositoryImpl
                 )
                 .orderBy(reportPartyComment.createdAt.desc())
                 .fetch();
+    }
+
+    @Override
+    public Optional<ReportPartyCommentDto> findByCommentPriKey(
+            Long userPriKey,
+            String commentPriKey
+    ) {
+        return Optional.ofNullable(
+                getReportPartyCommentDtoQuery()
+                        .from(reportPartyComment)
+                        .innerJoin(reportPartyComment.user, user)
+                        .on(userPriKey == null ?
+                                reportPartyComment.user.id.eq(user.id) :
+                                reportPartyComment.user.id.eq(userPriKey)
+                        )
+                        .innerJoin(reportPartyComment.partyComment, partyComment)
+                        .on(reportPartyComment.partyComment.id.eq(commentPriKey))
+                        .orderBy(reportPartyComment.createdAt.desc())
+                        .fetchFirst()
+        );
     }
 
     private JPAQuery<ReportPartyCommentDto> getReportPartyCommentDtoQuery() {

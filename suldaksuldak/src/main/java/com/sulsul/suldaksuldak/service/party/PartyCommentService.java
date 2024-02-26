@@ -4,10 +4,13 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyComment;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.party.comment.PartyChildrenCommentRes;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentDto;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentRes;
+import com.sulsul.suldaksuldak.dto.report.party.ReportPartyCommentDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
+import com.sulsul.suldaksuldak.repo.report.party.comment.ReportPartyCommentRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ import java.util.Optional;
 @Slf4j
 public class PartyCommentService {
     private final CheckPriKeyService checkPriKeyService;
+    private final ReportPartyCommentRepository reportPartyCommentRepository;
     private final PartyCommentRepository partyCommentRepository;
 
     /**
@@ -200,6 +204,7 @@ public class PartyCommentService {
     }
 
     public Page<PartyCommentRes> getPartyCommentList(
+            Long searchUser,
             Long partyPriKey,
             Pageable pageable
     ) {
@@ -209,6 +214,11 @@ public class PartyCommentService {
                         ErrorCode.BAD_REQUEST,
                         "모임 기본키가 누락되었습니다."
                 );
+            List<String> reportPartyCommentDtos =
+                    reportPartyCommentRepository.findByOptions(
+                            searchUser,
+                            partyPriKey
+                    ).stream().map(ReportPartyCommentDto::getCommentPriKey).toList();
             Page<PartyCommentDto> partyCommentDtos =
                     partyCommentRepository.findByPartyPriKey(
                             partyPriKey,
@@ -223,8 +233,10 @@ public class PartyCommentService {
                                             getPartyChildrenComment(
                                                     partyPriKey,
                                                     dto.getGroupComment(),
-                                                    dto.getCommentDep() + 1
-                                            )
+                                                    dto.getCommentDep() + 1,
+                                                    reportPartyCommentDtos
+                                            ),
+                                            reportPartyCommentDtos
                                     )
                             )
                             .toList(),
@@ -244,17 +256,21 @@ public class PartyCommentService {
         }
     }
 
-    public List<PartyCommentDto> getPartyChildrenComment(
+    public List<PartyChildrenCommentRes> getPartyChildrenComment(
             Long partyPriKey,
             String groupComment,
-            Integer commentDep
+            Integer commentDep,
+            List<String> reportCommentPriKeyList
     ) {
         try {
             return partyCommentRepository.findByCommentDep(
                     partyPriKey,
                     groupComment,
                     commentDep
-            );
+            ).stream().map(dto -> PartyChildrenCommentRes.from(
+                    dto,
+                    reportCommentPriKeyList
+            )).toList();
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.party.comment.PartyChildrenCommentRes;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentReq;
 import com.sulsul.suldaksuldak.dto.party.comment.PartyCommentRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -134,12 +135,15 @@ public class PartyCommentController {
             @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10")
     })
     public ApiDataResponse<Page<PartyCommentRes>> getPartyComment(
+            HttpServletRequest request,
             @PathVariable Long partyPriKey,
             Integer pageNum,
             Integer recordSize
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         return ApiDataResponse.of(
                 partyCommentService.getPartyCommentList(
+                        userPriKey,
                         partyPriKey,
                         UtilTool.getPageable(pageNum, recordSize)
                 )
@@ -148,14 +152,14 @@ public class PartyCommentController {
 
     @GetMapping("/children/{partyPriKey:[0-9]+}")
     @ApiOperation(
-            value = "모임 대댓글 목록 조회",
+            value = "모임 대댓글 목록 조회 ( 삭제 예정, 필요하시면 연락 부탁드립니다. )",
             notes = "모임의 대댓글 목록을 조회합니다."
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", required = true, dataTypeClass = Long.class),
             @ApiImplicitParam(name = "commentPriKey", value = "댓글 기본키", required = true, dataTypeClass = String.class)
     })
-    public ApiDataResponse<List<PartyCommentRes>> getChildrenComment(
+    public ApiDataResponse<List<PartyChildrenCommentRes>> getChildrenComment(
             @PathVariable Long partyPriKey,
             String commentPriKey
     ) {
@@ -163,11 +167,9 @@ public class PartyCommentController {
                 partyCommentService.getPartyChildrenComment(
                             partyPriKey,
                             commentPriKey,
-                            1
+                            1,
+                        List.of()
                     )
-                    .stream()
-                    .map(PartyCommentRes::from)
-                    .toList()
         );
     }
 

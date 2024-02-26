@@ -7,6 +7,7 @@ import com.sulsul.suldaksuldak.domain.report.ReportParty;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyReason;
 import com.sulsul.suldaksuldak.domain.user.User;
+import com.sulsul.suldaksuldak.dto.report.party.ReportPartyCommentDto;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.comment.PartyCommentRepository;
@@ -111,6 +112,16 @@ public class ReportService {
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "자신의 댓글은 신고할 수 없습니다."
+                );
+            Optional<ReportPartyCommentDto> reportPartyCommentDtos =
+                    reportPartyCommentRepository.findByCommentPriKey(
+                            userPriKey,
+                            partyComment.get().getId()
+                    );
+            if (!reportPartyCommentDtos.isEmpty())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 신고한 댓글 입니다."
                 );
             reportPartyCommentRepository.save(
                     ReportPartyComment.of(
