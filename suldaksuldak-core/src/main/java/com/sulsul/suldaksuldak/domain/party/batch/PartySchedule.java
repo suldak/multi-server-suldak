@@ -36,6 +36,9 @@ public class PartySchedule {
     @Enumerated(EnumType.STRING)
     private PartyBatchType partyBatchType;
 
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
+    private String serverIp;
+
     protected PartySchedule () {}
 
     protected PartySchedule (
@@ -43,13 +46,15 @@ public class PartySchedule {
             Party party,
             String cronStr,
             Boolean isActive,
-            PartyBatchType partyBatchType
+            PartyBatchType partyBatchType,
+            String serverIp
     ) {
         this.id = id;
         this.party = party;
         this.cronStr = cronStr;
         this.isActive = isActive;
         this.partyBatchType = partyBatchType;
+        this.serverIp = serverIp;
     }
 
     public static PartySchedule of (
@@ -57,14 +62,26 @@ public class PartySchedule {
             Party party,
             String cronStr,
             Boolean isActive,
-            PartyBatchType partyBatchType
+            PartyBatchType partyBatchType,
+            String serverIp
     ) {
         return new PartySchedule(
                 id,
                 party,
                 cronStr,
                 isActive,
-                partyBatchType
+                partyBatchType,
+                serverIp
         );
+    }
+
+    public String toSimpleString() {
+        return "id: " + id + "\n"
+                + "cronStr: " + cronStr + "\n"
+                + "isActive: " + isActive + "\n"
+                + "partyBatchType: " + partyBatchType + "\n"
+                + "serverIp: " + serverIp + "\n"
+                + "partyPriKey: " + party.getId() + "\n"
+                + "partyName: " + party.getName() + "\n";
     }
 }

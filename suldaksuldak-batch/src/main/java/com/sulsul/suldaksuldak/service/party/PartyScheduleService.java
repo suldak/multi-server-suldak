@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.service.party;
 
+import com.sulsul.suldaksuldak.component.StartUpEventListener;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.PartyBatchType;
 import com.sulsul.suldaksuldak.domain.party.Party;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyScheduleService {
+    private final StartUpEventListener startUpEventListener;
     private final PartyScheduleRepository partyScheduleRepository;
 
     /**
@@ -34,7 +36,8 @@ public class PartyScheduleService {
                             party,
                             partyJobDto.getTriggerCron(),
                             true,
-                            partyJobDto.getPartyBatchType()
+                            partyJobDto.getPartyBatchType(),
+                            startUpEventListener.getMyIpAddress()
                     )
             );
             return partyJobDto;
@@ -94,6 +97,29 @@ public class PartyScheduleService {
             PartyJobDto partyJobDto
     ) {
         try {
+            deletePartySchedule(
+                    partyPriKey,
+                    partyJobDto.getPartyBatchType()
+            );
+            return partyJobDto;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public Boolean deletePartySchedule(
+            Long partyPriKey,
+            PartyBatchType partyBatchType
+    ) {
+        try {
             if (partyPriKey == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -102,7 +128,7 @@ public class PartyScheduleService {
             Optional<PartySchedule> partySchedule =
                     partyScheduleRepository.findByPartyPriKeyAndBatchType(
                             partyPriKey,
-                            partyJobDto.getPartyBatchType()
+                            partyBatchType
                     );
             if (partySchedule.isEmpty())
                 throw new GeneralException(
@@ -113,7 +139,7 @@ public class PartyScheduleService {
             partyScheduleRepository.save(
                     partySchedule.get()
             );
-            return partyJobDto;
+            return true;
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),
@@ -132,6 +158,7 @@ public class PartyScheduleService {
     ) {
         try {
             return partyScheduleRepository.findByPartyPriKeyAndIsActive(
+                    startUpEventListener.getMyIpAddress(),
                     partyPriKey
             );
         } catch (GeneralException e) {

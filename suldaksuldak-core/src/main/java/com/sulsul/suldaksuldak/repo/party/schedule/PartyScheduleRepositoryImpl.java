@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.constant.party.PartyBatchType;
 import com.sulsul.suldaksuldak.domain.party.batch.PartySchedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class PartyScheduleRepositoryImpl
 
     @Override
     public List<PartySchedule> findByPartyPriKeyAndIsActive(
+            String myIp,
             Long partyPriKey
     ) {
         return jpaQueryFactory
@@ -46,7 +48,10 @@ public class PartyScheduleRepositoryImpl
                         partySchedule.party.id.eq(party.id) :
                         partySchedule.party.id.eq(partyPriKey)
                 )
-                .where(partySchedule.isActive.eq(true))
+                .where(
+                        serverIpEq(myIp),
+                        isActiveEq(true)
+                )
                 .fetch();
     }
 
@@ -55,5 +60,19 @@ public class PartyScheduleRepositoryImpl
     ) {
         return partyBatchType == null ? null :
                 partySchedule.partyBatchType.eq(partyBatchType);
+    }
+
+    private BooleanExpression serverIpEq(
+            String serverIp
+    ) {
+        return StringUtils.hasText(serverIp) ?
+                partySchedule.serverIp.eq(serverIp) : null;
+    }
+
+    private BooleanExpression isActiveEq(
+            Boolean isActive
+    ) {
+        return isActive == null ? null :
+                partySchedule.isActive.eq(isActive);
     }
 }

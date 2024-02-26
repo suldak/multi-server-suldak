@@ -13,6 +13,7 @@ public interface PartyScheduleRepositoryCustom {
     );
 
     List<PartySchedule> findByPartyPriKeyAndIsActive(
+            String myIp,
             Long partyPriKey
     );
 }

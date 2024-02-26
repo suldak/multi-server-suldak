@@ -39,6 +39,7 @@ public class JobManager {
                 partyScheduleService.getPartyScheduleList(null);
 
         for (PartySchedule partySchedule: partySchedules) {
+//            log.info(partySchedule.toSimpleString());
             partyScheduleJobService.addSchedule(
                     scheduler,
                     PartyJobDto.of(

@@ -32,17 +32,33 @@ public class PartyCommonService {
             PartyStateType partyStateType = party.getPartyStateType();
             // 모임 상태가 모집 중 일 때
             if (partyStateType.equals(PartyStateType.RECRUITING)) {
-                // 모임 인원 중 대기 상태를 거절로 수정
-                setAllPartyGuestType(
-                        partyPriKey,
-                        GuestType.WAIT,
-                        GuestType.REFUSE
-                );
-                // 모임 상태를 모집 중지로 수정
-                modifiedPartyState(
-                        party,
-                        PartyStateType.RECRUITMENT_END
-                );
+                // 승인된 인원이 3명 미만일 때
+                if (getPartyConfirmCnt(partyPriKey) < 3) {
+                    // 모든 모임 인원들의 상태를 취소로 설정
+                    setAllPartyGuestType(
+                            partyPriKey,
+                            null,
+                            GuestType.CANCEL
+                    );
+                    // 모임 상태를 모임 취소로 설정
+                    modifiedPartyState(
+                            party,
+                            PartyStateType.MEETING_CANCEL
+                    );
+                    return false;
+                } else {
+                    // 모임 인원 중 대기 상태를 거절로 수정
+                    setAllPartyGuestType(
+                            partyPriKey,
+                            GuestType.WAIT,
+                            GuestType.REFUSE
+                    );
+                    // 모임 상태를 모집 중지로 수정
+                    modifiedPartyState(
+                            party,
+                            PartyStateType.RECRUITMENT_END
+                    );
+                }
             }
             // 모임 상태가 모집 종료 일 때
             else if (partyStateType.equals(PartyStateType.RECRUITMENT_END)) {

@@ -75,6 +75,7 @@ public class PartyScheduleJobService implements JobScheduleService {
                 });
             }
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
         }
     }

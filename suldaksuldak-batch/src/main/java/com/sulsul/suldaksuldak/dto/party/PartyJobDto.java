@@ -11,6 +11,7 @@ import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -38,8 +39,8 @@ public class PartyJobDto implements JobDtoInterface {
                     JobIdentity.PARTY_BATCH_TRIGGER_RECRUITMENT_END.getName() + id,
                     // 모임 시작 3시간 전
                     ScheduleTool.generateCronStringByLocalDateTime(
-//                            party.getMeetingDay().minusHours(3)
-                            party.getMeetingDay().minusMinutes(10)
+                            party.getMeetingDay().minusHours(3)
+//                            party.getMeetingDay().minusMinutes(5)
                     ),
                     null
             );
@@ -67,8 +68,8 @@ public class PartyJobDto implements JobDtoInterface {
                     JobIdentity.PARTY_BATCH_TRIGGER_MEETING_COMPLETE.getName() + id,
                     // 모임 시각 1시간 후
                     ScheduleTool.generateCronStringByLocalDateTime(
-//                            party.getMeetingDay().plusHours(1)
-                            party.getMeetingDay().plusMinutes(10)
+                            party.getMeetingDay().plusHours(1)
+//                            party.getMeetingDay().plusMinutes(5)
                     ),
                     null
             );
@@ -82,8 +83,8 @@ public class PartyJobDto implements JobDtoInterface {
                     JobIdentity.PARTY_BATCH_TRIGGER_GUEST_COMPLETE.getName() + id,
                     // 모임 시각 7일 후
                     ScheduleTool.generateCronStringByLocalDateTime(
-//                            party.getMeetingDay().plusDays(7)
-                            party.getMeetingDay().plusMinutes(15)
+                            party.getMeetingDay().plusDays(7)
+//                            party.getMeetingDay().plusMinutes(10)
                     ),
                     null
             );
@@ -97,14 +98,18 @@ public class PartyJobDto implements JobDtoInterface {
             Trigger trigger,
             JobDetail jobDetail
     ) {
+        Instant nextFireTimeIns =
+                trigger.getNextFireTime() == null ?
+                null : trigger.getNextFireTime().toInstant();
+        LocalDateTime nextFireTime = nextFireTimeIns == null ?
+                null : LocalDateTime.ofInstant(nextFireTimeIns, ZoneId.systemDefault());
         return new PartyJobDto(
                 jobDetail.getJobDataMap().getLong(BasicJobKey.PARTY_PRI_KEY.getKeyStr()),
-                PartyBatchType.findText(jobDetail.getJobDataMap().getString(BasicJobKey.PARTY_BATCH_TYPE.getKeyStr())),
+                (PartyBatchType) jobDetail.getJobDataMap().get(BasicJobKey.PARTY_BATCH_TYPE.getKeyStr()),
                 trigger.getKey().getName(),
                 jobKey.getName(),
                 null,
-                LocalDateTime.ofInstant(((Trigger) trigger)
-                        .getNextFireTime().toInstant(), ZoneId.systemDefault())
+                nextFireTime
         );
     }
 }
