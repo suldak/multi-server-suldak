@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.controller.party;
 
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
@@ -45,6 +46,7 @@ public class PartyViewController {
             @ApiImplicitParam(name = "partyType", value = "모임 타입을 검색합니다."),
             @ApiImplicitParam(name = "hostUserPriKey", value = "모임 주최자를 검색합니다."),
             @ApiImplicitParam(name = "sortBool", value = "NULL 이거나 True 이면 최신순, False 이면 오래된 순", required = true, dataTypeClass = Boolean.class),
+            @ApiImplicitParam(name = "partyStateTypeStr", value = "조회 할 모임 상태 리스트 \",\"로 구분", dataTypeClass = String.class),
             @ApiImplicitParam(name = "pageNum", value = "페이지 번호 (0이 시작)", required = true, dataTypeClass = Integer.class, defaultValue = "0"),
             @ApiImplicitParam(name = "recordSize", value = "페이지 사이즈", required = true, dataTypeClass = Integer.class, defaultValue = "10"),
             @ApiImplicitParam(name = "partyTagPriKey", value = "모임 태그들의 기본키 \",\" 로 구분", example = "1,2,6", dataTypeClass = String.class)
@@ -59,10 +61,12 @@ public class PartyViewController {
             PartyType partyType,
             Long hostUserPriKey,
             String partyTagPriKey,
+            String partyStateTypeStr,
             Boolean sortBool,
             Integer pageNum,
             Integer recordSize
     ) {
+        List<PartyStateType> partyStateTypes = UtilTool.getSplitList(partyStateTypeStr, PartyStateType.class);
         return ApiDataResponse.of(
                 partyViewService.getPartyPageList(
                         name,
@@ -72,6 +76,7 @@ public class PartyViewController {
                         partyType,
                         hostUserPriKey,
                         splitPartyTagList(partyTagPriKey),
+                        partyStateTypes,
                         sortBool,
                         UtilTool.getPageable(pageNum, recordSize)
                 )

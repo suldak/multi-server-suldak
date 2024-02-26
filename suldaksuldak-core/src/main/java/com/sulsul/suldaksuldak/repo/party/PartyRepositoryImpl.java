@@ -7,6 +7,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
@@ -41,6 +42,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            List<PartyStateType> partyStateTypes,
             Boolean sortBool,
             Pageable pageable
     ) {
@@ -59,7 +61,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 searchAtBetween(searchStartTime, searchEndTime),
                                 personnelEq(personnel),
                                 partyTypeEq(partyType),
-                                partyTagListIn(partyTagPriList)
+                                partyTagListIn(partyTagPriList),
+                                partyStateTypeEq(partyStateTypes)
                         )
                         .orderBy(
                                 (sortBool == null || sortBool) ?
@@ -85,7 +88,8 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 searchAtBetween(searchStartTime, searchEndTime),
                                 personnelEq(personnel),
                                 partyTypeEq(partyType),
-                                partyTagListIn(partyTagPriList)
+                                partyTagListIn(partyTagPriList),
+                                partyStateTypeEq(partyStateTypes)
                         );
 
         return PageableExecutionUtils.getPage(
@@ -299,5 +303,13 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
         booleanBuilder.or(partyGuest.confirm.eq(GuestType.COMPLETE));
         booleanBuilder.or(partyGuest.confirm.eq(GuestType.COMPLETE_WAIT));
         return booleanBuilder;
+    }
+
+    public BooleanExpression partyStateTypeEq(
+            List<PartyStateType> partyStateTypes
+    ) {
+        if (partyStateTypes == null || partyStateTypes.isEmpty())
+            return null;
+        return party.partyStateType.in(partyStateTypes);
     }
 }

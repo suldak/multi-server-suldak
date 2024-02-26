@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.repo.party;
 
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
@@ -18,6 +19,7 @@ public interface PartyRepositoryCustom {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            List<PartyStateType> partyStateTypes,
             Boolean sortBool,
             Pageable pageable
     );

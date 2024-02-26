@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.service.party;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.error.ErrorMessage;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
@@ -39,6 +40,7 @@ public class PartyViewService {
             PartyType partyType,
             Long hostUserPriKey,
             List<Long> partyTagPriList,
+            List<PartyStateType> partyStateTypes,
             Boolean sortBool,
             Pageable pageable
     ) {
@@ -51,6 +53,7 @@ public class PartyViewService {
                     partyType,
                     hostUserPriKey,
                     partyTagPriList,
+                    partyStateTypes,
                     sortBool,
                     pageable
             );

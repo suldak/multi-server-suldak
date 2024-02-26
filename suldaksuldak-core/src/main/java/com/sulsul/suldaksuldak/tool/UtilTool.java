@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.tool;
 
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.data.domain.PageRequest;
@@ -63,7 +64,9 @@ public class UtilTool {
     }
 
     private static <T> T convertStringToType(String value, Class<T> type) {
-        if (type.equals(Integer.class)) {
+        if (type.equals(PartyStateType.class)) {
+            return type.cast(PartyStateType.valueOf(value));
+        } else if (type.equals(Integer.class)) {
             return type.cast(Integer.parseInt(value));
         } else if (type.equals(Long.class)) {
             return type.cast(Long.parseLong(value));
