@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.domain.party;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.BaseEntity;
+import com.sulsul.suldaksuldak.domain.admin.feedback.UserPartyFeedback;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.batch.PartySchedule;
 import com.sulsul.suldaksuldak.domain.report.ReportParty;
@@ -107,6 +108,11 @@ public class Party extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartySchedule> partySchedules = new LinkedHashSet<>();
 
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<UserPartyFeedback> userPartyFeedbacks = new LinkedHashSet<>();
     protected Party () {}
 
     protected Party (

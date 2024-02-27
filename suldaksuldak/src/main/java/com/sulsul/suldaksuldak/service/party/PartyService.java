@@ -3,14 +3,16 @@ package com.sulsul.suldaksuldak.service.party;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
+import com.sulsul.suldaksuldak.domain.admin.feedback.UserPartyFeedback;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
-import com.sulsul.suldaksuldak.dto.user.party.UserPartyFeedbackReq;
+import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.admin.feedback.UserPartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
@@ -33,6 +35,7 @@ public class PartyService {
     private final CheckPriKeyService checkPriKeyService;
     private final FileService fileService;
     private final UserRepository userRepository;
+    private final UserPartyFeedbackRepository userPartyFeedbackRepository;
     private final PartyRepository partyRepository;
     private final PartyTagRepository partyTagRepository;
     private final PartyGuestRepository partyGuestRepository;
@@ -199,15 +202,25 @@ public class PartyService {
             for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
                 try {
                     User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
-                    if (user.getId().equals(writerUserPriKey)) continue;
-                    if (user.getLevel() + feedbackObj.getFeedbackScore() >= 100) {
-                        user.setLevel(100.0);
-                    } else if (user.getLevel() + feedbackObj.getFeedbackScore() < 0) {
-                        user.setLevel(0.0);
-                    } else {
-                        user.setLevel(user.getLevel() + feedbackObj.getFeedbackScore());
-                    }
-                    userRepository.save(user);
+                    userPartyFeedbackRepository.save(
+                            UserPartyFeedback.of(
+                                    null,
+                                    feedbackObj.getFeedbackType(),
+                                    feedbackObj.getComment(),
+                                    party,
+                                    partyGuest.getUser(),
+                                    user
+                            )
+                    );
+//                    if (user.getId().equals(writerUserPriKey)) continue;
+//                    if (user.getLevel() + feedbackObj.getFeedbackScore() >= 100) {
+//                        user.setLevel(100.0);
+//                    } else if (user.getLevel() + feedbackObj.getFeedbackScore() < 0) {
+//                        user.setLevel(0.0);
+//                    } else {
+//                        user.setLevel(user.getLevel() + feedbackObj.getFeedbackScore());
+//                    }
+//                    userRepository.save(user);
                 } catch (Exception ignore) {}
             }
             partyGuest.setConfirm(GuestType.COMPLETE);

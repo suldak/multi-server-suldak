@@ -1,5 +1,6 @@
-package com.sulsul.suldaksuldak.dto.user.party;
+package com.sulsul.suldaksuldak.dto.admin.feedback;
 
+import com.sulsul.suldaksuldak.constant.party.FeedbackType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -26,7 +27,11 @@ public class UserPartyFeedbackReq {
     public static class FeedbackObj {
         @ApiModelProperty(value = "상대방(User)의 기본키", required = true)
         Long userPriKey;
-        @ApiModelProperty(value = "상대방에게 줄 점수", required = true)
-        Double feedbackScore;
+//        @ApiModelProperty(value = "상대방에게 줄 점수", required = true)
+//        Double feedbackScore;
+        @ApiModelProperty(value = "피드백 내용", required = true)
+        FeedbackType feedbackType;
+        @ApiModelProperty(value = "피드백 세부사항")
+        String comment;
     }
 }

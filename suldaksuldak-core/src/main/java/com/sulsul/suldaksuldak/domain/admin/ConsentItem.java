@@ -22,7 +22,7 @@ public class ConsentItem {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    ConsentItemType itemType;
+    private ConsentItemType itemType;
 
     @Column(nullable = false)
     @Setter

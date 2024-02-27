@@ -5,7 +5,7 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyReq;
-import com.sulsul.suldaksuldak.dto.user.party.UserPartyFeedbackReq;
+import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
