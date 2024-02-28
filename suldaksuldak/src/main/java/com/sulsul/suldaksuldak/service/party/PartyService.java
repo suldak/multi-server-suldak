@@ -3,6 +3,7 @@ package com.sulsul.suldaksuldak.service.party;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
+import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.admin.feedback.UserPartyFeedback;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,11 +50,17 @@ public class PartyService {
             MultipartFile file
     ) {
         try {
+            if (partyDto.getName() == null || partyDto.getName().isBlank())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임의 이름은 필수 입력 사항입니다."
+                );
             if (partyDto.getPersonnel() < 3)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "모임의 최소 인원은 3명입니다."
                 );
+            checkPartyData(partyDto);
             if (partyDto.getHostUserPriKey() == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -115,6 +123,7 @@ public class PartyService {
                         ErrorCode.BAD_REQUEST,
                         "모집이 종료된 모임은 수정할 수 없습니다."
                 );
+            checkPartyData(partyDto);
             partyRepository.save(
                     partyDto.updateEntity(
                             party
@@ -275,5 +284,61 @@ public class PartyService {
                     "이미 취소된 모임입니다."
             );
         return party;
+    }
+
+    private PartyDto checkPartyData(
+            PartyDto partyDto
+    ) {
+        try {
+            if (partyDto.getMeetingDay() == null ||
+                    !LocalDateTime.now().isBefore(partyDto.getMeetingDay()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임의 시간이 유효하지 않습니다."
+                );
+            if (partyDto.getContactType() == null || partyDto.getContactType().isBlank())
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "연락 수단을 입력해주세요."
+                );
+            if (partyDto.getPartyType() == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임의 타입은 필수 입력 사항입니다."
+                );
+            if (partyDto.getPartyType().equals(PartyType.ON_LINE)) {
+                if (partyDto.getUseProgram() == null || partyDto.getUseProgram().isBlank())
+                    throw new GeneralException(
+                            ErrorCode.BAD_REQUEST,
+                            "온라인 모임에, 사용 프로그램은 필수값 입니다."
+                    );
+                if (partyDto.getOnlineUrl() == null || partyDto.getOnlineUrl().isBlank())
+                    throw new GeneralException(
+                            ErrorCode.BAD_REQUEST,
+                            "온라인 모임에, URL은 필수값 입니다."
+                    );
+            } else if (partyDto.getPartyType().equals(PartyType.OFF_LINE)) {
+                if (partyDto.getPartyPlace() == null || partyDto.getPartyPlace().isBlank())
+                    throw new GeneralException(
+                            "오프라인 모임에서, 모임 장소는 필수값 입니다."
+                    );
+            } else {
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임의 타입이 유효하지 않습니다. (ON_LINE / OFF_LINE)"
+                );
+            }
+            return partyDto;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
     }
 }

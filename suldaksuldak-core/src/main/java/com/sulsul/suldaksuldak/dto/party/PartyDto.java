@@ -18,9 +18,12 @@ public class PartyDto {
     Integer personnel;
     String introStr;
     PartyType partyType;
+    // OFF_LINE
     String partyPlace;
     String contactType;
+    // ON_LINE
     String useProgram;
+    // ON_LINE
     String onlineUrl;
     PartyStateType partyStateType;
     Long hostUserPriKey;
