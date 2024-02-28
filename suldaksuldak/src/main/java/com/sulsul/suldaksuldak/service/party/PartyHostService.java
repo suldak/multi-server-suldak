@@ -54,7 +54,11 @@ public class PartyHostService {
                         ErrorCode.BAD_REQUEST,
                         "자신이 호스트인 모임입니다."
                 );
-
+            if (!partyGuest.getConfirm().equals(GuestType.WAIT))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "해당 유저는 대기 상태가 아닙니다."
+                );
             if (
                     confirm.equals(GuestType.CONFIRM) &&
                     !partyCommonService.checkPartyPersonnel(partyGuest.getParty())
