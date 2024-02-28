@@ -108,6 +108,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
         String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
+        if (refreshHeader == null || refreshHeader.isBlank() || refreshHeader.equals("null"))
+            throw new GeneralException(ErrorCode.BUSINESS_EXCEPTION_ERROR);
         if (refreshHeader.equals(jwtKey) || refreshHeader.split(" ")[1].equals(jwtKey)) {
             chain.doFilter(request, response);
             return;
@@ -118,8 +120,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     //        logger.debug("[+] header Check: " + header);
         try {
 //            String refreshHeader = request.getHeader(SDTokken.REFRESH_HEADER.getText());
-            if (refreshHeader == null || refreshHeader.isBlank() || refreshHeader.equals("null"))
-                throw new GeneralException(ErrorCode.BUSINESS_EXCEPTION_ERROR);
+//            if (refreshHeader == null || refreshHeader.isBlank() || refreshHeader.equals("null"))
+//                throw new GeneralException(ErrorCode.BUSINESS_EXCEPTION_ERROR);
             // admin
             if (request.getServerPort() == 8083) {
                 request.setAttribute(SDTokken.ADMIN.getText(), "ADMIN");
