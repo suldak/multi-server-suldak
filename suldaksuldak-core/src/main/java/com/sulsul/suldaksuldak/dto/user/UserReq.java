@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.user;
 
 
+import com.sulsul.suldaksuldak.constant.admin.UserValue;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
@@ -116,7 +117,7 @@ public class UserReq {
                     gender,
                     birthdayYear,
                     registration,
-                    25.0,
+                    UserValue.DEFAULT_LEVEL.getValue(),
                     0,
                     true,
                     selfIntroduction,
