@@ -10,11 +10,10 @@ import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
 import com.sulsul.suldaksuldak.domain.party.PartyTag;
 import com.sulsul.suldaksuldak.domain.user.User;
-import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackReq;
+import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.admin.feedback.UserPartyFeedbackRepository;
-import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.party.tag.PartyTagRepository;
@@ -36,7 +35,6 @@ import java.util.Optional;
 public class PartyService {
     private final CheckPriKeyService checkPriKeyService;
     private final FileService fileService;
-    private final UserRepository userRepository;
     private final UserPartyFeedbackRepository userPartyFeedbackRepository;
     private final PartyRepository partyRepository;
     private final PartyTagRepository partyTagRepository;
@@ -164,6 +162,32 @@ public class PartyService {
             if (oriFileBase != null)
                 fileService.deleteFile(oriFileBase.getFileNm());
             return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 모임 기본키로 모임 조회
+     */
+    public Optional<PartyDto> getPartyDto(
+            Long priKey
+    ) {
+        try {
+            if (priKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "유효하지 않은 기본키 입니다."
+                );
+            return partyRepository.findByPriKey(priKey);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

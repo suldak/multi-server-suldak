@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.dto.party;
 
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.FileBase;
@@ -36,6 +37,102 @@ public class PartyDto {
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
     Long confirmCnt;
+    GuestType guestType;
+
+    public PartyDto(
+            Long id,
+            String name,
+            LocalDateTime meetingDay,
+            Integer personnel,
+            String introStr,
+            PartyType partyType,
+            String partyPlace,
+            String contactType,
+            String useProgram,
+            String onlineUrl,
+            PartyStateType partyStateType,
+            Long hostUserPriKey,
+            String hostUserName,
+            String hostFileName,
+            String fileBaseNm,
+            Long tagPriKey,
+            String tagName,
+            Long warningCnt,
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt,
+            Long confirmCnt,
+            GuestType guestType
+    ) {
+        this.id = id;
+        this.name = name;
+        this.meetingDay = meetingDay;
+        this.personnel = personnel;
+        this.introStr = introStr;
+        this.partyType = partyType;
+        this.partyPlace = partyPlace;
+        this.contactType = contactType;
+        this.useProgram = useProgram;
+        this.onlineUrl = onlineUrl;
+        this.partyStateType = partyStateType;
+        this.hostUserPriKey = hostUserPriKey;
+        this.hostUserName = hostUserName;
+        this.hostFileName = hostFileName;
+        this.fileBaseNm = fileBaseNm;
+        this.tagPriKey = tagPriKey;
+        this.tagName = tagName;
+        this.warningCnt = warningCnt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.confirmCnt = confirmCnt;
+        this.guestType = guestType;
+    }
+
+    public PartyDto(
+            Long id,
+            String name,
+            LocalDateTime meetingDay,
+            Integer personnel,
+            String introStr,
+            PartyType partyType,
+            String partyPlace,
+            String contactType,
+            String useProgram,
+            String onlineUrl,
+            PartyStateType partyStateType,
+            Long hostUserPriKey,
+            String hostUserName,
+            String hostFileName,
+            String fileBaseNm,
+            Long tagPriKey,
+            String tagName,
+            Long warningCnt,
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt,
+            Long confirmCnt
+    ) {
+        this.id = id;
+        this.name = name;
+        this.meetingDay = meetingDay;
+        this.personnel = personnel;
+        this.introStr = introStr;
+        this.partyType = partyType;
+        this.partyPlace = partyPlace;
+        this.contactType = contactType;
+        this.useProgram = useProgram;
+        this.onlineUrl = onlineUrl;
+        this.partyStateType = partyStateType;
+        this.hostUserPriKey = hostUserPriKey;
+        this.hostUserName = hostUserName;
+        this.hostFileName = hostFileName;
+        this.fileBaseNm = fileBaseNm;
+        this.tagPriKey = tagPriKey;
+        this.tagName = tagName;
+        this.warningCnt = warningCnt;
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
+        this.confirmCnt = confirmCnt;
+        this.guestType = null;
+    }
 
     public static PartyDto of (
             Long id,
@@ -69,6 +166,7 @@ public class PartyDto {
                 null,
                 null,
                 tagPriKey,
+                null,
                 null,
                 null,
                 null,

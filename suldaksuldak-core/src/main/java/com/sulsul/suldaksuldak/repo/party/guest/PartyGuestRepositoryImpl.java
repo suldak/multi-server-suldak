@@ -35,7 +35,7 @@ public class PartyGuestRepositoryImpl
             List<Long> partyTagPriList,
             Long partyPriKey,
             Long userPriKey,
-            GuestType confirm
+            List<GuestType> confirmList
     ) {
         return getPartyGuestDtoQuery()
                 .from(partyGuest)
@@ -54,7 +54,7 @@ public class PartyGuestRepositoryImpl
                         searchAtBetween(searchStartTime, searchEndTime),
                         partyTypeEq(partyType),
                         partyTagListIn(partyTagPriList),
-                        confirmEq(confirm)
+                        confirmIn(confirmList)
                 )
                 .orderBy(partyGuest.createdAt.asc())
                 .fetch();
@@ -111,6 +111,13 @@ public class PartyGuestRepositoryImpl
                                 partyGuest.confirm
                         )
                 );
+    }
+
+    private BooleanExpression confirmIn(
+            List<GuestType> confirmList
+    ) {
+        return confirmList == null || confirmList.isEmpty() ?
+                null : partyGuest.confirm.in(confirmList);
     }
 
     private BooleanExpression confirmEq(

@@ -1,11 +1,16 @@
 package com.sulsul.suldaksuldak.controller.party;
 
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
+import com.sulsul.suldaksuldak.dto.party.PartyTotalRes;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
+import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.service.party.PartyService;
 import com.sulsul.suldaksuldak.service.party.PartyViewService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
@@ -25,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +38,7 @@ import java.util.List;
 @RequestMapping("/api/party/view")
 @Api(tags = "[MAIN] 모임 조회")
 public class PartyViewController {
+    private final PartyService partyService;
     private final PartyViewService partyViewService;
 
     @GetMapping
@@ -107,7 +114,7 @@ public class PartyViewController {
                                 null,
                                 null,
                                 partyPriKey,
-                                confirm
+                                List.of(confirm)
                         )
                         .stream()
                         .map(PartyGuestRes::from)
@@ -147,7 +154,7 @@ public class PartyViewController {
                                 partyType,
                                 splitPartyTagList(partyTagPriKey),
                                 userPriKey,
-                                confirm,
+                                List.of(confirm),
                                 sortBool
                         )
                         .stream()
@@ -174,6 +181,43 @@ public class PartyViewController {
                         .stream()
                         .map(PartyRes::from)
                         .toList()
+        );
+    }
+
+    @GetMapping("/{priKey:[0-9]+}")
+    @ApiOperation(
+            value = "모임 단일 조회",
+            notes = "모임 기본키를 조회해서 모임과 모임에 승인 / 완료 대기 / 왼료 인원을 조회합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "검색할 모임 기본키", dataTypeClass = Long.class)
+    })
+    public ApiDataResponse<PartyTotalRes> getPartyTotalData(
+            @PathVariable Long priKey
+    ) {
+        Optional<PartyDto> partyDto =
+                partyService.getPartyDto(priKey);
+        if (partyDto.isEmpty())
+            throw new GeneralException(
+                    ErrorCode.NOT_FOUND,
+                    "해당 모임을 찾지 못했습니다."
+            );
+
+        return ApiDataResponse.of(
+                PartyTotalRes.from(
+                        partyDto.get(),
+                        partyViewService.getPartyGuestList(
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        partyDto.get().getId(),
+                                        List.of(GuestType.CONFIRM, GuestType.COMPLETE_WAIT, GuestType.COMPLETE)
+                                )
+                                .stream()
+                                .map(PartyGuestRes::from)
+                                .toList()
+                )
         );
     }
 

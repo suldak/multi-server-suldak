@@ -17,7 +17,7 @@ public interface PartyGuestRepositoryCustom {
             List<Long> partyTagPriList,
             Long partyPriKey,
             Long userPriKey,
-            GuestType confirm
+            List<GuestType> confirmList
     );
 
     List<PartyGuest> findByPartyPriKey(

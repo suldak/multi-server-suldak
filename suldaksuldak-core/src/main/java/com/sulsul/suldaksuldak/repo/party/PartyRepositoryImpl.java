@@ -12,7 +12,6 @@ import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
-import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
 import static com.sulsul.suldaksuldak.domain.party.QPartyGuest.partyGuest;
@@ -123,12 +123,12 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
     }
 
     @Override
-    public List<PartyTotalDto> findByPriKeyAndGuestPriKey(
+    public List<PartyDto> findByPriKeyAndGuestPriKey(
             List<Long> priKeyList,
             Long guestPriKey,
             Boolean sortBool
     ) {
-        return getPartyTotalDtoQuery(guestPriKey)
+        return getPartyDtoQuery(guestPriKey)
                 .from(party)
                 .innerJoin(party.user, user)
                 .on(party.user.id.eq(user.id))
@@ -160,6 +160,19 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                                 party.createdAt.asc()
                 )
                 .fetch();
+    }
+
+    @Override
+    public Optional<PartyDto> findByPriKey(Long priKey) {
+        return Optional.ofNullable(
+                getPartyDtoQuery()
+                        .from(party)
+                        .innerJoin(party.user, user)
+                        .on(party.user.id.eq(user.id))
+                        .leftJoin(party.fileBase, QFileBase.fileBase)
+                        .where(party.id.eq(priKey))
+                        .fetchFirst()
+        );
     }
 
     private JPAQuery<PartyDto> getPartyDtoQuery() {
@@ -203,13 +216,13 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                 );
     }
 
-    private JPAQuery<PartyTotalDto> getPartyTotalDtoQuery(
+    private JPAQuery<PartyDto> getPartyDtoQuery(
             Long guestPriKey
     ) {
         return jpaQueryFactory
                 .select(
                         Projections.constructor(
-                                PartyTotalDto.class,
+                                PartyDto.class,
                                 party.id,
                                 party.name,
                                 party.meetingDay,

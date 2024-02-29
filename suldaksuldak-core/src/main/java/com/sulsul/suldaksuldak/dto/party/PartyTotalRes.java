@@ -1,18 +1,19 @@
 package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
-import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
+import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Value
-@ApiModel(value = "모임 Response")
-public class PartyRes {
+@ApiModel(value = "모임에 대한 모든 정보 Response")
+public class PartyTotalRes {
     @ApiModelProperty(value = "모임 기본키")
     Long id;
     @ApiModelProperty(value = "모임 이름")
@@ -55,13 +56,13 @@ public class PartyRes {
     Long confirmCnt;
     @ApiModelProperty(value = "모임 신고 횟수")
     Long warningCnt;
-    @ApiModelProperty(value = "유저 기준 검색 시, 모임에 대한 유저의 상태")
-    GuestType guestType;
+    List<PartyGuestRes> partyGuestList;
 
-    public static PartyRes from(
-            PartyDto partyDto
+    public static PartyTotalRes from(
+            PartyDto partyDto,
+            List<PartyGuestRes> partyGuestList
     ) {
-        return new PartyRes(
+        return new PartyTotalRes(
                 partyDto.getId(),
                 partyDto.getName(),
                 partyDto.getMeetingDay(),
@@ -87,7 +88,7 @@ public class PartyRes {
                 partyDto.getModifiedAt(),
                 partyDto.getConfirmCnt(),
                 partyDto.getWarningCnt(),
-                partyDto.getGuestType()
+                partyGuestList
         );
     }
 }

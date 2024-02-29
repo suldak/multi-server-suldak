@@ -7,7 +7,6 @@ import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.PartyDto;
 import com.sulsul.suldaksuldak.dto.party.PartyRes;
-import com.sulsul.suldaksuldak.dto.party.PartyTotalDto;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestDto;
 import com.sulsul.suldaksuldak.dto.report.party.ReportPartyDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -100,7 +99,7 @@ public class PartyViewService {
             PartyType partyType,
             List<Long> partyTagPriList,
             Long partyPriKey,
-            GuestType confirm
+            List<GuestType> confirmList
     ) {
         try {
             return partyGuestRepository.findByOptions(
@@ -110,7 +109,7 @@ public class PartyViewService {
                     partyTagPriList,
                     partyPriKey,
                     null,
-                    confirm
+                    confirmList
             );
         } catch (GeneralException e) {
             throw new GeneralException(
@@ -128,13 +127,13 @@ public class PartyViewService {
     /**
      * 유저가 참가하는 모임 목록 조회
      */
-    public List<PartyTotalDto> getPartyByUser(
+    public List<PartyDto> getPartyByUser(
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
             PartyType partyType,
             List<Long> partyTagPriList,
             Long userPriKey,
-            GuestType confirm,
+            List<GuestType> confirmList,
             Boolean sortBool
     ) {
         try {
@@ -151,7 +150,7 @@ public class PartyViewService {
                             partyTagPriList,
                             null,
                             userPriKey,
-                            confirm
+                            confirmList
                     ).stream().map(PartyGuestDto::getPartyPriKey).toList();
             return partyRepository.findByPriKeyAndGuestPriKey(partyPriKeyList, userPriKey, sortBool);
         } catch (GeneralException e) {
