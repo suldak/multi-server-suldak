@@ -25,9 +25,6 @@ public class PartyScheduleJobService implements JobScheduleService {
     private static ApplicationContext applicationContext;
 
     @Autowired
-    private static PartyScheduleService partyScheduleService;
-
-    @Autowired
     public PartyScheduleJobService(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
