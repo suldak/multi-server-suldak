@@ -1,7 +1,9 @@
 package com.sulsul.suldaksuldak.component;
 
 import com.sulsul.suldaksuldak.domain.party.batch.PartySchedule;
+import com.sulsul.suldaksuldak.dto.level.LevelJobDto;
 import com.sulsul.suldaksuldak.dto.party.PartyJobDto;
+import com.sulsul.suldaksuldak.service.level.LevelScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,8 @@ public class JobManager {
     private PartyScheduleJobService partyScheduleJobService;
     @Autowired
     private PartyScheduleService partyScheduleService;
+    @Autowired
+    private LevelScheduleJobService levelScheduleJobService;
 
     public void start() {
         try {
@@ -39,15 +43,20 @@ public class JobManager {
                 partyScheduleService.getPartyScheduleList(null);
 
         for (PartySchedule partySchedule: partySchedules) {
-//            log.info(partySchedule.toSimpleString());
             partyScheduleJobService.addSchedule(
                     scheduler,
                     PartyJobDto.of(
                             partySchedule.getParty(),
-                            partySchedule.getPartyBatchType()
+                            partySchedule.getPartyBatchType(),
+                            partySchedule.getCronStr()
                     )
             );
         }
+        levelScheduleJobService.addSchedule(
+                scheduler,
+                LevelJobDto.of()
+        );
         partyScheduleJobService.printScheduleList(scheduler);
+        levelScheduleJobService.printScheduleList(scheduler);
     }
 }

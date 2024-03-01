@@ -94,6 +94,60 @@ public class PartyJobDto implements JobDtoInterface {
     }
 
     public static PartyJobDto of (
+            Party party,
+            PartyBatchType partyBatchType,
+            String triggerCron
+    ) {
+        Long id = party.getId();
+        // 모임 종료 스케줄
+        if (partyBatchType.equals(PartyBatchType.SET_RECRUITMENT_END)) {
+            return new PartyJobDto(
+                    id,
+                    PartyBatchType.SET_RECRUITMENT_END,
+                    JobIdentity.PARTY_BATCH_JOB_RECRUITMENT_END.getName() + id,
+                    JobIdentity.PARTY_BATCH_TRIGGER_RECRUITMENT_END.getName() + id,
+                    triggerCron,
+                    null
+            );
+        }
+        // 모임 중 스케줄
+        else if (partyBatchType.equals(PartyBatchType.SET_ON_GOING)) {
+            return new PartyJobDto(
+                    id,
+                    PartyBatchType.SET_ON_GOING,
+                    JobIdentity.PARTY_BATCH_JOB_ON_GOING.getName() + id,
+                    JobIdentity.PARTY_BATCH_TRIGGER_ON_GOING.getName() + id,
+                    triggerCron,
+                    null
+            );
+        }
+        // 모임 완료 스케줄
+        else if (partyBatchType.equals(PartyBatchType.SET_MEETING_COMPLETE)) {
+            return new PartyJobDto(
+                    id,
+                    PartyBatchType.SET_MEETING_COMPLETE,
+                    JobIdentity.PARTY_BATCH_JOB_MEETING_COMPLETE.getName() + id,
+                    JobIdentity.PARTY_BATCH_TRIGGER_MEETING_COMPLETE.getName() + id,
+                    triggerCron,
+                    null
+            );
+        }
+        // 모인 인원 완료 스케줄
+        else if (partyBatchType.equals(PartyBatchType.SET_GUEST_COMPLETE)) {
+            return new PartyJobDto(
+                    id,
+                    PartyBatchType.SET_GUEST_COMPLETE,
+                    JobIdentity.PARTY_BATCH_JOB_GUEST_COMPLETE.getName() + id,
+                    JobIdentity.PARTY_BATCH_TRIGGER_GUEST_COMPLETE.getName() + id,
+                    triggerCron,
+                    null
+            );
+        } else {
+            return null;
+        }
+    }
+
+    public static PartyJobDto of (
             JobKey jobKey,
             Trigger trigger,
             JobDetail jobDetail

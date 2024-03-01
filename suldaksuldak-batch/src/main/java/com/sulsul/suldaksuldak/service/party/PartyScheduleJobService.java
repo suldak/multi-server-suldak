@@ -54,7 +54,6 @@ public class PartyScheduleJobService implements JobScheduleService {
         try {
             for (JobKey jobKey: scheduler.getJobKeys(null)) {
                 scheduler.getTriggersOfJob(jobKey).forEach(trigger -> {
-                    log.info(trigger.getKey().getName());
                     if (trigger.getKey().getName().startsWith(JobIdentity.PARTY_BATCH_TRIGGER.getName())) {
                         try {
                             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
