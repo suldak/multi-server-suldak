@@ -6,6 +6,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.FeedbackType;
 import com.sulsul.suldaksuldak.domain.user.QUser;
+import com.sulsul.suldaksuldak.dto.admin.feedback.GroupUserFeedbackDto;
 import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -60,6 +61,49 @@ public class UserPartyFeedbackRepositoryImpl implements
                         feedbackAtBetween(startAt, endAt)
                 )
                 .orderBy(userPartyFeedback.feedbackAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Long> findAllUserPriKey() {
+        QUser writerUser = new QUser("writerUser");
+        QUser targetUser = new QUser("targetUser");
+        return jpaQueryFactory
+                .select(userPartyFeedback.targetUser.id)
+                .from(userPartyFeedback)
+                .innerJoin(userPartyFeedback.party, party)
+                .on(userPartyFeedback.party.id.eq(party.id))
+                .innerJoin(userPartyFeedback.writer, writerUser)
+                .on(userPartyFeedback.writer.id.eq(writerUser.id))
+                .innerJoin(userPartyFeedback.targetUser, targetUser)
+                .on(userPartyFeedback.targetUser.id.eq(targetUser.id))
+                .groupBy(userPartyFeedback.targetUser.id)
+                .fetch();
+    }
+
+    @Override
+    public List<GroupUserFeedbackDto> findGroupDtoByTargetPriKey(
+            Long targetUserPriKey
+    ) {
+        QUser writerUser = new QUser("writerUser");
+        QUser targetUser = new QUser("targetUser");
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                GroupUserFeedbackDto.class,
+                                userPartyFeedback.targetUser.id,
+                                userPartyFeedback.feedbackType,
+                                userPartyFeedback.feedbackType.count()
+                        )
+                )
+                .from(userPartyFeedback)
+                .innerJoin(userPartyFeedback.party, party)
+                .on(userPartyFeedback.party.id.eq(party.id))
+                .innerJoin(userPartyFeedback.writer, writerUser)
+                .on(userPartyFeedback.writer.id.eq(writerUser.id))
+                .innerJoin(userPartyFeedback.targetUser, targetUser)
+                .on(userPartyFeedback.targetUser.id.eq(targetUserPriKey))
+                .groupBy(userPartyFeedback.feedbackType)
                 .fetch();
     }
 

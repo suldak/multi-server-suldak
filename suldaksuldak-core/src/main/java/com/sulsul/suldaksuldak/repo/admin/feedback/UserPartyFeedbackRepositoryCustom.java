@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.repo.admin.feedback;
 
 import com.sulsul.suldaksuldak.constant.party.FeedbackType;
+import com.sulsul.suldaksuldak.dto.admin.feedback.GroupUserFeedbackDto;
 import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackDto;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,11 @@ public interface UserPartyFeedbackRepositoryCustom {
             Long targetUserPriKey,
             LocalDateTime startAt,
             LocalDateTime endAt
+    );
+
+    List<Long> findAllUserPriKey();
+
+    List<GroupUserFeedbackDto> findGroupDtoByTargetPriKey(
+            Long targetUserPriKey
     );
 }
