@@ -234,6 +234,8 @@ public class PartyService {
 
             for (UserPartyFeedbackReq.FeedbackObj feedbackObj: feedbackObjs) {
                 try {
+                    // 자기 자신에 대한 피드백 무시
+                    if (writerUserPriKey.equals(feedbackObj.getUserPriKey())) continue;
                     User user = checkPriKeyService.checkAndGetUser(feedbackObj.getUserPriKey());
                     userPartyFeedbackRepository.save(
                             UserPartyFeedback.of(
