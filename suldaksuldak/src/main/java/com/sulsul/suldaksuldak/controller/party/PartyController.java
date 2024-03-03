@@ -8,6 +8,7 @@ import com.sulsul.suldaksuldak.dto.admin.feedback.UserPartyFeedbackReq;
 import com.sulsul.suldaksuldak.dto.party.PartyReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;
+import com.sulsul.suldaksuldak.service.stats.StatsService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 public class PartyController {
     private final ToBatchServer toBatchServer;
     private final PartyService partyService;
+    private final StatsService statsService;
 
     @ApiOperation(
             value = "모임 생성",
@@ -53,6 +55,10 @@ public class PartyController {
                         PartyStateType.RECRUITING
                 ),
                 file
+        );
+        statsService.savePartySearchLog(
+                userPriKey,
+                partyPriKey
         );
         return ApiDataResponse.of(
                 toBatchServer.partyBatchApiToBatchServer(
