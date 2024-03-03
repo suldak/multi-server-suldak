@@ -5,6 +5,7 @@ import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
+import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
@@ -59,20 +60,29 @@ public class StatsService {
                 Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorId);
                 userLiquorRepository.save(
                         UserLiquorDto
-                                .of(null, userId, liquorId, 0.1)
+                                .of(
+                                        null,
+                                        userId,
+                                        liquorId,
+                                        0.1,
+                                        LocalDateTime.now()
+                                )
                                 .toEntity(user, liquor)
                 );
+                return true;
             } else {
-                userLiquorRepository.findById(dto.get().getId())
-                        .ifPresent(
-                                findEntity -> {
-                                    userLiquorRepository.save(
-                                            UserLiquorDto.addSearchCnt(findEntity)
-                                    );
-                                }
-                        );
+                Optional<UserLiquor> userLiquor =
+                        userLiquorRepository.findById(dto.get().getId());
+                if (userLiquor.isEmpty())
+                    return false;
+                if (userLiquor.get().getLastSearchTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
+                    userLiquorRepository.save(
+                            UserLiquorDto.addSearchCnt(userLiquor.get())
+                    );
+                    return true;
+                }
+                return false;
             }
-            return true;
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {

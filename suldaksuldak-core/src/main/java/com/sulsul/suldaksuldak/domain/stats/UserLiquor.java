@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @ToString
@@ -31,31 +32,40 @@ public class UserLiquor {
     @Column(nullable = false)
     private Double searchCnt;
 
+    @Setter
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime lastSearchTime;
+
+
     protected UserLiquor () {}
 
     protected UserLiquor (
             Long id,
             User user,
             Liquor liquor,
-            Double searchCnt
+            Double searchCnt,
+            LocalDateTime lastSearchTime
     ) {
         this.id = id;
         this.user = user;
         this.liquor = liquor;
         this.searchCnt = searchCnt;
+        this.lastSearchTime = lastSearchTime;
     }
 
     public static UserLiquor of (
             Long id,
             User user,
             Liquor liquor,
-            Double searchCnt
+            Double searchCnt,
+            LocalDateTime lastSearchTime
     ) {
         return new UserLiquor(
                 id,
                 user,
                 liquor,
-                searchCnt
+                searchCnt,
+                lastSearchTime
         );
     }
 }

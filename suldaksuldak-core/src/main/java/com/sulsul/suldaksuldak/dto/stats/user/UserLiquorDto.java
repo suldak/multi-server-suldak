@@ -5,24 +5,29 @@ import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.user.User;
 import lombok.Value;
 
+import java.time.LocalDateTime;
+
 @Value
 public class UserLiquorDto {
     Long id;
     Long userId;
     Long liquorId;
     Double searchCnt;
+    LocalDateTime lastSearchTime;
 
     public static UserLiquorDto of (
             Long id,
             Long userId,
             Long liquorId,
-            Double searchCnt
+            Double searchCnt,
+            LocalDateTime lastSearchTime
     ) {
         return new UserLiquorDto(
                 id,
                 userId,
                 liquorId,
-                searchCnt
+                searchCnt,
+                lastSearchTime
         );
     }
 
@@ -34,7 +39,8 @@ public class UserLiquorDto {
                 id,
                 user,
                 liquor,
-                searchCnt
+                searchCnt,
+                lastSearchTime
         );
     }
 
@@ -42,6 +48,7 @@ public class UserLiquorDto {
             UserLiquor userLiquor
     ) {
         userLiquor.setSearchCnt(userLiquor.getSearchCnt() + 0.1);
+        userLiquor.setLastSearchTime(LocalDateTime.now());
         return userLiquor;
     }
 }

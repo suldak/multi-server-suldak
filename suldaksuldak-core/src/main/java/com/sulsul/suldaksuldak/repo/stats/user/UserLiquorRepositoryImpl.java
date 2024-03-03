@@ -60,7 +60,8 @@ public class UserLiquorRepositoryImpl implements UserLiquorRepositoryCustom {
                                 userLiquor.id,
                                 userLiquor.user.id,
                                 userLiquor.liquor.id,
-                                userLiquor.searchCnt
+                                userLiquor.searchCnt,
+                                userLiquor.lastSearchTime
                         )
                 );
     }
