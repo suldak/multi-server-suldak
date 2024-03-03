@@ -242,14 +242,19 @@ public class PartyViewController {
                     """
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "limitNum", value = "검색할 모임의 개수", dataTypeClass = Integer.class),
-            @ApiImplicitParam(name = "searchOption", value = "검색할 옵션 (GUEST / CLICK)", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "limitNum", value = "검색할 모임의 개수 (기본 10)", dataTypeClass = Integer.class, defaultValue = "10"),
+            @ApiImplicitParam(name = "searchOption", value = "검색할 옵션 (GUEST / CLICK)", required = true, dataTypeClass = String.class)
     })
     public ApiDataResponse<List<PartyTotalRes>> getPopularPartyList(
             String searchOption,
             Integer limitNum
     ) {
-        if (searchOption == null || (!searchOption.equals("GUEST") && !searchOption.equals("CLICK")))
+        if (searchOption == null ||
+                (
+                        !searchOption.equals("GUEST")
+                    && !searchOption.equals("CLICK")
+                )
+        )
             throw new GeneralException(
                     ErrorCode.BAD_REQUEST,
                     "옵션이 유효하지 않습니다."
@@ -260,6 +265,65 @@ public class PartyViewController {
             partyDtos = partyViewService.getTopGuestPartyList(limitNum == null ? 10 : limitNum);
         } else {
             partyDtos = partyViewService.getTopClickPartyList(limitNum == null ? 10 : limitNum);
+        }
+        return ApiDataResponse.of(
+                partyDtos
+                        .stream()
+                        .map(dto ->
+                                PartyTotalRes.from(
+                                        dto,
+                                        partyViewService.getPartyGuestList(
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        dto.getId(),
+                                                        List.of(GuestType.CONFIRM)
+                                                )
+                                                .stream()
+                                                .map(PartyGuestRes::from)
+                                                .toList()
+                                )
+                        )
+                        .toList()
+        );
+    }
+
+    @GetMapping("/recommend-list")
+    @ApiOperation(
+            value = "추천하는 모임 조회",
+            notes = """
+                    \n옵션
+                    \n1. 호스트 알콜도수가 높은 순으로 모임 조회 (LEVEL)
+                    \n2. 유저기준 최근 참여했던 모임 카테고리 중 최신순 (USER)
+                    """
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "limitNum", value = "검색할 모임의 개수 (기본 10)", dataTypeClass = Integer.class, defaultValue = "10"),
+            @ApiImplicitParam(name = "searchOption", value = "검색할 옵션 (LEVEL / USER)", required = true, dataTypeClass = String.class)
+    })
+    public ApiDataResponse<List<PartyTotalRes>> getRecommendPartyList(
+            HttpServletRequest request,
+            Integer limitNum,
+            String searchOption
+    ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (searchOption == null ||
+                (
+                        !searchOption.equals("LEVEL")
+                                && !searchOption.equals("USER")
+                )
+        )
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "옵션이 유효하지 않습니다."
+            );
+
+        List<PartyDto> partyDtos;
+        if (searchOption.equals("LEVEL")) {
+            partyDtos = partyViewService.getTopHostLevelPartyList(limitNum == null ? 10 : limitNum);
+        } else {
+            partyDtos = partyViewService.getUserRecommendPartyList(userPriKey, limitNum == null ? 10 : limitNum);
         }
         return ApiDataResponse.of(
                 partyDtos

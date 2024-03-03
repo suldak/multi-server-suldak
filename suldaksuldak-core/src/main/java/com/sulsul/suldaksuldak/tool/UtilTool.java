@@ -101,7 +101,9 @@ public class UtilTool {
     }
 
     public static List<Long> removeDuplicates(List<Long> inputList) {
-        HashSet<Long> uniqueSet = new HashSet<>(inputList);
+//        HashSet<Long> uniqueSet = new HashSet<>(inputList);
+//        return new ArrayList<>(uniqueSet);
+        LinkedHashSet<Long> uniqueSet = new LinkedHashSet<>(inputList);
         return new ArrayList<>(uniqueSet);
     }
 

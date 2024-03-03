@@ -14,6 +14,8 @@ import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
 import com.sulsul.suldaksuldak.repo.stats.party.PartySearchLogRepository;
+import com.sulsul.suldaksuldak.tool.UtilTool;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -248,6 +250,54 @@ public class PartyViewService {
                 dto.ifPresent(partyDtos::add);
             }
             return partyDtos;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 호스트의 알콜 도수가 높은 순으로 모임 조회
+     */
+    public List<PartyDto> getTopHostLevelPartyList(
+            Integer limitNum
+    ) {
+        try {
+            return partyRepository.findByHostLevel(limitNum);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public List<PartyDto> getUserRecommendPartyList(
+            Long userPriKey,
+            Integer limitNum
+    ) {
+        try {
+            List<Long> tagPriKey =
+                    partyGuestRepository.findTahPriKeyByUserRecommend(
+                            userPriKey,
+                            limitNum
+                    );
+            return partyRepository.findByTagPriKeyList(
+                    UtilTool.removeDuplicates(tagPriKey),
+                    limitNum
+            );
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

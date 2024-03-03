@@ -43,4 +43,13 @@ public interface PartyRepositoryCustom {
     Optional<PartyDto> findByPriKey(
             Long priKey
     );
+
+    List<PartyDto> findByHostLevel(
+            Integer limitNum
+    );
+
+    List<PartyDto> findByTagPriKeyList(
+            List<Long> tagPriKeyList,
+            Integer limitNum
+    );
 }

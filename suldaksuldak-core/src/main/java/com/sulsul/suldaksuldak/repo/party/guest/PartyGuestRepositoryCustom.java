@@ -33,4 +33,9 @@ public interface PartyGuestRepositoryCustom {
     List<Long> findPartyPriKeyByTopGuestCount(
             Integer limitNum
     );
+
+    List<Long> findTahPriKeyByUserRecommend(
+            Long userPriKey,
+            Integer limitNum
+    );
 }

@@ -117,6 +117,34 @@ public class PartyGuestRepositoryImpl
                 .fetch();
     }
 
+    @Override
+    public List<Long> findTahPriKeyByUserRecommend(
+            Long userPriKey,
+            Integer limitNum
+    ) {
+        return jpaQueryFactory
+                .select(partyGuest.party.partyTag.id)
+                .from(partyGuest)
+                .innerJoin(partyGuest.party, party)
+                .on(partyGuest.party.id.eq(party.id))
+                .innerJoin(partyGuest.user, user)
+                .on(partyGuest.user.id.eq(userPriKey))
+                .where(
+                        partyGuest.confirm.in(
+                                List.of(
+                                        GuestType.COMPLETE,
+                                        GuestType.COMPLETE_WAIT,
+                                        GuestType.ON_GOING,
+                                        GuestType.CONFIRM
+                                )
+                        )
+                )
+                .groupBy(partyGuest.party.partyTag.id, partyGuest.modifiedAt)
+                .limit(limitNum)
+                .orderBy(partyGuest.modifiedAt.desc())
+                .fetch();
+    }
+
     private JPAQuery<PartyGuestDto> getPartyGuestDtoQuery() {
         return jpaQueryFactory
                 .select(
