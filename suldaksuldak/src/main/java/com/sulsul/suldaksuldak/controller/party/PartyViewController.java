@@ -12,6 +12,7 @@ import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyService;
 import com.sulsul.suldaksuldak.service.party.PartyViewService;
+import com.sulsul.suldaksuldak.service.stats.StatsService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -38,6 +39,7 @@ import java.util.Optional;
 @RequestMapping("/api/party/view")
 @Api(tags = "[MAIN] 모임 조회")
 public class PartyViewController {
+    private final StatsService statsService;
     private final PartyService partyService;
     private final PartyViewService partyViewService;
 
@@ -186,15 +188,24 @@ public class PartyViewController {
 
     @GetMapping("/{priKey:[0-9]+}")
     @ApiOperation(
-            value = "모임 단일 조회",
+            value = "모임 단일 조회 (집계)",
             notes = "모임 기본키를 조회해서 모임과 모임에 승인 / 완료 대기 / 왼료 인원을 조회합니다."
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "priKey", value = "검색할 모임 기본키", dataTypeClass = Long.class)
     })
     public ApiDataResponse<PartyTotalRes> getPartyTotalData(
+            HttpServletRequest request,
             @PathVariable Long priKey
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
+        if (userPriKey != null) {
+            Boolean logResult = statsService.savePartySearchLog(
+                    userPriKey,
+                    priKey
+            );
+        }
+
         Optional<PartyDto> partyDto =
                 partyService.getPartyDto(priKey);
         if (partyDto.isEmpty())

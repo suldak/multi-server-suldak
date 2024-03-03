@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.stats.user;
+package com.sulsul.suldaksuldak.repo.stats.user.liquor;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;

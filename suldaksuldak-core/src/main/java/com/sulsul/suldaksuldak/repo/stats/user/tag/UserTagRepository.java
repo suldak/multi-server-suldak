@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.stats.user;
+package com.sulsul.suldaksuldak.repo.stats.user.tag;
 
 import com.sulsul.suldaksuldak.domain.stats.QUserTag;
 import com.sulsul.suldaksuldak.domain.stats.UserTag;

@@ -13,6 +13,7 @@ import com.sulsul.suldaksuldak.domain.question.UserSelect;
 import com.sulsul.suldaksuldak.domain.report.ReportParty;
 import com.sulsul.suldaksuldak.domain.report.ReportPartyComment;
 import com.sulsul.suldaksuldak.domain.search.SearchText;
+import com.sulsul.suldaksuldak.domain.stats.PartySearchLog;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.stats.UserTag;
 import lombok.Getter;
@@ -183,6 +184,12 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "targetUser", cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<UserPartyFeedback> targetUserPartyFeedbacks = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<PartySearchLog> partySearchLogs = new LinkedHashSet<>();
 
     protected User () {}
 

@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.stats.user;
+package com.sulsul.suldaksuldak.repo.stats.user.liquor;
 
 import com.sulsul.suldaksuldak.domain.stats.QUserLiquor;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;

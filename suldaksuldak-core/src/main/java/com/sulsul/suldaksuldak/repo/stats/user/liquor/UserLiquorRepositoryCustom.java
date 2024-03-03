@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.stats.user;
+package com.sulsul.suldaksuldak.repo.stats.user.liquor;
 
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;

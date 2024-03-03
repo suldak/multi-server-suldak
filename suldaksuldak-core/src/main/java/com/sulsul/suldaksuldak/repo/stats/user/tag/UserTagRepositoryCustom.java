@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.stats.user;
+package com.sulsul.suldaksuldak.repo.stats.user.tag;
 
 import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;

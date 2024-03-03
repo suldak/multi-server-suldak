@@ -4,11 +4,14 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.stats.TagType;
 import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.domain.liquor.LiquorLike;
+import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.stats.LiquorSearchLog;
+import com.sulsul.suldaksuldak.domain.stats.PartySearchLog;
 import com.sulsul.suldaksuldak.domain.stats.UserLiquor;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
+import com.sulsul.suldaksuldak.dto.stats.party.PartySearchLogDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserLiquorTagDto;
 import com.sulsul.suldaksuldak.dto.stats.user.UserTagDto;
@@ -16,9 +19,10 @@ import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackRes;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.liquor.like.LiquorLikeRepository;
+import com.sulsul.suldaksuldak.repo.stats.party.PartySearchLogRepository;
 import com.sulsul.suldaksuldak.repo.stats.search.LiquorSearchLogRepository;
-import com.sulsul.suldaksuldak.repo.stats.user.UserLiquorRepository;
-import com.sulsul.suldaksuldak.repo.stats.user.UserTagRepository;
+import com.sulsul.suldaksuldak.repo.stats.user.liquor.UserLiquorRepository;
+import com.sulsul.suldaksuldak.repo.stats.user.tag.UserTagRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +38,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.sulsul.suldaksuldak.domain.stats.QPartySearchLog.partySearchLog;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -44,6 +50,7 @@ public class StatsService {
     private final UserTagRepository userTagRepository;
     private final LiquorDataService liquorDataService;
     private final LiquorLikeRepository liquorLikeRepository;
+    private final PartySearchLogRepository partySearchLogRepository;
 
     /**
      * 유저 - 술 집게 Table에 집계
@@ -352,6 +359,63 @@ public class StatsService {
                     liquorLike.isEmpty() ? 3.0 : -3.0
             );
             return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public Boolean savePartySearchLog(
+            Long userPriKey,
+            Long partyPriKey
+    ) {
+        try {
+            User user = checkPriKeyService.checkAndGetUser(userPriKey);
+            Party party = checkPriKeyService.checkAndGetParty(partyPriKey);
+            Optional<PartySearchLogDto> partySearchLogDto =
+                    partySearchLogRepository.findLastByUserPriKeyAndPartyPriKey(
+                            userPriKey,
+                            partyPriKey
+                    );
+            String priKey =
+                    LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul"))
+                            .toInstant().toEpochMilli()
+                            + "_" + userPriKey
+                            + "_" + partyPriKey;
+            if (
+                    partySearchLogDto.isEmpty() ||
+                            partySearchLogDto.get().getSearchAt().plusMinutes(10)
+                                    .isBefore(LocalDateTime.now())
+            ) {
+                partySearchLogRepository.save(
+                        PartySearchLog.of(
+                                priKey,
+                                user,
+                                party
+                        )
+                );
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Long> getTopPartyPriKey(
+            Integer limitNum
+    ) {
+        try {
+            return partySearchLogRepository.findPartyPriKeyByTopSearch(limitNum);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),
