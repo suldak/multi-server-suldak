@@ -25,10 +25,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -298,46 +298,42 @@ public class LiquorViewService {
             Long userPriKey
     ) {
         try {
-            // TODO 병렬화
-            HashMap<Long, Integer> liquorAbvPriKeyList =
-                    UtilTool.generateCountedHashMap(
-                            liquorPriKeyList
-                                    .stream()
+            // 각 해시맵 생성을 비동기적으로 처리
+            CompletableFuture<HashMap<Long, Integer>> liquorAbvPriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
+                            liquorPriKeyList.stream()
                                     .map(UserLiquorTagDto::getLiquorAbvPriKey)
                                     .filter(Objects::nonNull)
                                     .toList()
-                    );
-            HashMap<Long, Integer> liquorDetailPriKeyList =
-                    UtilTool.generateCountedHashMap(
-                            liquorPriKeyList
-                                    .stream()
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> liquorDetailPriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
+                            liquorPriKeyList.stream()
                                     .map(UserLiquorTagDto::getLiquorDetailPriKey)
                                     .filter(Objects::nonNull)
                                     .toList()
-                    );
-            HashMap<Long, Integer> drinkingCapacityPriKey =
-                    UtilTool.generateCountedHashMap(
-                            liquorPriKeyList
-                                    .stream()
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> drinkingCapacityPriKeyFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
+                            liquorPriKeyList.stream()
                                     .map(UserLiquorTagDto::getDrinkingCapacityPriKey)
                                     .filter(Objects::nonNull)
                                     .toList()
-                    );
-            HashMap<Long, Integer> liquorNamePriKeyList =
-                    UtilTool.generateCountedHashMap(
-                            liquorPriKeyList
-                                    .stream()
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> liquorNamePriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
+                            liquorPriKeyList.stream()
                                     .map(UserLiquorTagDto::getLiquorNamePriKey)
                                     .filter(Objects::nonNull)
                                     .toList()
-                    );
-            HashMap<Long, Integer> liquorSnackPriKeyList =
-                    UtilTool.generateCountedHashMap(
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> liquorSnackPriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
                             UtilTool.removeDuplicates(
-                                    liquorPriKeyList
-                                            .stream()
+                                    liquorPriKeyList.stream()
                                             .map(dto -> {
-                                                List<LiquorSnackDto> liquorSnackDtos = liquorDataService.getLiquorSnackDtoList(dto.getLiquorId());
+                                                List<LiquorSnackDto> liquorSnackDtos =
+                                                        liquorDataService.getLiquorSnackDtoList(dto.getLiquorId());
                                                 return liquorSnackDtos.stream()
                                                         .map(LiquorSnackDto::getId)
                                                         .toList();
@@ -345,14 +341,14 @@ public class LiquorViewService {
                                             .flatMap(List::stream)
                                             .toList()
                             )
-                    );
-            HashMap<Long, Integer> statePriKeyList =
-                    UtilTool.generateCountedHashMap(
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> statePriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
                             UtilTool.removeDuplicates(
-                                    liquorPriKeyList
-                                            .stream()
+                                    liquorPriKeyList.stream()
                                             .map(dto -> {
-                                                List<StateTypeDto> stateTypeDtos = liquorDataService.getStateTypeDtoList(dto.getLiquorId());
+                                                List<StateTypeDto> stateTypeDtos =
+                                                        liquorDataService.getStateTypeDtoList(dto.getLiquorId());
                                                 return stateTypeDtos.stream()
                                                         .map(StateTypeDto::getId)
                                                         .toList();
@@ -360,14 +356,14 @@ public class LiquorViewService {
                                             .flatMap(List::stream)
                                             .toList()
                             )
-                    );
-            HashMap<Long, Integer> tastePriKeyList =
-                    UtilTool.generateCountedHashMap(
+                    ));
+            CompletableFuture<HashMap<Long, Integer>> tastePriKeyListFuture =
+                    CompletableFuture.supplyAsync(() -> UtilTool.generateCountedHashMap(
                             UtilTool.removeDuplicates(
-                                    liquorPriKeyList
-                                            .stream()
+                                    liquorPriKeyList.stream()
                                             .map(dto -> {
-                                                List<TasteTypeDto> tasteTypeDtos = liquorDataService.getTasteTypeDtoList(dto.getLiquorId());
+                                                List<TasteTypeDto> tasteTypeDtos =
+                                                        liquorDataService.getTasteTypeDtoList(dto.getLiquorId());
                                                 return tasteTypeDtos.stream()
                                                         .map(TasteTypeDto::getId)
                                                         .toList();
@@ -375,81 +371,237 @@ public class LiquorViewService {
                                             .flatMap(List::stream)
                                             .toList()
                             )
-                    );
+                    ));
 
-            // 데이터 조회
-            List<Long> resultLiquorPriKey = new ArrayList<>();
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList))) {
-                log.info("liquorAbvPriKeyList >> " + liquorAbvPriKeyList);
-                resultLiquorPriKey.addAll(
-                        liquorRepository.findByLiquorAbvPriKey(
-                                UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList)
-                        )
+            // 모든 해시맵 생성 작업이 완료될 때까지 기다림
+            CompletableFuture<Void> allHashmapsFuture = CompletableFuture.allOf(
+                    liquorAbvPriKeyListFuture,
+                    liquorDetailPriKeyListFuture,
+                    drinkingCapacityPriKeyFuture,
+                    liquorNamePriKeyListFuture,
+                    liquorSnackPriKeyListFuture,
+                    statePriKeyListFuture,
+                    tastePriKeyListFuture
+            );
+
+            allHashmapsFuture.join();
+            HashMap<Long, Integer> liquorAbvPriKeyList = liquorAbvPriKeyListFuture.join();
+            HashMap<Long, Integer> liquorDetailPriKeyList = liquorDetailPriKeyListFuture.join();
+            HashMap<Long, Integer> drinkingCapacityPriKey = drinkingCapacityPriKeyFuture.join();
+            HashMap<Long, Integer> liquorNamePriKeyList = liquorNamePriKeyListFuture.join();
+            HashMap<Long, Integer> liquorSnackPriKeyList = liquorSnackPriKeyListFuture.join();
+            HashMap<Long, Integer> statePriKeyList = statePriKeyListFuture.join();
+            HashMap<Long, Integer> tastePriKeyList = tastePriKeyListFuture.join();
+
+            // 비동기적으로 결과 조회
+            CompletableFuture<List<Long>> liquorKeysFuture = CompletableFuture.supplyAsync(() -> {
+                List<CompletableFuture<List<Long>>> resultLiquorKeysFutures = List.of(
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList)) ?
+                                liquorRepository.findByLiquorAbvPriKey(UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList)) ?
+                                liquorRepository.findByLiquorDetailPriKey(UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey)) ?
+                                liquorRepository.findByDrinkingCapacityPriKey(UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorNamePriKeyList)) ?
+                                liquorRepository.findByLiquorNamePriKey(UtilTool.selectKeysWithHighValues(liquorNamePriKeyList)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList)) ?
+                                snToLiRepository.findLiquorPriKeyByTagPriKey(UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(statePriKeyList)) ?
+                                stToLiRepository.findLiquorPriKeyByTagPriKey(UtilTool.selectKeysWithHighValues(statePriKeyList)) :
+                                Collections.emptyList()),
+                        CompletableFuture.supplyAsync(() ->
+                                UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(tastePriKeyList)) ?
+                                ttToLiRepository.findLiquorPriKeyByTagPriKey(UtilTool.selectKeysWithHighValues(tastePriKeyList)) :
+                                Collections.emptyList())
                 );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList))) {
-                log.info("liquorDetailPriKeyList >> " + liquorDetailPriKeyList);
-                resultLiquorPriKey.addAll(
-                        liquorRepository.findByLiquorDetailPriKey(
-                                UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList)
-                        )
+
+                CompletableFuture<Void> allResultsFuture = CompletableFuture.allOf(
+                        resultLiquorKeysFutures.toArray(new CompletableFuture[0])
                 );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey))) {
-                log.info("drinkingCapacityPriKey >> " + drinkingCapacityPriKey);
-                resultLiquorPriKey.addAll(
-                        liquorRepository.findByDrinkingCapacityPriKey(
-                                UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey)
-                        )
-                );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorNamePriKeyList))) {
-                log.info("liquorNamePriKeyList >> " + liquorNamePriKeyList);
-                resultLiquorPriKey.addAll(
-                        liquorRepository.findByLiquorNamePriKey(
-                                UtilTool.selectKeysWithHighValues(liquorNamePriKeyList)
-                        )
-                );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList))) {
-                log.info("liquorSnackPriKeyList >> " + liquorSnackPriKeyList);
-                resultLiquorPriKey.addAll(
-                        snToLiRepository.findLiquorPriKeyByTagPriKey(
-                                UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList)
-                        )
-                );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(statePriKeyList))) {
-                log.info("statePriKeyList >> " + statePriKeyList);
-                resultLiquorPriKey.addAll(
-                        stToLiRepository.findLiquorPriKeyByTagPriKey(
-                                UtilTool.selectKeysWithHighValues(statePriKeyList)
-                        )
-                );
-            }
-            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(tastePriKeyList))) {
-                log.info("tastePriKeyList >> " + tastePriKeyList);
-                resultLiquorPriKey.addAll(
-                        ttToLiRepository.findLiquorPriKeyByTagPriKey(
-                                UtilTool.selectKeysWithHighValues(tastePriKeyList)
-                        )
-                );
-            }
-            resultLiquorPriKey = UtilTool.removeDuplicates(resultLiquorPriKey);
-            log.info(resultLiquorPriKey.toString());
+
+                return allResultsFuture.thenApply(ignored ->
+                        resultLiquorKeysFutures.stream()
+                                .map(CompletableFuture::join)
+                                .flatMap(List::stream)
+                                .collect(Collectors.toList())
+                ).join();
+            });
+
+            List<Long> resultLiquorKeys = liquorKeysFuture.join();
+
+            // 결과 처리와 반환
             Page<LiquorDto> liquorDto = liquorRepository.findByLiquorPriKeyListAndSearchTag(
                     pageable,
-                    resultLiquorPriKey
+                    resultLiquorKeys
             );
-            List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
-            for (LiquorDto res: liquorDto.getContent()) {
-                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res, userPriKey));
-            }
-            return new PageImpl<>(
-                    liquorTotalRes,
-                    liquorDto.getPageable(),
-                    liquorDto.getTotalElements()
-            );
+
+            List<LiquorTotalRes> liquorTotalRes = liquorDto.getContent().stream()
+                    .map(res -> liquorDataService.getLiquorTotalData(res, userPriKey))
+                    .collect(Collectors.toList());
+
+            return new PageImpl<>(liquorTotalRes, pageable, liquorDto.getTotalElements());
+//            HashMap<Long, Integer> liquorAbvPriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            liquorPriKeyList
+//                                    .stream()
+//                                    .map(UserLiquorTagDto::getLiquorAbvPriKey)
+//                                    .filter(Objects::nonNull)
+//                                    .toList()
+//                    );
+//            HashMap<Long, Integer> liquorDetailPriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            liquorPriKeyList
+//                                    .stream()
+//                                    .map(UserLiquorTagDto::getLiquorDetailPriKey)
+//                                    .filter(Objects::nonNull)
+//                                    .toList()
+//                    );
+//            HashMap<Long, Integer> drinkingCapacityPriKey =
+//                    UtilTool.generateCountedHashMap(
+//                            liquorPriKeyList
+//                                    .stream()
+//                                    .map(UserLiquorTagDto::getDrinkingCapacityPriKey)
+//                                    .filter(Objects::nonNull)
+//                                    .toList()
+//                    );
+//            HashMap<Long, Integer> liquorNamePriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            liquorPriKeyList
+//                                    .stream()
+//                                    .map(UserLiquorTagDto::getLiquorNamePriKey)
+//                                    .filter(Objects::nonNull)
+//                                    .toList()
+//                    );
+//            HashMap<Long, Integer> liquorSnackPriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            UtilTool.removeDuplicates(
+//                                    liquorPriKeyList
+//                                            .stream()
+//                                            .map(dto -> {
+//                                                List<LiquorSnackDto> liquorSnackDtos = liquorDataService.getLiquorSnackDtoList(dto.getLiquorId());
+//                                                return liquorSnackDtos.stream()
+//                                                        .map(LiquorSnackDto::getId)
+//                                                        .toList();
+//                                            })
+//                                            .flatMap(List::stream)
+//                                            .toList()
+//                            )
+//                    );
+//            HashMap<Long, Integer> statePriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            UtilTool.removeDuplicates(
+//                                    liquorPriKeyList
+//                                            .stream()
+//                                            .map(dto -> {
+//                                                List<StateTypeDto> stateTypeDtos = liquorDataService.getStateTypeDtoList(dto.getLiquorId());
+//                                                return stateTypeDtos.stream()
+//                                                        .map(StateTypeDto::getId)
+//                                                        .toList();
+//                                            })
+//                                            .flatMap(List::stream)
+//                                            .toList()
+//                            )
+//                    );
+//            HashMap<Long, Integer> tastePriKeyList =
+//                    UtilTool.generateCountedHashMap(
+//                            UtilTool.removeDuplicates(
+//                                    liquorPriKeyList
+//                                            .stream()
+//                                            .map(dto -> {
+//                                                List<TasteTypeDto> tasteTypeDtos = liquorDataService.getTasteTypeDtoList(dto.getLiquorId());
+//                                                return tasteTypeDtos.stream()
+//                                                        .map(TasteTypeDto::getId)
+//                                                        .toList();
+//                                            })
+//                                            .flatMap(List::stream)
+//                                            .toList()
+//                            )
+//                    );
+//
+//            // 데이터 조회
+//            List<Long> resultLiquorPriKey = new ArrayList<>();
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList))) {
+//                log.info("liquorAbvPriKeyList >> " + liquorAbvPriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        liquorRepository.findByLiquorAbvPriKey(
+//                                UtilTool.selectKeysWithHighValues(liquorAbvPriKeyList)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList))) {
+//                log.info("liquorDetailPriKeyList >> " + liquorDetailPriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        liquorRepository.findByLiquorDetailPriKey(
+//                                UtilTool.selectKeysWithHighValues(liquorDetailPriKeyList)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey))) {
+//                log.info("drinkingCapacityPriKey >> " + drinkingCapacityPriKey);
+//                resultLiquorPriKey.addAll(
+//                        liquorRepository.findByDrinkingCapacityPriKey(
+//                                UtilTool.selectKeysWithHighValues(drinkingCapacityPriKey)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorNamePriKeyList))) {
+//                log.info("liquorNamePriKeyList >> " + liquorNamePriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        liquorRepository.findByLiquorNamePriKey(
+//                                UtilTool.selectKeysWithHighValues(liquorNamePriKeyList)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList))) {
+//                log.info("liquorSnackPriKeyList >> " + liquorSnackPriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        snToLiRepository.findLiquorPriKeyByTagPriKey(
+//                                UtilTool.selectKeysWithHighValues(liquorSnackPriKeyList)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(statePriKeyList))) {
+//                log.info("statePriKeyList >> " + statePriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        stToLiRepository.findLiquorPriKeyByTagPriKey(
+//                                UtilTool.selectKeysWithHighValues(statePriKeyList)
+//                        )
+//                );
+//            }
+//            if (UtilTool.checkLongList(UtilTool.selectKeysWithHighValues(tastePriKeyList))) {
+//                log.info("tastePriKeyList >> " + tastePriKeyList);
+//                resultLiquorPriKey.addAll(
+//                        ttToLiRepository.findLiquorPriKeyByTagPriKey(
+//                                UtilTool.selectKeysWithHighValues(tastePriKeyList)
+//                        )
+//                );
+//            }
+//            resultLiquorPriKey = UtilTool.removeDuplicates(resultLiquorPriKey);
+//            log.info(resultLiquorPriKey.toString());
+//            Page<LiquorDto> liquorDto = liquorRepository.findByLiquorPriKeyListAndSearchTag(
+//                    pageable,
+//                    resultLiquorPriKey
+//            );
+//            List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
+//            for (LiquorDto res: liquorDto.getContent()) {
+//                liquorTotalRes.add(liquorDataService.getLiquorTotalData(res, userPriKey));
+//            }
+//            return new PageImpl<>(
+//                    liquorTotalRes,
+//                    liquorDto.getPageable(),
+//                    liquorDto.getTotalElements()
+//            );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
