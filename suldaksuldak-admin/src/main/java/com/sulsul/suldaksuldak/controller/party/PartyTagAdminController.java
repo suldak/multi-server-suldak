@@ -34,8 +34,8 @@ public class PartyTagAdminController {
     }
 
     @ApiOperation(
-            value = "모임 태그 생성 및 수정",
-            notes = "모임 태그를 생성하거나 수정합니다."
+            value = "모임 태그 삭제",
+            notes = "모임 태그를 삭제합니다."
     )
     @DeleteMapping("/{priKey:[0-9]+}")
     public ApiDataResponse<Boolean> deletePartyTag(

@@ -30,7 +30,7 @@ public class ConsentViewController {
             notes = "동의 항목 타입과 순서에 맞게 정보 조회"
     )
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "itemType", value = "동의 항목 종류", required = true, dataTypeClass = ConsentItemType.class),
+            @ApiImplicitParam(name = "itemType", value = "동의 항목 종류", required = true, dataTypeClass = String.class),
             @ApiImplicitParam(name = "itemSeq", value = "동의 항목 순서", dataTypeClass = Integer.class)
     })
     @GetMapping(value = "/consent")
