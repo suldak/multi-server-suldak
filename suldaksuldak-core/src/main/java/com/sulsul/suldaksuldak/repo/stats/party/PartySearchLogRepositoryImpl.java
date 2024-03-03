@@ -8,6 +8,8 @@ import static com.sulsul.suldaksuldak.domain.stats.QPartySearchLog.partySearchLo
 import static com.sulsul.suldaksuldak.domain.user.QUser.user;
 
 import static com.sulsul.suldaksuldak.domain.party.QParty.party;
+
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.dto.stats.party.PartySearchLogDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -51,6 +53,11 @@ public class PartySearchLogRepositoryImpl
                 .on(partySearchLog.user.id.eq(user.id))
                 .innerJoin(partySearchLog.party, party)
                 .on(partySearchLog.party.id.eq(party.id))
+                .where(
+                        partySearchLog.party.partyStateType.eq(
+                                PartyStateType.RECRUITING
+                        )
+                )
                 .groupBy(partySearchLog.party.id)
                 .limit(limitNum)
                 .orderBy(partySearchLog.party.id.count().desc())

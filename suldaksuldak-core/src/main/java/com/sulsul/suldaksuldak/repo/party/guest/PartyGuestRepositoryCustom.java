@@ -29,4 +29,8 @@ public interface PartyGuestRepositoryCustom {
             Long userPriKey,
             Long partyPriKey
     );
+
+    List<Long> findPartyPriKeyByTopGuestCount(
+            Integer limitNum
+    );
 }

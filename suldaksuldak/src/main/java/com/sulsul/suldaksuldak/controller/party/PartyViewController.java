@@ -232,6 +232,58 @@ public class PartyViewController {
         );
     }
 
+    @GetMapping("/popular-list")
+    @ApiOperation(
+            value = "현재 인기있는 모임 조회",
+            notes = """
+                    \n옵션
+                    \n1. 참여자가 많은 순으로 모임 조회 (GUEST)
+                    \n2. 조회(클릭)이 많은 순으로 모임 조회 (CLICK) (한번도 클릭되지 않은 모임은 조회되지 않음)
+                    """
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "limitNum", value = "검색할 모임의 개수", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "searchOption", value = "검색할 옵션 (GUEST / CLICK)", dataTypeClass = String.class)
+    })
+    public ApiDataResponse<List<PartyTotalRes>> getPopularPartyList(
+            String searchOption,
+            Integer limitNum
+    ) {
+        if (searchOption == null || (!searchOption.equals("GUEST") && !searchOption.equals("CLICK")))
+            throw new GeneralException(
+                    ErrorCode.BAD_REQUEST,
+                    "옵션이 유효하지 않습니다."
+            );
+
+        List<PartyDto> partyDtos;
+        if (searchOption.equals("GUEST")) {
+            partyDtos = partyViewService.getTopGuestPartyList(limitNum == null ? 10 : limitNum);
+        } else {
+            partyDtos = partyViewService.getTopClickPartyList(limitNum == null ? 10 : limitNum);
+        }
+        return ApiDataResponse.of(
+                partyDtos
+                        .stream()
+                        .map(dto ->
+                                PartyTotalRes.from(
+                                        dto,
+                                        partyViewService.getPartyGuestList(
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        dto.getId(),
+                                                        List.of(GuestType.CONFIRM)
+                                                )
+                                                .stream()
+                                                .map(PartyGuestRes::from)
+                                                .toList()
+                                )
+                        )
+                        .toList()
+        );
+    }
+
     private List<Long> splitPartyTagList(String partyTagPriKey) {
         List<Long> partyTagPriList = new ArrayList<>();
         if (partyTagPriKey != null && !partyTagPriKey.isBlank()) {

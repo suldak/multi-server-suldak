@@ -13,6 +13,7 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
+import com.sulsul.suldaksuldak.repo.stats.party.PartySearchLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class PartyViewService {
     private final ReportPartyRepository reportPartyRepository;
     private final PartyRepository partyRepository;
     private final PartyGuestRepository partyGuestRepository;
+    private final PartySearchLogRepository partySearchLogRepository;
 
     /**
      * 모임 목록 조회
@@ -180,6 +184,70 @@ public class PartyViewService {
                         ErrorMessage.NOT_FOUND_USER_PRI_KEY
                 );
             return partyRepository.findByHostPriKey(userPriKey, sortBool);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 참여자가 많은 순으로 모임 조회
+     */
+    public List<PartyDto> getTopGuestPartyList(
+            Integer limitNum
+    ) {
+        try {
+            List<PartyDto> partyDtos = new ArrayList<>();
+            List<Long> partyPriKeyList =
+                    partyGuestRepository.findPartyPriKeyByTopGuestCount(
+                            limitNum
+                    );
+            for (Long partyPriKey: partyPriKeyList) {
+                Optional<PartyDto> dto =
+                        partyRepository.findByPriKey(
+                                partyPriKey
+                        );
+                dto.ifPresent(partyDtos::add);
+            }
+            return partyDtos;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 조회가 많은 순으로 모임 조회
+     */
+    public List<PartyDto> getTopClickPartyList(
+            Integer limitNum
+    ) {
+        try {
+            List<PartyDto> partyDtos = new ArrayList<>();
+            List<Long> partyPriKeyList =
+                    partySearchLogRepository.findPartyPriKeyByTopSearch(limitNum);
+            for (Long partyPriKey: partyPriKeyList) {
+                Optional<PartyDto> dto =
+                        partyRepository.findByPriKey(
+                                partyPriKey
+                        );
+                dto.ifPresent(partyDtos::add);
+            }
+            return partyDtos;
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

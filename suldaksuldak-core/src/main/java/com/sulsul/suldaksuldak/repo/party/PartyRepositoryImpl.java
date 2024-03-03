@@ -103,8 +103,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
 
     @Override
     public List<PartyDto> findByPriKeyList(
-            List<Long> priKeyList,
-            Boolean sortBool
+            List<Long> priKeyList
     ) {
         return getPartyDtoQuery()
                 .from(party)
@@ -114,11 +113,7 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
                 .where(
                         party.id.in(priKeyList)
                 )
-                .orderBy(
-                        (sortBool == null || sortBool) ?
-                                party.createdAt.desc() :
-                                party.createdAt.asc()
-                )
+                .orderBy(party.createdAt.asc())
                 .fetch();
     }
 

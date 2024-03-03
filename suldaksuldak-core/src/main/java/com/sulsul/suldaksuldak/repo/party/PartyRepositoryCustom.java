@@ -26,8 +26,7 @@ public interface PartyRepositoryCustom {
     );
 
     List<PartyDto> findByPriKeyList(
-            List<Long> priKeyList,
-            Boolean sortBool
+            List<Long> priKeyList
     );
 
     List<PartyDto> findByPriKeyAndGuestPriKey(

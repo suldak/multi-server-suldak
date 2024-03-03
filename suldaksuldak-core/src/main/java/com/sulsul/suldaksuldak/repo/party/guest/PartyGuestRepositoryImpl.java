@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.domain.file.QFileBase;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
@@ -91,6 +92,29 @@ public class PartyGuestRepositoryImpl
                         .leftJoin(partyGuest.user.fileBase, QFileBase.fileBase)
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public List<Long> findPartyPriKeyByTopGuestCount(
+            Integer limitNum
+    ) {
+        return jpaQueryFactory
+                .select(partyGuest.party.id)
+                .from(partyGuest)
+                .innerJoin(partyGuest.party, party)
+                .on(partyGuest.party.id.eq(party.id))
+                .where(
+                        partyGuest.party.partyStateType.eq(
+                                PartyStateType.RECRUITING
+                        )
+                )
+                .groupBy(partyGuest.party.id)
+                .orderBy(
+                        partyGuest.party.id.count().desc(),
+                        partyGuest.party.createdAt.desc()
+                )
+                .limit(limitNum)
+                .fetch();
     }
 
     private JPAQuery<PartyGuestDto> getPartyGuestDtoQuery() {

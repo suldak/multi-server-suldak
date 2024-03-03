@@ -410,22 +410,4 @@ public class StatsService {
             return false;
         }
     }
-
-    public List<Long> getTopPartyPriKey(
-            Integer limitNum
-    ) {
-        try {
-            return partySearchLogRepository.findPartyPriKeyByTopSearch(limitNum);
-        } catch (GeneralException e) {
-            throw new GeneralException(
-                    e.getErrorCode(),
-                    e.getMessage()
-            );
-        } catch (Exception e) {
-            throw new GeneralException(
-                    ErrorCode.DATA_ACCESS_ERROR,
-                    e.getMessage()
-            );
-        }
-    }
 }
