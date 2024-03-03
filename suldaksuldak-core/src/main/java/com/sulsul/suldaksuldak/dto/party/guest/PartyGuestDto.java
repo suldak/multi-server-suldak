@@ -14,9 +14,11 @@ public class PartyGuestDto {
     Long hostPriKey;
     String hostNickname;
     String hostFileNm;
+    Double hostLevel;
     Long guestPriKey;
     String guestNickname;
     String guestFileNm;
+    Double guestLevel;
     GuestType confirmState;
 
     public PartyGuestDto(
@@ -27,6 +29,7 @@ public class PartyGuestDto {
             Long guestPriKey,
             String guestNickname,
             String guestFileNm,
+            Double guestLevel,
             GuestType confirmState
     ) {
         this.id = id;
@@ -35,9 +38,11 @@ public class PartyGuestDto {
         this.hostPriKey = user.getId();
         this.hostNickname = user.getNickname();
         this.hostFileNm = user.getFileBase() == null ? null : user.getFileBase().getFileNm();
+        this.hostLevel = user.getLevel();
         this.guestPriKey = guestPriKey;
         this.guestNickname = guestNickname;
         this.guestFileNm = guestFileNm;
+        this.guestLevel = guestLevel;
         this.confirmState = confirmState;
     }
 }

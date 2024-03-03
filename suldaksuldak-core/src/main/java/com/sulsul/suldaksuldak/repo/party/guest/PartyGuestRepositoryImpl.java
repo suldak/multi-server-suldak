@@ -160,6 +160,7 @@ public class PartyGuestRepositoryImpl
                                 partyGuest.user.id,
                                 partyGuest.user.nickname,
                                 partyGuest.user.fileBase.fileNm,
+                                partyGuest.user.level,
                                 partyGuest.confirm
                         )
                 );

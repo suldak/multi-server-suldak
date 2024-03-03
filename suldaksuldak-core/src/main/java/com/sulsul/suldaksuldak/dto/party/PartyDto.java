@@ -30,6 +30,7 @@ public class PartyDto {
     Long hostUserPriKey;
     String hostUserName;
     String hostFileName;
+    Double hostLevel;
     String fileBaseNm;
     Long tagPriKey;
     String tagName;
@@ -54,6 +55,7 @@ public class PartyDto {
             Long hostUserPriKey,
             String hostUserName,
             String hostFileName,
+            Double hostLevel,
             String fileBaseNm,
             Long tagPriKey,
             String tagName,
@@ -77,6 +79,7 @@ public class PartyDto {
         this.hostUserPriKey = hostUserPriKey;
         this.hostUserName = hostUserName;
         this.hostFileName = hostFileName;
+        this.hostLevel = hostLevel;
         this.fileBaseNm = fileBaseNm;
         this.tagPriKey = tagPriKey;
         this.tagName = tagName;
@@ -102,6 +105,7 @@ public class PartyDto {
             Long hostUserPriKey,
             String hostUserName,
             String hostFileName,
+            Double hostLevel,
             String fileBaseNm,
             Long tagPriKey,
             String tagName,
@@ -124,6 +128,7 @@ public class PartyDto {
         this.hostUserPriKey = hostUserPriKey;
         this.hostUserName = hostUserName;
         this.hostFileName = hostFileName;
+        this.hostLevel = hostLevel;
         this.fileBaseNm = fileBaseNm;
         this.tagPriKey = tagPriKey;
         this.tagName = tagName;
@@ -162,6 +167,7 @@ public class PartyDto {
                 onlineUrl,
                 partyStateType,
                 hostUserPriKey,
+                null,
                 null,
                 null,
                 null,

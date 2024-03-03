@@ -41,6 +41,8 @@ public class PartyRes {
     String hostUserName;
     @ApiModelProperty(value = "주최자 사진")
     String hostUserPicture;
+    @ApiModelProperty(value = "주최자 레벨")
+    Double hostLevel;
     @ApiModelProperty(value = "모임 사진 URL")
     String pictureUrl;
     @ApiModelProperty(value = "모임 태그 기본키")
@@ -78,6 +80,7 @@ public class PartyRes {
                 partyDto.getHostFileName() == null ||
                         partyDto.getHostFileName().isBlank() ?
                         null : FileUrl.FILE_DOWN_URL.getUrl() + partyDto.getHostFileName(),
+                partyDto.getHostLevel(),
                 partyDto.getFileBaseNm() == null ||
                         partyDto.getFileBaseNm().isBlank() ?
                         null : FileUrl.FILE_DOWN_URL.getUrl() + partyDto.getFileBaseNm(),

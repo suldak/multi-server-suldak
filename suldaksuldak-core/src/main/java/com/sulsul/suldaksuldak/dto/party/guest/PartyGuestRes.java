@@ -21,12 +21,16 @@ public class PartyGuestRes {
     String hostNickname;
     @ApiModelProperty(value = "호스트 사진 URL")
     String hostFileNm;
+    @ApiModelProperty(value = "주최자 레벨")
+    Double hostLevel;
     @ApiModelProperty(value = "참가원 기본키")
     Long guestPriKey;
     @ApiModelProperty(value = "참가원 닉네임")
     String guestNickname;
     @ApiModelProperty(value = "유저 사진 URL")
     String guestFileNm;
+    @ApiModelProperty(value = "참석자 레벨")
+    Double guestLevel;
     @ApiModelProperty(value = "확정 여부")
     GuestType confirmState;
 
@@ -41,10 +45,12 @@ public class PartyGuestRes {
                 partyGuestDto.getHostNickname(),
                 partyGuestDto.getHostFileNm() == null ? null :
                         FileUrl.FILE_DOWN_URL.getUrl() + partyGuestDto.getHostFileNm(),
+                partyGuestDto.getHostLevel(),
                 partyGuestDto.getGuestPriKey(),
                 partyGuestDto.getGuestNickname(),
                 partyGuestDto.getGuestFileNm() == null ? null :
                         FileUrl.FILE_DOWN_URL.getUrl() + partyGuestDto.getGuestFileNm(),
+                partyGuestDto.getGuestLevel(),
                 partyGuestDto.getConfirmState()
         );
     }
