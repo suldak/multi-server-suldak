@@ -98,8 +98,8 @@ public class PartyHostController {
 
     @PutMapping("/meeting-cancle/{partyPriKey:[0-9]+}")
     @ApiOperation(
-            value = "모임 취소 설정",
-            notes = "해당 모임을 취소합니다."
+            value = "모임 취소 (삭제) 설정",
+            notes = "해당 모임을 취소(삭제) 합니다."
     )
     @ApiImplicitParams({
             @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class)

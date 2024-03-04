@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.service.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
+import com.sulsul.suldaksuldak.constant.party.PartyRoleType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
@@ -150,6 +151,11 @@ public class PartyHostService {
                     checkPriKeyService.checkAndGetPartyCancelReason(
                             partyCancelDto.getPartyCancelReasonPriKey()
                     );
+            if (!partyCancelReason.getPartyRoleType().equals(PartyRoleType.HOST))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "호스트 모임 취소 이유로 시도해 주세요."
+                );
 //            party.setPartyStateType(partyStateType);
             partyCommonService.modifiedPartyState(party, partyStateType);
             partyCancelRepository.save(

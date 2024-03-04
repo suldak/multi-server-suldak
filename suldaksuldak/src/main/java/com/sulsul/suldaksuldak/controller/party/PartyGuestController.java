@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.party;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.party.cancel.PartyCancelReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyGuestService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -11,10 +12,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -64,6 +62,7 @@ public class PartyGuestController {
     })
     public ApiDataResponse<Boolean> cancelPartyGuest(
             HttpServletRequest request,
+            @RequestBody PartyCancelReq partyCancelReq,
             @PathVariable String priKey
     ) {
         Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
@@ -75,7 +74,11 @@ public class PartyGuestController {
         return ApiDataResponse.of(
                 partyGuestService.partyCancel(
                         requestUserPriKey,
-                        priKey
+                        priKey,
+                        partyCancelReq.toDto(
+                                null,
+                                requestUserPriKey
+                        )
                 )
         );
     }
