@@ -5,7 +5,10 @@ import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.domain.party.PartyGuest;
+import com.sulsul.suldaksuldak.domain.party.cancel.PartyCancelReason;
+import com.sulsul.suldaksuldak.dto.party.cancel.PartyCancelDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
+import com.sulsul.suldaksuldak.repo.party.cancel.PartyCancelRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.PartyCommonService;
@@ -21,6 +24,7 @@ public class PartyHostService {
     private final PartyService partyService;
     private final PartyGuestRepository partyGuestRepository;
     private final PartyCommonService partyCommonService;
+    private final PartyCancelRepository partyCancelRepository;
 
     /**
      * 관계 기본기
@@ -83,16 +87,17 @@ public class PartyHostService {
         }
     }
 
-    /**
-     * 모임의 상태를 수정합니다.
-     */
-    public Boolean modifiedPartyState(
+    public Boolean modifiedRecruitmentEndParty(
             Long partyPriKey,
-            Long hostPriKey,
-            PartyStateType partyStateType
+            Long hostPriKey
     ) {
         try {
             Party party = partyService.checkParty(partyPriKey, false);
+            if (!party.getUser().getId().equals(hostPriKey))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "호스트만 모임의 상태를 수정할 수 있습니다."
+                );
             if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -103,19 +108,57 @@ public class PartyHostService {
                         ErrorCode.BAD_REQUEST,
                         "승인된 인원이 최소 3명 부터 모집을 종료할 수 있습니다."
                 );
+            return partyCommonService.partyTotalHandler(
+                    party
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.DATA_ACCESS_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 모임의 상태를 수정합니다.
+     */
+    public Boolean modifiedCancelParty(
+            Long partyPriKey,
+            Long hostPriKey,
+            PartyStateType partyStateType,
+            PartyCancelDto partyCancelDto
+    ) {
+        try {
+            Party party = partyService.checkParty(partyPriKey, false);
+            if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모집이 종료된 모임은 수정할 수 없습니다."
+                );
             if (!party.getUser().getId().equals(hostPriKey))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
                         "호스트만 모임의 상태를 수정할 수 있습니다."
                 );
 
-            if (
-                    partyStateType.equals(PartyStateType.MEETING_CANCEL) ||
-                    partyStateType.equals(PartyStateType.MEETING_DELETE)
-            ) {
-                party.setPartyStateType(partyStateType);
-                partyCommonService.modifiedPartyState(party, partyStateType);
-            }
+            PartyCancelReason partyCancelReason =
+                    checkPriKeyService.checkAndGetPartyCancelReason(
+                            partyCancelDto.getPartyCancelReasonPriKey()
+                    );
+//            party.setPartyStateType(partyStateType);
+            partyCommonService.modifiedPartyState(party, partyStateType);
+            partyCancelRepository.save(
+                    partyCancelDto.toEntity(
+                            partyCancelReason,
+                            party,
+                            party.getUser()
+                    )
+            );
             return partyCommonService.partyTotalHandler(
                     party
             );

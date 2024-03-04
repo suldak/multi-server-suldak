@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
+import com.sulsul.suldaksuldak.dto.party.cancel.PartyCancelReq;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.party.PartyHostService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
@@ -82,10 +83,9 @@ public class PartyHostController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
-        partyHostService.modifiedPartyState(
+        partyHostService.modifiedRecruitmentEndParty(
                 partyPriKey,
-                requestUserPriKey,
-                PartyStateType.RECRUITMENT_END
+                requestUserPriKey
         );
         return ApiDataResponse.of(
                 toBatchServer.partyBatchApiToBatchServer(
@@ -106,6 +106,7 @@ public class PartyHostController {
     })
     public ApiDataResponse<Boolean> setPartyMeetingCancel(
             @PathVariable Long partyPriKey,
+            @RequestBody PartyCancelReq partyCancelReq,
             HttpServletRequest request
     ) {
         Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
@@ -114,10 +115,14 @@ public class PartyHostController {
                     ErrorCode.BAD_REQUEST,
                     "유저 정보가 없습니다."
             );
-        partyHostService.modifiedPartyState(
+        partyHostService.modifiedCancelParty(
                 partyPriKey,
                 requestUserPriKey,
-                PartyStateType.MEETING_CANCEL
+                PartyStateType.MEETING_CANCEL,
+                partyCancelReq.toDto(
+                        partyPriKey,
+                        requestUserPriKey
+                )
         );
         return ApiDataResponse.of(
                 toBatchServer.partyBatchApiToBatchServer(
@@ -127,34 +132,34 @@ public class PartyHostController {
         );
     }
 
-    @PutMapping("/meeting-delete/{partyPriKey:[0-9]+}")
-    @ApiOperation(
-            value = "모임 삭제 처리",
-            notes = "해당 모임을 삭제합니다."
-    )
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class)
-    })
-    public ApiDataResponse<Boolean> setPartyMeetingDelete(
-            @PathVariable Long partyPriKey,
-            HttpServletRequest request
-    ) {
-        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
-        if (requestUserPriKey == null)
-            throw new GeneralException(
-                    ErrorCode.BAD_REQUEST,
-                    "유저 정보가 없습니다."
-            );
-        partyHostService.modifiedPartyState(
-                partyPriKey,
-                requestUserPriKey,
-                PartyStateType.MEETING_DELETE
-        );
-        return ApiDataResponse.of(
-                toBatchServer.partyBatchApiToBatchServer(
-                        partyPriKey,
-                        HttpMethod.DELETE
-                )
-        );
-    }
+//    @PutMapping("/meeting-delete/{partyPriKey:[0-9]+}")
+//    @ApiOperation(
+//            value = "모임 삭제 처리",
+//            notes = "해당 모임을 삭제합니다."
+//    )
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "partyPriKey", value = "모임 기본키", dataTypeClass = Long.class)
+//    })
+//    public ApiDataResponse<Boolean> setPartyMeetingDelete(
+//            @PathVariable Long partyPriKey,
+//            HttpServletRequest request
+//    ) {
+//        Long requestUserPriKey = UtilTool.getUserPriKeyFromHeader(request);
+//        if (requestUserPriKey == null)
+//            throw new GeneralException(
+//                    ErrorCode.BAD_REQUEST,
+//                    "유저 정보가 없습니다."
+//            );
+//        partyHostService.modifiedPartyState(
+//                partyPriKey,
+//                requestUserPriKey,
+//                PartyStateType.MEETING_DELETE
+//        );
+//        return ApiDataResponse.of(
+//                toBatchServer.partyBatchApiToBatchServer(
+//                        partyPriKey,
+//                        HttpMethod.DELETE
+//                )
+//        );
+//    }
 }
