@@ -156,7 +156,7 @@ public class PartyViewController {
                                 partyType,
                                 splitPartyTagList(partyTagPriKey),
                                 userPriKey,
-                                List.of(confirm),
+                                confirm == null ? null : List.of(confirm),
                                 sortBool
                         )
                         .stream()
