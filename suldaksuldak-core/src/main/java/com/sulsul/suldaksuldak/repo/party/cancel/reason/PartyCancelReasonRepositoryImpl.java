@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.party.cancel;
+package com.sulsul.suldaksuldak.repo.party.cancel.reason;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;

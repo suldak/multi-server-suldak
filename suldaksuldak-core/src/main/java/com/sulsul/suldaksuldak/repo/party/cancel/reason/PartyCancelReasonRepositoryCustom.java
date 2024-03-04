@@ -1,4 +1,4 @@
-package com.sulsul.suldaksuldak.repo.party.cancel;
+package com.sulsul.suldaksuldak.repo.party.cancel.reason;
 
 import com.sulsul.suldaksuldak.constant.party.PartyRoleType;
 import com.sulsul.suldaksuldak.dto.party.cancel.PartyCancelReasonDto;
