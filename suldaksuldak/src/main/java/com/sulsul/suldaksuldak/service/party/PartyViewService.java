@@ -15,7 +15,6 @@ import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.repo.report.party.ReportPartyRepository;
 import com.sulsul.suldaksuldak.repo.stats.party.PartySearchLogRepository;
 import com.sulsul.suldaksuldak.tool.UtilTool;
-import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

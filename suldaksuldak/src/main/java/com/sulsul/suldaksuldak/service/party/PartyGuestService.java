@@ -109,13 +109,21 @@ public class PartyGuestService {
                         ErrorCode.BAD_REQUEST,
                         "이미 모집이 종료된 모임입니다."
                 );
+            if (partyGuest.getConfirm().equals(GuestType.CANCEL))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "이미 취소한 모임입니다."
+                );
             if (
-                    partyGuest.getConfirm().equals(GuestType.COMPLETE) ||
-                            partyGuest.getConfirm().equals(GuestType.COMPLETE_WAIT)
+                    !partyGuest.getConfirm().equals(GuestType.CONFIRM) &&
+                            !partyGuest.getConfirm().equals(GuestType.WAIT)
+//                    partyGuest.getConfirm().equals(GuestType.COMPLETE) ||
+//                            partyGuest.getConfirm().equals(GuestType.COMPLETE_WAIT)
             )
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
-                        "이미 종료된 모임 입니다."
+//                        "이미 종료된 모임 입니다."
+                        "승인이나 대기 상태에서만 모임을 취소할 수 있습니다."
                 );
             partyGuest.setConfirm(GuestType.CANCEL);
             partyGuestRepository.save(partyGuest);

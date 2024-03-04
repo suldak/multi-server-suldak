@@ -17,4 +17,16 @@ public class PartyCancelReq {
     Long partyCancelReasonPriKey;
     @ApiModelProperty(value = "모임 취소 상세 이유")
     String detailReason;
+
+    public PartyCancelDto toDto(
+            Long partyPriKey,
+            Long userPriKey
+    ) {
+        return PartyCancelDto.of(
+                partyCancelReasonPriKey,
+                detailReason,
+                partyPriKey,
+                userPriKey
+        );
+    }
 }
