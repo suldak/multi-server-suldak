@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @Entity(name = "liquorSearchLog")
 public class LiquorSearchLog {
     @Id
+    @Column(columnDefinition = "VARCHAR(255)")
     private String id;
 
     @ManyToOne(optional = false)

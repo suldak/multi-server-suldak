@@ -22,7 +22,7 @@ public class PartyTag {
     private Long id;
 
     @Setter
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 50, columnDefinition = "VARCHAR(50)")
     private String name;
 
     @ToString.Exclude

@@ -21,9 +21,10 @@ import java.time.LocalDateTime;
 @Entity(name = "searchText")
 public class SearchText {
     @Id
+    @Column(columnDefinition = "VARCHAR(255)")
     private String id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(100)")
     private String content;
 
     @ManyToOne(optional = false)

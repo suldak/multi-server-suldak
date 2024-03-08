@@ -34,7 +34,7 @@ public class Party extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String name;
 
     @Setter
@@ -46,7 +46,7 @@ public class Party extends BaseEntity {
     private Integer personnel;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String introStr;
 
     @Column(nullable = false)
@@ -54,19 +54,19 @@ public class Party extends BaseEntity {
     private PartyType partyType;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String partyPlace;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String contactType;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "VARCHAR(100)")
     private String useProgram;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "VARCHAR(255")
     private String onlineUrl;
 
     @Setter

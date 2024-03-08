@@ -39,24 +39,24 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(255)")
     private String userEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String userPw;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "VARCHAR(100)")
     @Setter
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(2)")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Column(nullable = false)
     private Integer birthdayYear;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(15)")
     @Enumerated(EnumType.STRING)
     private Registration registration;
 
@@ -72,7 +72,7 @@ public class User extends BaseEntity {
     @Setter
     private Boolean isActive;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @Setter
     private String selfIntroduction;
 

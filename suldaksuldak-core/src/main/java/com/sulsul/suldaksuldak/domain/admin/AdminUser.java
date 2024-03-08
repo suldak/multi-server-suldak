@@ -21,14 +21,14 @@ public class AdminUser extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String adminId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String adminPw;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String adminNm;
 
     protected AdminUser() {}

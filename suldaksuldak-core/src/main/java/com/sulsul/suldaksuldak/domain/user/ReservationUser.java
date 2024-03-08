@@ -19,7 +19,7 @@ public class ReservationUser extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     private String userEmail;
 
     protected ReservationUser () {}

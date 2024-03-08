@@ -28,7 +28,7 @@ public class ConsentItem {
     @Setter
     private Integer itemSeq;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     @Setter
     private String itemText;
 

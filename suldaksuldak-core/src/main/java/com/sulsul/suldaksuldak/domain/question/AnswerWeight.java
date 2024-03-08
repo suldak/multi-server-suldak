@@ -20,15 +20,15 @@ public class AnswerWeight {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private TagType tagType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long tagId;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DOUBLE")
     private Double weight;
 
     @ManyToOne(optional = false)

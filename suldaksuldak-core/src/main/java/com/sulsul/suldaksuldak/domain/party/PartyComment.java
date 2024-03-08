@@ -22,7 +22,7 @@ import java.util.Set;
 @Entity(name = "partyComment")
 public class PartyComment extends BaseEntity {
     @Id
-    @Column(columnDefinition = "VARCHAR(100)")
+    @Column(columnDefinition = "VARCHAR(255)")
     private String id;
 
     @Setter

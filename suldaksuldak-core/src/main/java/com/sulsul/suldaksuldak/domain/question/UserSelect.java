@@ -16,6 +16,7 @@ import javax.persistence.*;
 @Entity(name = "userSelect")
 public class UserSelect {
     @Id
+    @Column(columnDefinition = "VARCHAR(100)")
     private String id;
 
     @ManyToOne(optional = false)

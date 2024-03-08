@@ -33,27 +33,27 @@ public class Liquor extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, columnDefinition = "VARCHAR(50)")
     private String name;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String summaryExplanation;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String detailExplanation;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String searchTag;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String liquorRecipe;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DOUBLE")
     private Double detailAbv;
 
     @Setter

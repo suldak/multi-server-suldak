@@ -23,11 +23,11 @@ public class DrinkingCapacity implements TagEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, unique = true, length = 10, columnDefinition = "VARCHAR(10)")
     private String name;
 
     @Setter
-    @Column
+    @Column(columnDefinition = "VARCHAR(10)")
     private String color;
 
     @ToString.Exclude

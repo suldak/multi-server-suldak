@@ -29,7 +29,7 @@ public class UserLiquor {
     private Liquor liquor;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DOUBLE")
     private Double searchCnt;
 
     @Setter

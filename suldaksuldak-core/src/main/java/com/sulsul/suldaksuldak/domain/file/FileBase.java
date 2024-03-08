@@ -23,13 +23,13 @@ public class FileBase extends BaseEntity {
     @Id
     private String fileNm;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String fileLocation;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String oriFileNm;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String fileExt;
 
     @ToString.Exclude

@@ -26,7 +26,7 @@ public class LiquorMaterial implements TagEntity {
     private Long id;
 
     @Setter
-    @Column(nullable = false, unique = true, length = 10)
+    @Column(nullable = false, unique = true, length = 10, columnDefinition = "VARCHAR(50)")
     private String name;
 
     @ToString.Exclude

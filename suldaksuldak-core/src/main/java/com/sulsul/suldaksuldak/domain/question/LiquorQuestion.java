@@ -28,7 +28,7 @@ public class LiquorQuestion {
     private Integer qIndex;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String qText;
 
     @ToString.Exclude
