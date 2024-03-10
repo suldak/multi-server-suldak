@@ -49,7 +49,7 @@ public class Party extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String introStr;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(10)")
     @Enumerated(EnumType.STRING)
     private PartyType partyType;
 

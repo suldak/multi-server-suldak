@@ -23,6 +23,7 @@ public class ReportParty extends BaseEntity {
     private Long id;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "report_reason_id")
     private ReportPartyReason reportReason;
 
     @ManyToOne(optional = false)

@@ -43,8 +43,8 @@ public class UserSelectService {
     public Boolean createUserSelectData (
             Long userPriKey,
             UserSelectReq userSelectReq
-    ) {
-        try {
+    ) {`
+        try {`
             // 유저가 있는지 체크
             User user = checkPriKeyService.checkAndGetUser(userPriKey);
             // 해당 유저에 이미 있던 답변 가중치 조회 및 감소

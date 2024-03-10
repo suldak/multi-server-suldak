@@ -25,7 +25,7 @@ public class PartyCancelReason {
     private String reason;
 
     @Setter
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(10)")
     @Enumerated(EnumType.STRING)
     private PartyRoleType partyRoleType;
 

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity(name = "userSelect")
 public class UserSelect {
     @Id
-    @Column(columnDefinition = "VARCHAR(100)")
+    @Column(columnDefinition = "VARCHAR(255)")
     private String id;
 
     @ManyToOne(optional = false)

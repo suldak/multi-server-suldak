@@ -32,7 +32,7 @@ public class PartySchedule {
     @Column(nullable = false)
     private Boolean isActive;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(30)")
     @Enumerated(EnumType.STRING)
     private PartyBatchType partyBatchType;
 
