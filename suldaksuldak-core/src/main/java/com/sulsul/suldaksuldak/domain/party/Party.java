@@ -66,7 +66,7 @@ public class Party extends BaseEntity {
     private String useProgram;
 
     @Setter
-    @Column(columnDefinition = "VARCHAR(255")
+    @Column(columnDefinition = "TEXT")
     private String onlineUrl;
 
     @Setter
