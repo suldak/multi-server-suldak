@@ -46,4 +46,5 @@ public interface LiquorRepositoryCustom {
             List<Long> liquorPriKeyList
     );
     List<Long> findAllLiquorPriKey();
+    List<LiquorDto> findByDeleteLiquor();
 }

@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.service.liquor;
 
 import com.sulsul.suldaksuldak.constant.error.ErrorCode;
+import com.sulsul.suldaksuldak.domain.liquor.Liquor;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.bridge.BridgeInterface;
@@ -9,6 +10,8 @@ import com.sulsul.suldaksuldak.repo.bridge.sell.SlToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.st.StToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.tt.TtToLiRepository;
+import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorDelService {
+    private final CheckPriKeyService checkPriKeyService;
+    private final LiquorRepository liquorRepository;
     private final MtToLiRepository mtToLiRepository;
     private final SlToLiRepository slToLiRepository;
     private final SnToLiRepository snToLiRepository;
@@ -134,6 +139,27 @@ public class LiquorDelService {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    public Boolean deleteLiquor(
+            Long liquorPriKey
+    ) {
+        try {
+            Liquor liquor = checkPriKeyService.checkAndGetLiquor(liquorPriKey);
+            liquor.setIsActive(false);
+            liquorRepository.save(liquor);
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
         }
     }
 

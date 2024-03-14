@@ -58,7 +58,7 @@ public class StatsService {
     public Boolean countSearchCnt(
             Long userId,
             Long liquorId
-    ) {
+    ) throws GeneralException {
         try {
             Optional<UserLiquorDto> dto =
                     userLiquorRepository.findByUserPriKeyAndLiquorPriKey(userId, liquorId);
@@ -124,6 +124,7 @@ public class StatsService {
 
     /**
      * 집계된 술 통계를 기준으로 기간 별 조회
+     * 삭제된 술은 조회하지 않음
      */
     public Page<Long> getLiquorDataByLogStats(
             LocalDateTime startAt,

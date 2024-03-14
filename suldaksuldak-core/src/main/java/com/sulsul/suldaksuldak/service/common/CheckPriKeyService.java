@@ -167,6 +167,11 @@ public class CheckPriKeyService {
                         ErrorCode.NOT_FOUND,
                         "해당 술 정보를 찾을 수 없습니다."
                 );
+            if (!liquor.get().getIsActive())
+                throw new GeneralException(
+                        ErrorCode.NOT_FOUND,
+                        "해당 데이터를 조회할 수 없습니다."
+                );
             return liquor.get();
         } catch (GeneralException e) {
             throw new GeneralException(

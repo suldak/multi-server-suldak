@@ -39,6 +39,7 @@ public class LiquorLikeRepositoryImpl
                         .on(liquorLike.user.id.eq(userPriKey))
                         .innerJoin(liquorLike.liquor, liquor)
                         .on(liquorLike.liquor.id.eq(liquorPriKey))
+                        .where(liquorIsActiveEq(true))
                         .fetchFirst()
         );
     }
@@ -64,7 +65,7 @@ public class LiquorLikeRepositoryImpl
                                 liquorLike.user.id.eq(user.id) :
                                 liquorLike.user.id.eq(userPriKey)
                         )
-                        .where(likeAtBetween(startAt, endAt))
+                        .where(likeAtBetween(startAt, endAt), liquorIsActiveEq(true))
                         .groupBy(liquorLike.liquor.id)
                         .orderBy(
                                 liquorLike.liquor.id.count().desc(),
@@ -86,7 +87,7 @@ public class LiquorLikeRepositoryImpl
                                 liquorLike.user.id.eq(user.id) :
                                 liquorLike.user.id.eq(userPriKey)
                         )
-                        .where(likeAtBetween(startAt, endAt))
+                        .where(likeAtBetween(startAt, endAt), liquorIsActiveEq(true))
                         .groupBy(liquorLike.liquor.id);
         return PageableExecutionUtils.getPage(
                 liquorLikeDtos, pageable,
@@ -118,5 +119,11 @@ public class LiquorLikeRepositoryImpl
     ) {
         if ((startAt == null) || (endAt == null)) return null;
         return liquorLike.likeTime.between(startAt, endAt);
+    }
+
+    private BooleanExpression liquorIsActiveEq(
+            Boolean isActive
+    ) {
+        return liquorLike.liquor.isActive.eq(isActive);
     }
 }

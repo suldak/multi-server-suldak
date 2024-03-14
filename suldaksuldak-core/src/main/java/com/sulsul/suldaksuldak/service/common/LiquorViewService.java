@@ -640,4 +640,26 @@ public class LiquorViewService {
             );
         }
     }
+
+    public List<LiquorTotalRes> getLiquorDeleteList() {
+        try {
+            List<LiquorTotalRes> liquorTotalRes = new ArrayList<>();
+            List<LiquorDto> liquorDtos =
+                    liquorRepository.findByDeleteLiquor();
+            for (LiquorDto dto: liquorDtos) {
+                liquorTotalRes.add(liquorDataService.getLiquorTotalData(dto, null));
+            }
+            return liquorTotalRes;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
 }

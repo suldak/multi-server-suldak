@@ -4,13 +4,13 @@ import com.sulsul.suldaksuldak.service.liquor.LiquorDelService;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.bridge.BridgeReq;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "[ADMIN] 술 관련 정보 삭제")
 public class LiquorDelController {
     private final LiquorDelService liquorDelService;
+
+    @ApiOperation(
+            value = "술 삭제",
+            notes = "술을 삭제 처리 합니다."
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "priKey", value = "술 기본키", required = true, dataTypeClass = Long.class)
+    })
+    @DeleteMapping("/{priKey:[0-9]+}")
+    public ApiDataResponse<Boolean> deleteLiquor(
+            @PathVariable Long priKey
+    ) {
+        return ApiDataResponse.of(
+                liquorDelService.deleteLiquor(priKey)
+        );
+    }
 
     @ApiOperation(
             value = "재료와 술 관계 삭제",

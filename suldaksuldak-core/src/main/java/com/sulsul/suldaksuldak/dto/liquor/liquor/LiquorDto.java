@@ -94,6 +94,7 @@ public class LiquorDto {
                 searchTag,
                 liquorRecipe,
                 detailAbv,
+                true,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,

@@ -168,4 +168,15 @@ public class LiquorViewController {
                 )
         );
     }
+
+    @ApiOperation(
+            value = "삭제된 술 목록 조회",
+            notes = "삭제 처리된 술 목록을 조회합니다."
+    )
+    @GetMapping("/liquor-delete")
+    public ApiDataResponse<List<LiquorTotalRes>> getLiquorDeleteList() {
+        return ApiDataResponse.of(
+                liquorViewService.getLiquorDeleteList()
+        );
+    }
 }

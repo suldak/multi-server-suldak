@@ -56,6 +56,12 @@ public class Liquor extends BaseEntity {
     @Column(nullable = false, columnDefinition = "DOUBLE")
     private Double detailAbv;
 
+    // 삭제 여부
+    @Setter
+    @Column(nullable = false)
+    private Boolean isActive;
+
+
     @Setter
     @ManyToOne
     private DrinkingCapacity drinkingCapacity;
@@ -139,6 +145,7 @@ public class Liquor extends BaseEntity {
             String searchTag,
             String liquorRecipe,
             Double detailAbv,
+            Boolean isActive,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -152,6 +159,7 @@ public class Liquor extends BaseEntity {
         this.searchTag = searchTag;
         this.liquorRecipe = liquorRecipe;
         this.detailAbv = detailAbv;
+        this.isActive = isActive;
         this.liquorAbv = liquorAbv;
         this.liquorDetail = liquorDetail;
         this.drinkingCapacity = drinkingCapacity;
@@ -167,6 +175,7 @@ public class Liquor extends BaseEntity {
             String searchTag,
             String liquorRecipe,
             Double detailAbv,
+            Boolean isActive,
             LiquorAbv liquorAbv,
             LiquorDetail liquorDetail,
             DrinkingCapacity drinkingCapacity,
@@ -181,6 +190,7 @@ public class Liquor extends BaseEntity {
                 searchTag,
                 liquorRecipe,
                 detailAbv,
+                isActive,
                 liquorAbv,
                 liquorDetail,
                 drinkingCapacity,

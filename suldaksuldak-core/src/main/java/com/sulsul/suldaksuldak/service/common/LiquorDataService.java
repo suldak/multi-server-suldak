@@ -79,6 +79,9 @@ public class LiquorDataService {
         }
     }
 
+    /**
+     * 삭제 처리된 술은 조회하지 않음
+     */
     public Page<LiquorLikeDto> getLiquorLikeList(
             Long liquorPriKey,
             Long userPriKey,
@@ -109,6 +112,7 @@ public class LiquorDataService {
 
     /**
      * 술에 관련된 모든 데이터 조회
+     * 삭제된 술을 조회하면 오류 발생
      */
     public LiquorTotalRes getLiquorTotalData(
             Long liquorPriKey,

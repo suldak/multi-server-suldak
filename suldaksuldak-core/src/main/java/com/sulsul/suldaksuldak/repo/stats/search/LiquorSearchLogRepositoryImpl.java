@@ -36,7 +36,7 @@ public class LiquorSearchLogRepositoryImpl implements LiquorSearchLogRepositoryC
                         .from(liquorSearchLog)
                         .innerJoin(liquorSearchLog.liquor, liquor)
                         .on(liquorSearchLog.liquor.id.eq(liquor.id))
-                        .where(searchAtBetween(startAt, endAt))
+                        .where(searchAtBetween(startAt, endAt), liquorIsActiveEq(true))
                         .groupBy(liquorSearchLog.liquor.id)
                         .orderBy(liquorSearchLog.liquor.count().desc(), liquorSearchLog.liquor.createdAt.desc())
                         .offset(pageable.getOffset())
@@ -50,7 +50,7 @@ public class LiquorSearchLogRepositoryImpl implements LiquorSearchLogRepositoryC
                         .from(liquorSearchLog)
                         .innerJoin(liquorSearchLog.liquor, liquor)
                         .on(liquorSearchLog.liquor.id.eq(liquor.id))
-                        .where(searchAtBetween(startAt, endAt))
+                        .where(searchAtBetween(startAt, endAt), liquorIsActiveEq(true))
                         .groupBy(liquorSearchLog.liquor.id);
 
         return PageableExecutionUtils.getPage(
@@ -79,5 +79,11 @@ public class LiquorSearchLogRepositoryImpl implements LiquorSearchLogRepositoryC
         return liquorSearchLog.searchAt.between(
                 startAt, endAt
         );
+    }
+
+    public BooleanExpression liquorIsActiveEq(
+            Boolean isActive
+    ) {
+        return liquorSearchLog.liquor.isActive.eq(isActive);
     }
 }

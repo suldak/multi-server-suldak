@@ -34,7 +34,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 getLiquorDtoQuery()
                         .from(liquor)
                         .leftJoin(liquor.fileBase, fileBase)
-                        .where(priKeyEq(priKey))
+                        .where(priKeyEq(priKey), isActiveEq(true))
                         .fetchFirst()
         );
     }
@@ -55,7 +55,8 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .leftJoin(liquor.fileBase, fileBase)
                 .where(
-                        priKeyIn(liquorPriKeys)
+                        priKeyIn(liquorPriKeys),
+                        isActiveEq(true)
                 )
                 .fetch();
     }
@@ -74,6 +75,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorAbv.id.in(tagPriKeys)
                 )
                 .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(true))
                 .fetch();
     }
 
@@ -93,7 +95,8 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .leftJoin(liquor.fileBase, fileBase)
                 .where(
-                        priKeyIn(liquorPriKeys)
+                        priKeyIn(liquorPriKeys),
+                        isActiveEq(true)
                 )
                 .fetch();
     }
@@ -112,6 +115,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorDetail.id.in(tagPriKeys)
                 )
                 .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(true))
                 .fetch();
     }
 
@@ -131,7 +135,8 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .leftJoin(liquor.fileBase, fileBase)
                 .where(
-                        priKeyIn(liquorPriKeys)
+                        priKeyIn(liquorPriKeys),
+                        isActiveEq(true)
                 )
                 .fetch();
     }
@@ -150,6 +155,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.drinkingCapacity.id.in(tagPriKeys)
                 )
                 .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(true))
                 .fetch();
     }
 
@@ -169,7 +175,8 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 )
                 .leftJoin(liquor.fileBase, fileBase)
                 .where(
-                        priKeyIn(liquorPriKeys)
+                        priKeyIn(liquorPriKeys),
+                        isActiveEq(true)
                 )
                 .fetch();
     }
@@ -188,6 +195,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                                 liquor.liquorName.id.in(tagPriKeys)
                 )
                 .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(true))
                 .fetch();
     }
 
@@ -197,7 +205,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 .select(liquor.id)
                 .from(liquor)
                 .leftJoin(liquor.fileBase, fileBase)
-                .where(searchTagLike(searchTag))
+                .where(searchTagLike(searchTag), isActiveEq(true))
                 .orderBy(liquor.name.asc())
                 .fetch();
     }
@@ -211,6 +219,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                         .select(liquor.id)
                         .from(liquor)
                         .leftJoin(liquor.fileBase, fileBase)
+                        .where(isActiveEq(true))
                         .orderBy(liquor.createdAt.desc())
                         .offset(pageable.getOffset())
                         .limit(pageable.getPageSize())
@@ -241,7 +250,7 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
 //                        .on(liquor.drinkingCapacity.id.eq(drinkingCapacity.id))
 //                        .leftJoin(liquor.liquorName, liquorName)
 //                        .on(liquor.liquorName.id.eq(liquorName.id))
-                        .where(priKeyIn(liquorPriKeyList));
+                        .where(priKeyIn(liquorPriKeyList), isActiveEq(true));
 
         List<LiquorDto> liquorTotalRes =
                 selectQuery
@@ -265,6 +274,17 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
                 .select(liquor.id)
                 .from(liquor)
                 .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(true))
+                .fetch();
+    }
+
+    @Override
+    public List<LiquorDto> findByDeleteLiquor() {
+        return getLiquorDtoQuery()
+                .from(liquor)
+                .leftJoin(liquor.fileBase, fileBase)
+                .where(isActiveEq(false))
+                .orderBy(liquor.createdAt.desc())
                 .fetch();
     }
 
@@ -308,5 +328,11 @@ public class LiquorRepositoryImpl implements LiquorRepositoryCustom {
     ) {
         return hasText(searchTag) ?
                 liquor.searchTag.contains(searchTag) : null;
+    }
+
+    private BooleanExpression isActiveEq(
+            Boolean isActive
+    ) {
+        return liquor.isActive.eq(isActive);
     }
 }
