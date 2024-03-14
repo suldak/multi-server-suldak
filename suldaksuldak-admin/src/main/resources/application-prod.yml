@@ -1,0 +1,20 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://suldak-db.cfk6gcmaap5x.ap-northeast-2.rds.amazonaws.com:3306/suldaksuldak?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: suldak
+    password: suldaksuldak
+  main:
+    allow-bean-definition-overriding: 'true'
+  jpa:
+      hibernate:
+        ddl-auto: validate
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+jwt:
+  key: "SULDAKSULDAK_KEY"
