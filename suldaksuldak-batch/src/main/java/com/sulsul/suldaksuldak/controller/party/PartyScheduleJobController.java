@@ -5,6 +5,7 @@ import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyJobDto;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
+import com.sulsul.suldaksuldak.service.common.PartyCommonService;
 import com.sulsul.suldaksuldak.service.level.LevelControlService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleService;
@@ -26,6 +27,7 @@ public class PartyScheduleJobController {
     private final CheckPriKeyService checkPriKeyService;
     private final PartyScheduleJobService partyScheduleJobService;
     private final LevelControlService levelControlService;
+    private final PartyCommonService partyCommonService;
 
     @ApiOperation(
             value = "1. 모임 생성 시 스케줄 생성",
@@ -249,5 +251,25 @@ public class PartyScheduleJobController {
             log.error(e.getMessage());
             return ApiDataResponse.of(false);
         }
+    }
+
+    @GetMapping("/test-party/{partyPriKey:[0-9]+}")
+    public ApiDataResponse<Boolean> checkParty(
+            @PathVariable Long partyPriKey
+    ) {
+        Party party =
+                checkPriKeyService.checkAndGetParty(partyPriKey);
+        return ApiDataResponse.of(
+                partyCommonService.setPartyComplete(party)
+        );
+    }
+
+    @GetMapping("/test/{partyPriKey:[0-9]+}")
+    public ApiDataResponse<Boolean> check(
+            @PathVariable Long partyPriKey
+    ) {
+        return ApiDataResponse.of(
+                levelControlService.updateUserLevelFromComplete(partyPriKey)
+        );
     }
 }

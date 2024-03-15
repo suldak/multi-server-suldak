@@ -120,6 +120,12 @@ public class Party extends BaseEntity {
     @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<PartySearchLog> partySearchLogs = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @OrderBy("id")
+    @OneToMany(mappedBy = "party", cascade = CascadeType.REMOVE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<PartyComplete> partyCompletes = new LinkedHashSet<>();
     protected Party () {}
 
     protected Party (

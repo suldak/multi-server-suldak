@@ -2,8 +2,11 @@ package com.sulsul.suldaksuldak.service.level;
 
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.admin.feedback.GroupUserFeedbackDto;
+import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteDto;
+import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteGroupDto;
 import com.sulsul.suldaksuldak.repo.admin.feedback.UserPartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.party.complete.PartyCompleteRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +23,57 @@ public class LevelControlService {
     private final CheckPriKeyService checkPriKeyService;
     private final UserRepository userRepository;
     private final UserPartyFeedbackRepository userPartyFeedbackRepository;
+    private final PartyCompleteRepository partyCompleteRepository;
+
+    // 모임 참가 및 호스트에 대한 레벨 조장
+    public Boolean updateUserLevelFromComplete(
+            Long partyPriKey
+    ) {
+        try {
+            List<PartyCompleteDto> partyCompleteDtos =
+                    partyCompleteRepository.findByPartyPriKey(partyPriKey);
+            for (PartyCompleteDto dto: partyCompleteDtos) {
+                try {
+                    Optional<PartyCompleteGroupDto> completeCheck =
+                            partyCompleteRepository.findUserGroupByUserPriKey(dto.getUserPriKey(), false);
+                    if (completeCheck.isPresent()) {
+                        if (completeCheck.get().getCompleteCnt() % 5 == 0) {
+                            // 모임 참여 5회 달성
+                            User user = checkPriKeyService.checkAndGetUser(completeCheck.get().getUserPriKey());
+                            Double plusLevel = 0.5 * getLevelWeight(user.getLevel());
+                            Double newUserLevel = Math.min(user.getLevel() + plusLevel, 99.9);
+                            log.info("{} Level Change: {} > {}", user.getNickname(), user.getLevel(), newUserLevel);
+                            user.setLevel(newUserLevel);
+                            userRepository.save(user);
+                        }
+                    }
+                    if (dto.getIsHost()) {
+                        Optional<PartyCompleteGroupDto> hostCheck =
+                                partyCompleteRepository.findUserGroupByUserPriKey(dto.getUserPriKey(), true);
+                        if (hostCheck.isPresent()) {
+                            if (hostCheck.get().getHostCnt() % 2 == 0) {
+                                // 모임 호스트 2회 달성
+                                User user = checkPriKeyService.checkAndGetUser(hostCheck.get().getUserPriKey());
+                                Double plusLevel = 0.4 * getLevelWeight(user.getLevel());
+                                Double newUserLevel = Math.min(user.getLevel() + plusLevel, 99.9);
+                                log.info("[HOST] {} Level Change: {} > {}", user.getNickname(), user.getLevel(), newUserLevel);
+                                user.setLevel(newUserLevel);
+                                userRepository.save(user);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.error(e.getMessage());
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return false;
+        }
+    }
 
     // 모임 피드백 레벨 조정
     public Boolean updateUserLevelFromFeedback() {
