@@ -18,9 +18,8 @@ public interface UserPartyFeedbackRepositoryCustom {
             LocalDateTime endAt
     );
 
-    List<Long> findAllUserPriKey();
-
     List<GroupUserFeedbackDto> findGroupDtoByTargetPriKey(
-            Long targetUserPriKey
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime
     );
 }

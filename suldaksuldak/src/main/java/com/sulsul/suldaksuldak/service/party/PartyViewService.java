@@ -289,7 +289,7 @@ public class PartyViewService {
     ) {
         try {
             List<Long> tagPriKey =
-                    partyGuestRepository.findTahPriKeyByUserRecommend(
+                    partyGuestRepository.findTagPriKeyByUserRecommend(
                             userPriKey,
                             limitNum
                     );

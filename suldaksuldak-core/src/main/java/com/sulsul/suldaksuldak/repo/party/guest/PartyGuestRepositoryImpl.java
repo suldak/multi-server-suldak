@@ -118,7 +118,7 @@ public class PartyGuestRepositoryImpl
     }
 
     @Override
-    public List<Long> findTahPriKeyByUserRecommend(
+    public List<Long> findTagPriKeyByUserRecommend(
             Long userPriKey,
             Integer limitNum
     ) {

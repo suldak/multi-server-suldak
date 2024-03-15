@@ -65,25 +65,9 @@ public class UserPartyFeedbackRepositoryImpl implements
     }
 
     @Override
-    public List<Long> findAllUserPriKey() {
-        QUser writerUser = new QUser("writerUser");
-        QUser targetUser = new QUser("targetUser");
-        return jpaQueryFactory
-                .select(userPartyFeedback.targetUser.id)
-                .from(userPartyFeedback)
-                .innerJoin(userPartyFeedback.party, party)
-                .on(userPartyFeedback.party.id.eq(party.id))
-                .innerJoin(userPartyFeedback.writer, writerUser)
-                .on(userPartyFeedback.writer.id.eq(writerUser.id))
-                .innerJoin(userPartyFeedback.targetUser, targetUser)
-                .on(userPartyFeedback.targetUser.id.eq(targetUser.id))
-                .groupBy(userPartyFeedback.targetUser.id)
-                .fetch();
-    }
-
-    @Override
     public List<GroupUserFeedbackDto> findGroupDtoByTargetPriKey(
-            Long targetUserPriKey
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime
     ) {
         QUser writerUser = new QUser("writerUser");
         QUser targetUser = new QUser("targetUser");
@@ -92,8 +76,14 @@ public class UserPartyFeedbackRepositoryImpl implements
                         Projections.constructor(
                                 GroupUserFeedbackDto.class,
                                 userPartyFeedback.targetUser.id,
-                                userPartyFeedback.feedbackType,
-                                userPartyFeedback.feedbackType.count()
+                                userPartyFeedback.feedbackType
+                                        .when(FeedbackType.GOOD)
+                                        .then(1L)
+                                        .otherwise(0L).sum(),
+                                userPartyFeedback.feedbackType
+                                        .when(FeedbackType.BAD)
+                                        .then(1L)
+                                        .otherwise(0L).sum()
                         )
                 )
                 .from(userPartyFeedback)
@@ -102,8 +92,9 @@ public class UserPartyFeedbackRepositoryImpl implements
                 .innerJoin(userPartyFeedback.writer, writerUser)
                 .on(userPartyFeedback.writer.id.eq(writerUser.id))
                 .innerJoin(userPartyFeedback.targetUser, targetUser)
-                .on(userPartyFeedback.targetUser.id.eq(targetUserPriKey))
-                .groupBy(userPartyFeedback.feedbackType)
+                .on(userPartyFeedback.targetUser.id.eq(targetUser.id))
+                .where(feedbackAtBetween(searchStartTime, searchEndTime))
+                .groupBy(userPartyFeedback.targetUser.id)
                 .fetch();
     }
 

@@ -5,6 +5,7 @@ import com.sulsul.suldaksuldak.domain.party.Party;
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.party.PartyJobDto;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
+import com.sulsul.suldaksuldak.service.level.LevelControlService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleService;
 import io.swagger.annotations.Api;
@@ -24,6 +25,7 @@ public class PartyScheduleJobController {
     private final PartyScheduleService partyScheduleService;
     private final CheckPriKeyService checkPriKeyService;
     private final PartyScheduleJobService partyScheduleJobService;
+    private final LevelControlService levelControlService;
 
     @ApiOperation(
             value = "1. 모임 생성 시 스케줄 생성",
