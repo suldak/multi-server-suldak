@@ -67,3 +67,6 @@ spring:
 
 jwt:
   key: "SULDAKSULDAK_KEY"
+batch:
+  server:
+    uri: http://localhost:8084

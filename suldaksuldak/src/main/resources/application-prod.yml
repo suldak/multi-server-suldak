@@ -67,3 +67,6 @@ spring:
 
 jwt:
   key: "SULDAKSULDAK_KEY"
+batch:
+  server:
+    uri: https://admin.suldak.co.kr

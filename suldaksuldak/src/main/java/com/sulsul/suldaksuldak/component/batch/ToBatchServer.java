@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.sulsul.suldaksuldak.constant.auth.SDTokken;
 import com.sulsul.suldaksuldak.constant.batch.BatchServerUrl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -25,7 +24,9 @@ public class ToBatchServer {
     @Value("${jwt.key}")
     private String jwtKey;
 
-    @Autowired
+    @Value("${batch.server.uri}")
+    private String batchServerUri;
+
     public ToBatchServer() {
         HttpComponentsClientHttpRequestFactory factory
                 = new HttpComponentsClientHttpRequestFactory();
@@ -61,7 +62,8 @@ public class ToBatchServer {
             HttpMethod httpMethod
     ) {
         try {
-            String localUrl = "http://localhost:8084" + batchServerUrl.getUrl() + partyPriKey;
+//            String localUrl = "http://localhost:8084" + batchServerUrl.getUrl() + partyPriKey;
+            String localUrl = batchServerUri + batchServerUrl.getUrl() + partyPriKey;
 
             HttpEntity<JsonNode> requestEntity = getPostHeaderAndBody();
 
