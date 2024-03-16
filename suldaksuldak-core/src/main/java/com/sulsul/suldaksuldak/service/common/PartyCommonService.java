@@ -12,6 +12,7 @@ import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.PartyRepository;
 import com.sulsul.suldaksuldak.repo.party.complete.PartyCompleteRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
+import com.sulsul.suldaksuldak.service.level.LevelControlService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class PartyCommonService {
     private final PartyRepository partyRepository;
     private final PartyGuestRepository partyGuestRepository;
     private final PartyCompleteRepository partyCompleteRepository;
+    private final LevelControlService levelControlService;
 
     /**
      * 모임 시간, 상태에 따라서 모임의 상태와 인원에 대한 정보를 수정합니다.
@@ -104,6 +106,10 @@ public class PartyCommonService {
                 );
                 // 모임이 최종 완료된 인원 정보 저장
                 setPartyComplete(party);
+                // 모임 참여 및 호스트 로 인한 레벨 증감 실행
+                levelControlService.updateUserLevelFromComplete(
+                        party.getId()
+                );
             }
             // 모임 상태가 취소 및 삭제 일 때
             else {
@@ -240,6 +246,7 @@ public class PartyCommonService {
                                     false,
                                     false,
                                     dto.getHostPriKey().equals(user.getId()),
+                                    null,
                                     null,
                                     party,
                                     user

@@ -10,7 +10,8 @@ public class PartyCompleteDto {
     Boolean isCompleteProcessed;
     Boolean isHostProcessed;
     Boolean isHost;
-    LocalDateTime processedAt;
+    LocalDateTime completeProcessedAt;
+    LocalDateTime hostProcessedAt;
     Long partyPriKey;
     Long userPriKey;
 }

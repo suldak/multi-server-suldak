@@ -28,9 +28,11 @@ public class PartyComplete {
     @Column(columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
+    @Setter
     @Column(nullable = false)
     private Boolean isCompleteProcessed;
 
+    @Setter
     @Column(nullable = false)
     private Boolean isHostProcessed;
 
@@ -46,7 +48,11 @@ public class PartyComplete {
 
     @Setter
     @Column(columnDefinition = "TIMESTAMP")
-    private LocalDateTime processedAt;
+    private LocalDateTime completeProcessedAt;
+
+    @Setter
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime hostProcessedAt;
 
     @ManyToOne(optional = false)
     private Party party;
@@ -66,7 +72,8 @@ public class PartyComplete {
             Boolean isCompleteProcessed,
             Boolean isHostProcessed,
             Boolean isHost,
-            LocalDateTime processedAt,
+            LocalDateTime completeProcessedAt,
+            LocalDateTime hostProcessedAt,
             Party party,
             User user
     ) {
@@ -74,7 +81,8 @@ public class PartyComplete {
         this.isCompleteProcessed = isCompleteProcessed;
         this.isHostProcessed = isHostProcessed;
         this.isHost = isHost;
-        this.processedAt = processedAt;
+        this.completeProcessedAt = completeProcessedAt;
+        this.hostProcessedAt = hostProcessedAt;
         this.party = party;
         this.user = user;
     }
@@ -84,7 +92,8 @@ public class PartyComplete {
             Boolean isCompleteProcessed,
             Boolean isHostProcessed,
             Boolean isHost,
-            LocalDateTime processedAt,
+            LocalDateTime completeProcessedAt,
+            LocalDateTime hostProcessedAt,
             Party party,
             User user
     ) {
@@ -93,7 +102,8 @@ public class PartyComplete {
                 isCompleteProcessed,
                 isHostProcessed,
                 isHost,
-                processedAt,
+                completeProcessedAt,
+                hostProcessedAt,
                 party,
                 user
         );

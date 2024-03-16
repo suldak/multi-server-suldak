@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sulsul.suldaksuldak.domain.party.PartyComplete;
 import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteDto;
 import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteGroupDto;
 import lombok.RequiredArgsConstructor;
@@ -70,6 +71,25 @@ public class PartyCompleteRepositoryImpl
         );
     }
 
+    @Override
+    public List<PartyComplete> findUnprocessedByUserPriKey(
+            Long userPriKey,
+            Boolean isCheckHost
+    ) {
+        return jpaQueryFactory
+                .selectFrom(partyComplete)
+                .innerJoin(partyComplete.party, party)
+                .on(partyComplete.party.id.eq(party.id))
+                .innerJoin(partyComplete.user, user)
+                .on(partyComplete.user.id.eq(userPriKey))
+                .where(
+                        isCheckHost ?
+                                isHostProcessedEq(false) :
+                                isCompleteProcessedEq(false)
+                )
+                .fetch();
+    }
+
     private JPAQuery<PartyCompleteDto> getPartyCompleteDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -79,7 +99,8 @@ public class PartyCompleteRepositoryImpl
                                 partyComplete.isCompleteProcessed,
                                 partyComplete.isHostProcessed,
                                 partyComplete.isHost,
-                                partyComplete.processedAt,
+                                partyComplete.completeProcessedAt,
+                                partyComplete.hostProcessedAt,
                                 partyComplete.party.id,
                                 partyComplete.user.id
                         )

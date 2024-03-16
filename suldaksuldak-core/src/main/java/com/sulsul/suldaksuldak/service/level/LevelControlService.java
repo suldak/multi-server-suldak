@@ -1,5 +1,6 @@
 package com.sulsul.suldaksuldak.service.level;
 
+import com.sulsul.suldaksuldak.domain.party.PartyComplete;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.admin.feedback.GroupUserFeedbackDto;
 import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteDto;
@@ -42,9 +43,23 @@ public class LevelControlService {
                             User user = checkPriKeyService.checkAndGetUser(completeCheck.get().getUserPriKey());
                             Double plusLevel = 0.5 * getLevelWeight(user.getLevel());
                             Double newUserLevel = Math.min(user.getLevel() + plusLevel, 99.9);
-                            log.info("{} Level Change: {} > {}", user.getNickname(), user.getLevel(), newUserLevel);
+                            //레벨 조정
+                            log.info("[COMPLETE] {} Level Change: {} > {}", user.getNickname(), user.getLevel(), newUserLevel);
                             user.setLevel(newUserLevel);
                             userRepository.save(user);
+                            // 처리된 참여 데이터 수정
+                            List<PartyComplete> completeData =
+                                    partyCompleteRepository.findUnprocessedByUserPriKey(
+                                            user.getId(),
+                                            false
+                                    );
+                            for (PartyComplete entity: completeData) {
+                                entity.setIsCompleteProcessed(true);
+                                entity.setCompleteProcessedAt(LocalDateTime.now());
+                                partyCompleteRepository.save(
+                                        entity
+                                );
+                            }
                         }
                     }
                     if (dto.getIsHost()) {
@@ -56,9 +71,23 @@ public class LevelControlService {
                                 User user = checkPriKeyService.checkAndGetUser(hostCheck.get().getUserPriKey());
                                 Double plusLevel = 0.4 * getLevelWeight(user.getLevel());
                                 Double newUserLevel = Math.min(user.getLevel() + plusLevel, 99.9);
+                                //레벨 조정
                                 log.info("[HOST] {} Level Change: {} > {}", user.getNickname(), user.getLevel(), newUserLevel);
                                 user.setLevel(newUserLevel);
                                 userRepository.save(user);
+                                // 처리된 참여 데이터 수정
+                                List<PartyComplete> hostData =
+                                        partyCompleteRepository.findUnprocessedByUserPriKey(
+                                                user.getId(),
+                                                true
+                                        );
+                                for (PartyComplete entity: hostData) {
+                                    entity.setIsHostProcessed(true);
+                                    entity.setHostProcessedAt(LocalDateTime.now());
+                                    partyCompleteRepository.save(
+                                            entity
+                                    );
+                                }
                             }
                         }
                     }

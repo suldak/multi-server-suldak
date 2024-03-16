@@ -40,7 +40,7 @@ public class PartyJobDto implements JobDtoInterface {
                     // 모임 시작 3시간 전
                     ScheduleTool.generateCronStringByLocalDateTime(
                             party.getMeetingDay().minusHours(3)
-//                            party.getMeetingDay().minusMinutes(5)
+//                            party.getMeetingDay().minusMinutes(1)
                     ),
                     null
             );
@@ -69,7 +69,7 @@ public class PartyJobDto implements JobDtoInterface {
                     // 모임 시각 1시간 후
                     ScheduleTool.generateCronStringByLocalDateTime(
                             party.getMeetingDay().plusHours(1)
-//                            party.getMeetingDay().plusMinutes(5)
+//                            party.getMeetingDay().plusMinutes(2)
                     ),
                     null
             );
@@ -84,7 +84,7 @@ public class PartyJobDto implements JobDtoInterface {
                     // 모임 시각 7일 후
                     ScheduleTool.generateCronStringByLocalDateTime(
                             party.getMeetingDay().plusDays(7)
-//                            party.getMeetingDay().plusMinutes(10)
+//                            party.getMeetingDay().plusMinutes(3)
                     ),
                     null
             );
