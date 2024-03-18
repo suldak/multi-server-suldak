@@ -179,7 +179,8 @@ public class PartyService {
      * 모임 기본키로 모임 조회
      */
     public Optional<PartyDto> getPartyDto(
-            Long priKey
+            Long priKey,
+            Long searchUserPriKey
     ) {
         try {
             if (priKey == null)
@@ -187,7 +188,7 @@ public class PartyService {
                         ErrorCode.BAD_REQUEST,
                         "유효하지 않은 기본키 입니다."
                 );
-            return partyRepository.findByPriKey(priKey);
+            return partyRepository.findByPriKey(priKey, searchUserPriKey);
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

@@ -207,7 +207,10 @@ public class PartyViewController {
         }
 
         Optional<PartyDto> partyDto =
-                partyService.getPartyDto(priKey);
+                partyService.getPartyDto(
+                        priKey,
+                        userPriKey
+                );
         if (partyDto.isEmpty())
             throw new GeneralException(
                     ErrorCode.NOT_FOUND,
@@ -246,9 +249,11 @@ public class PartyViewController {
             @ApiImplicitParam(name = "searchOption", value = "검색할 옵션 (GUEST / CLICK)", required = true, dataTypeClass = String.class)
     })
     public ApiDataResponse<List<PartyTotalRes>> getPopularPartyList(
+            HttpServletRequest request,
             String searchOption,
             Integer limitNum
     ) {
+        Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
         if (searchOption == null ||
                 (
                         !searchOption.equals("GUEST")
@@ -262,9 +267,9 @@ public class PartyViewController {
 
         List<PartyDto> partyDtos;
         if (searchOption.equals("GUEST")) {
-            partyDtos = partyViewService.getTopGuestPartyList(limitNum == null ? 10 : limitNum);
+            partyDtos = partyViewService.getTopGuestPartyList(limitNum == null ? 10 : limitNum, userPriKey);
         } else {
-            partyDtos = partyViewService.getTopClickPartyList(limitNum == null ? 10 : limitNum);
+            partyDtos = partyViewService.getTopClickPartyList(limitNum == null ? 10 : limitNum, userPriKey);
         }
         return ApiDataResponse.of(
                 partyDtos

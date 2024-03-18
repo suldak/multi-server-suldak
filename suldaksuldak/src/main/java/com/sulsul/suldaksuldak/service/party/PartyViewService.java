@@ -202,7 +202,8 @@ public class PartyViewService {
      * 참여자가 많은 순으로 모임 조회
      */
     public List<PartyDto> getTopGuestPartyList(
-            Integer limitNum
+            Integer limitNum,
+            Long searchUserPriKey
     ) {
         try {
             List<PartyDto> partyDtos = new ArrayList<>();
@@ -213,7 +214,8 @@ public class PartyViewService {
             for (Long partyPriKey: partyPriKeyList) {
                 Optional<PartyDto> dto =
                         partyRepository.findByPriKey(
-                                partyPriKey
+                                partyPriKey,
+                                searchUserPriKey
                         );
                 dto.ifPresent(partyDtos::add);
             }
@@ -235,7 +237,8 @@ public class PartyViewService {
      * 조회가 많은 순으로 모임 조회
      */
     public List<PartyDto> getTopClickPartyList(
-            Integer limitNum
+            Integer limitNum,
+            Long searchUserPriKey
     ) {
         try {
             List<PartyDto> partyDtos = new ArrayList<>();
@@ -244,7 +247,8 @@ public class PartyViewService {
             for (Long partyPriKey: partyPriKeyList) {
                 Optional<PartyDto> dto =
                         partyRepository.findByPriKey(
-                                partyPriKey
+                                partyPriKey,
+                                searchUserPriKey
                         );
                 dto.ifPresent(partyDtos::add);
             }

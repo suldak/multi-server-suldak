@@ -158,9 +158,20 @@ public class PartyRepositoryImpl implements PartyRepositoryCustom {
     }
 
     @Override
-    public Optional<PartyDto> findByPriKey(Long priKey) {
+    public Optional<PartyDto> findByPriKey(
+            Long priKey,
+            Long searchUserPriKey
+    ) {
         return Optional.ofNullable(
+                searchUserPriKey == null ?
                 getPartyDtoQuery()
+                        .from(party)
+                        .innerJoin(party.user, user)
+                        .on(party.user.id.eq(user.id))
+                        .leftJoin(party.fileBase, QFileBase.fileBase)
+                        .where(party.id.eq(priKey))
+                        .fetchFirst() :
+                getPartyDtoQuery(searchUserPriKey)
                         .from(party)
                         .innerJoin(party.user, user)
                         .on(party.user.id.eq(user.id))

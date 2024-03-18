@@ -41,7 +41,8 @@ public interface PartyRepositoryCustom {
     );
 
     Optional<PartyDto> findByPriKey(
-            Long priKey
+            Long priKey,
+            Long searchUserPriKey
     );
 
     List<PartyDto> findByHostLevel(
