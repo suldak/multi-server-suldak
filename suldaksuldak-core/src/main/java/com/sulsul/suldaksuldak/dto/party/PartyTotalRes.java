@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.dto.party;
 
 import com.sulsul.suldaksuldak.constant.file.FileUrl;
+import com.sulsul.suldaksuldak.constant.party.GuestType;
 import com.sulsul.suldaksuldak.constant.party.PartyStateType;
 import com.sulsul.suldaksuldak.constant.party.PartyType;
 import com.sulsul.suldaksuldak.dto.party.guest.PartyGuestRes;
@@ -58,6 +59,8 @@ public class PartyTotalRes {
     Long confirmCnt;
     @ApiModelProperty(value = "모임 신고 횟수")
     Long warningCnt;
+    @ApiModelProperty(value = "유저 기준 검색 시, 모임에 대한 유저의 상태")
+    GuestType guestType;
     List<PartyGuestRes> partyGuestList;
 
     public static PartyTotalRes from(
@@ -91,6 +94,7 @@ public class PartyTotalRes {
                 partyDto.getModifiedAt(),
                 partyDto.getConfirmCnt(),
                 partyDto.getWarningCnt(),
+                partyDto.getGuestType(),
                 partyGuestList
         );
     }
