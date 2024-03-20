@@ -130,6 +130,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 user.vibrationActive,
                                 user.pushActive,
                                 user.marketingActive,
+                                user.suspensionStartDate,
+                                user.suspensionEndDate,
                                 user.createdAt,
                                 user.modifiedAt
                         )

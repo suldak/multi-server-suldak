@@ -77,6 +77,8 @@ public class UserReq {
                 null,
                 null,
                 null,
+                null,
+                null,
                 null
         );
     }
@@ -126,6 +128,8 @@ public class UserReq {
                     true,
                     true,
                     true,
+                    null,
+                    null,
                     null
             );
         } catch (Exception e) {

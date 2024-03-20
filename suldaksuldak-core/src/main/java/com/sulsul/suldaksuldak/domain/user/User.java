@@ -24,6 +24,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -96,6 +97,14 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @Setter
     private Boolean marketingActive;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @Setter
+    private LocalDateTime suspensionStartDate;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    @Setter
+    private LocalDateTime suspensionEndDate;
 
     @OneToOne
     @Setter
@@ -217,6 +226,8 @@ public class User extends BaseEntity {
             Boolean vibrationActive,
             Boolean pushActive,
             Boolean marketingActive,
+            LocalDateTime suspensionStartDate,
+            LocalDateTime suspensionEndDate,
             FileBase fileBase
     ) {
         this.id = id;
@@ -235,6 +246,8 @@ public class User extends BaseEntity {
         this.vibrationActive = vibrationActive;
         this.pushActive = pushActive;
         this.marketingActive = marketingActive;
+        this.suspensionStartDate = suspensionStartDate;
+        this.suspensionEndDate = suspensionEndDate;
         this.fileBase = fileBase;
     }
 
@@ -255,6 +268,8 @@ public class User extends BaseEntity {
             Boolean vibrationActive,
             Boolean pushActive,
             Boolean marketingActive,
+            LocalDateTime suspensionStartDate,
+            LocalDateTime suspensionEndDate,
             FileBase picture
     ) {
         return new User(
@@ -274,6 +289,8 @@ public class User extends BaseEntity {
                 vibrationActive,
                 pushActive,
                 marketingActive,
+                suspensionStartDate,
+                suspensionEndDate,
                 picture
         );
     }

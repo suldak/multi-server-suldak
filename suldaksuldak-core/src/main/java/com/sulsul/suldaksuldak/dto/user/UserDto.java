@@ -33,6 +33,8 @@ public class UserDto {
     Boolean vibrationActive;
     Boolean pushActive;
     Boolean marketingActive;
+    LocalDateTime suspensionStartDate;
+    LocalDateTime suspensionEndDate;
     LocalDateTime createdAt;
     LocalDateTime modifiedAt;
 
@@ -41,6 +43,8 @@ public class UserDto {
     ) {
         return new UserDto(
                 priKey,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -79,6 +83,8 @@ public class UserDto {
             Boolean vibrationActive,
             Boolean pushActive,
             Boolean marketingActive,
+            LocalDateTime suspensionStartDate,
+            LocalDateTime suspensionEndDate,
             String fileBaseNm
     ) {
         return new UserDto(
@@ -99,6 +105,8 @@ public class UserDto {
                 vibrationActive,
                 pushActive,
                 marketingActive,
+                suspensionStartDate,
+                suspensionEndDate,
                 null,
                 null
         );
@@ -124,6 +132,8 @@ public class UserDto {
                 vibrationActive,
                 pushActive,
                 marketingActive,
+                suspensionStartDate,
+                suspensionEndDate,
                 fileBase
         );
     }

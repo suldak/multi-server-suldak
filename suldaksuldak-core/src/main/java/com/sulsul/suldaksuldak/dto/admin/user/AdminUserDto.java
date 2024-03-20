@@ -65,6 +65,8 @@ public class AdminUserDto {
                 null,
                 null,
                 null,
+                null,
+                null,
                 null
         );
     }

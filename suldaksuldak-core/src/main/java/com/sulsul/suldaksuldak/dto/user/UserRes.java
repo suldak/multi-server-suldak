@@ -47,6 +47,12 @@ public class UserRes {
     Boolean pushActive;
     @ApiModelProperty(value = "마케팅 정보 알림 여부")
     Boolean marketingActive;
+    @ApiModelProperty(value = "이용 정지 시작 일자")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    LocalDateTime suspensionStartDate;
+    @ApiModelProperty(value = "이용 정지 만료 일자")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    LocalDateTime suspensionEndDate;
     @ApiModelProperty(value = "생성 일시")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
@@ -78,6 +84,8 @@ public class UserRes {
                 userDto.getVibrationActive(),
                 userDto.getPushActive(),
                 userDto.getMarketingActive(),
+                userDto.getSuspensionStartDate(),
+                userDto.getSuspensionEndDate(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -107,6 +115,8 @@ public class UserRes {
                 userDto.getVibrationActive(),
                 userDto.getPushActive(),
                 userDto.getMarketingActive(),
+                userDto.getSuspensionStartDate(),
+                userDto.getSuspensionEndDate(),
                 userDto.getCreatedAt(),
                 userDto.getModifiedAt(),
                 null,
@@ -124,6 +134,8 @@ public class UserRes {
                 null,
                 null,
                 socialUserDto.getRegistration(),
+                null,
+                null,
                 null,
                 null,
                 null,
