@@ -24,7 +24,7 @@ public class UserDto {
     Integer birthdayYear;
     Registration registration;
     Double level;
-    Integer warningCnt;
+    Double warningCnt;
     Boolean isActive;
     String selfIntroduction;
     String fileBaseNm;
@@ -71,7 +71,7 @@ public class UserDto {
             Integer birthdayYear,
             Registration registration,
             Double level,
-            Integer warningCnt,
+            Double warningCnt,
             Boolean isActive,
             String selfIntroduction,
             Boolean alarmActive,
@@ -126,28 +126,6 @@ public class UserDto {
                 marketingActive,
                 fileBase
         );
-    }
-
-    /**
-     * 유저 레벨 수정
-     */
-    public static User updateUserLevel(
-            User user,
-            Double level
-    ) {
-        user.setLevel(level);
-        return user;
-    }
-
-    /**
-     * 유저 신고 누적 신고
-     */
-    public static User updateUserWarningCnt(
-            User user,
-            Integer warningCnt
-    ) {
-        user.setWarningCnt(warningCnt);
-        return user;
     }
 
     /**

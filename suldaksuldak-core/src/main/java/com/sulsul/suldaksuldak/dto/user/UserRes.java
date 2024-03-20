@@ -30,7 +30,7 @@ public class UserRes {
     @ApiModelProperty(value = "유저 레벨")
     Double level;
     @ApiModelProperty(value = "신고 누적")
-    Integer warningCnt;
+    Double warningCnt;
     @ApiModelProperty(value = "활성화 여부")
     Boolean isActive;
     @ApiModelProperty(value = "자기소개")

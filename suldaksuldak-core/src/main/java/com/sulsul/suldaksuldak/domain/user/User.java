@@ -65,9 +65,9 @@ public class User extends BaseEntity {
     @Setter
     private Double level;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "DOUBLE")
     @Setter
-    private Integer warningCnt;
+    private Double warningCnt;
 
     @Column(nullable = false)
     @Setter
@@ -209,7 +209,7 @@ public class User extends BaseEntity {
             Integer birthdayYear,
             Registration registration,
             Double level,
-            Integer warningCnt,
+            Double warningCnt,
             Boolean isActive,
             String selfIntroduction,
             Boolean alarmActive,
@@ -247,7 +247,7 @@ public class User extends BaseEntity {
             Integer birthdayYear,
             Registration registration,
             Double level,
-            Integer warningCnt,
+            Double warningCnt,
             Boolean isActive,
             String selfIntroduction,
             Boolean alarmActive,

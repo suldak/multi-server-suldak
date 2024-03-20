@@ -137,7 +137,7 @@ public class UserService implements UserDetailsService {
                     userSearchReq.getEndYear(),
                     userSearchReq.getRegistration(),
                     UtilTool.getSplitList(userSearchReq.getLevelList(), Double.class),
-                    UtilTool.getSplitList(userSearchReq.getWarningCntList(), Integer.class),
+                    UtilTool.getSplitList(userSearchReq.getWarningCntList(), Double.class),
                     userSearchReq.getIsActive()
             );
         } catch (GeneralException e) {

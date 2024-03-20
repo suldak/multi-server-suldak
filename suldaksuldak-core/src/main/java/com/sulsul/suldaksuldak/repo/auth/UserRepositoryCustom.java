@@ -28,7 +28,7 @@ public interface UserRepositoryCustom {
             Integer endYear,
             Registration registration,
             List<Double> levelList,
-            List<Integer> warningCntList,
+            List<Double> warningCntList,
             Boolean isActive
     );
 

@@ -76,7 +76,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Integer endYear,
             Registration registration,
             List<Double> levelList,
-            List<Integer> warningCntList,
+            List<Double> warningCntList,
             Boolean isActive
     ) {
         return getUserDtoQuery()
@@ -212,7 +212,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     private BooleanExpression warningCntListIn(
-            List<Integer> warningCntList
+            List<Double> warningCntList
     ) {
         return warningCntList == null || warningCntList.isEmpty() ?
                 null : user.warningCnt.in(warningCntList);

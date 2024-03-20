@@ -30,7 +30,7 @@ public class AdminUserController {
             @ApiImplicitParam(name = "nickname", value = "유저 닉네임", dataTypeClass = String.class),
             @ApiImplicitParam(name = "selfIntroduction", value = "유저 자기소개", dataTypeClass = String.class),
             @ApiImplicitParam(name = "level", value = "유저 레벨", dataTypeClass = Double.class),
-            @ApiImplicitParam(name = "warningCnt", value = "신고 누적 횟수", dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "warningCnt", value = "신고 누적 횟수", dataTypeClass = Double.class),
             @ApiImplicitParam(name = "isActive", value = "탈퇴 여부", dataTypeClass = Boolean.class)
     })
     @PostMapping(value = "/user")
@@ -39,7 +39,7 @@ public class AdminUserController {
             String nickname,
             String selfIntroduction,
             Double level,
-            Integer warningCnt,
+            Double warningCnt,
             Boolean isActive
     ) {
         return ApiDataResponse.of(

@@ -33,12 +33,12 @@ public class UserReq {
     Integer birthdayYear;
     @ApiModelProperty(value = "가입 방법", required = true)
     Registration registration;
-    @ApiModelProperty(value = "유저 레빌")
-    Double level;
-    @ApiModelProperty(value = "유저 신고 누적")
-    Integer warningCnt;
-    @ApiModelProperty(value = "유저 활성화 여부")
-    Boolean isActive;
+//    @ApiModelProperty(value = "유저 레빌")
+//    Double level;
+//    @ApiModelProperty(value = "유저 신고 누적")
+//    Double warningCnt;
+//    @ApiModelProperty(value = "유저 활성화 여부")
+//    Boolean isActive;
     @ApiModelProperty(value = "자기소개")
     String selfIntroduction;
     @ApiModelProperty(value = "알림 여부")
@@ -57,7 +57,7 @@ public class UserReq {
             String nickname,
             String selfIntroduction,
             Double level,
-            Integer warningCnt,
+            Double warningCnt,
             Boolean isActive
     ) {
         return UserDto.of(
@@ -81,31 +81,31 @@ public class UserReq {
         );
     }
 
-    public UserDto toDto() {
-        try {
-            return UserDto.of(
-                    id,
-                    userEmail,
-                    UtilTool.encryptPassword(userPw, userEmail),
-                    nickname,
-                    gender,
-                    birthdayYear,
-                    registration,
-                    level,
-                    warningCnt,
-                    isActive,
-                    selfIntroduction,
-                    alarmActive,
-                    soundActive,
-                    vibrationActive,
-                    pushActive,
-                    marketingActive,
-                    null
-            );
-        } catch (Exception e) {
-            throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());
-        }
-    }
+//    public UserDto toDto() {
+//        try {
+//            return UserDto.of(
+//                    id,
+//                    userEmail,
+//                    UtilTool.encryptPassword(userPw, userEmail),
+//                    nickname,
+//                    gender,
+//                    birthdayYear,
+//                    registration,
+//                    level,
+//                    warningCnt,
+//                    isActive,
+//                    selfIntroduction,
+//                    alarmActive,
+//                    soundActive,
+//                    vibrationActive,
+//                    pushActive,
+//                    marketingActive,
+//                    null
+//            );
+//        } catch (Exception e) {
+//            throw new GeneralException(ErrorCode.INTERNAL_ERROR, e.getMessage());
+//        }
+//    }
 
     public UserDto createUser() {
         try {
@@ -118,7 +118,7 @@ public class UserReq {
                     birthdayYear,
                     registration,
                     UserValue.DEFAULT_LEVEL.getValue(),
-                    0,
+                    0.0,
                     true,
                     selfIntroduction,
                     true,
