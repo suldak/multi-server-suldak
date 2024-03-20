@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.dto.party.PartyJobDto;
 import com.sulsul.suldaksuldak.service.level.LevelScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleJobService;
 import com.sulsul.suldaksuldak.service.party.PartyScheduleService;
+import com.sulsul.suldaksuldak.tool.ScheduleTool;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -14,6 +15,9 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -42,16 +46,30 @@ public class JobManager {
         List<PartySchedule> partySchedules =
                 partyScheduleService.getPartyScheduleList(null);
 
+        List<PartySchedule> missingPartySchedule = new ArrayList<>();
         for (PartySchedule partySchedule: partySchedules) {
-            partyScheduleJobService.addSchedule(
-                    scheduler,
-                    PartyJobDto.of(
-                            partySchedule.getParty(),
-                            partySchedule.getPartyBatchType(),
-                            partySchedule.getCronStr()
-                    )
-            );
+            LocalDateTime fireTime =
+                    ScheduleTool.cronToLocalDateTime(partySchedule.getCronStr());
+            if (LocalDateTime.now().isBefore(fireTime)) {
+                partyScheduleJobService.addSchedule(
+                        scheduler,
+                        PartyJobDto.of(
+                                partySchedule.getParty(),
+                                partySchedule.getPartyBatchType(),
+                                partySchedule.getCronStr()
+                        )
+                );
+            } else {
+                missingPartySchedule.add(partySchedule);
+            }
         }
+        List<PartySchedule> sortMissingList =
+                missingPartySchedule.stream()
+                        .sorted(Comparator.comparing((PartySchedule ps) -> ps.getParty().getId())
+                                .thenComparing((PartySchedule ps) -> ps.getPartyBatchType().getNum()))
+                        .toList();
+        partyScheduleService.handleSchedules(sortMissingList);
+
         levelScheduleJobService.addSchedule(
                 scheduler,
                 LevelJobDto.of()

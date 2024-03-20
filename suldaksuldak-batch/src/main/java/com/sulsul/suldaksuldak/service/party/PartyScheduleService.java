@@ -8,6 +8,8 @@ import com.sulsul.suldaksuldak.domain.party.batch.PartySchedule;
 import com.sulsul.suldaksuldak.dto.party.PartyJobDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.party.schedule.PartyScheduleRepository;
+import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
+import com.sulsul.suldaksuldak.service.common.PartyCommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +21,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class PartyScheduleService {
+    private final CheckPriKeyService checkPriKeyService;
     private final StartUpEventListener startUpEventListener;
+    private final PartyCommonService partyCommonService;
     private final PartyScheduleRepository partyScheduleRepository;
 
     /**
@@ -158,7 +162,8 @@ public class PartyScheduleService {
     ) {
         try {
             return partyScheduleRepository.findByPartyPriKeyAndIsActive(
-                    startUpEventListener.getMyIpAddress(),
+//                    startUpEventListener.getMyIpAddress(),
+                    null,
                     partyPriKey
             );
         } catch (GeneralException e) {
@@ -171,6 +176,37 @@ public class PartyScheduleService {
                     ErrorCode.DATA_ACCESS_ERROR,
                     e.getMessage()
             );
+        }
+    }
+
+    /**
+     * 시간이 지난 모임 스케줄을 처리 합니다.
+     */
+    public Boolean handleSchedules(
+            List<PartySchedule> missingList
+    ) {
+        try {
+            for (PartySchedule partySchedule: missingList) {
+                try {
+                    if (
+                            partySchedule.getPartyBatchType().equals(PartyBatchType.SET_RECRUITMENT_END) ||
+                            partySchedule.getPartyBatchType().equals(PartyBatchType.SET_ON_GOING) ||
+                            partySchedule.getPartyBatchType().equals(PartyBatchType.SET_MEETING_COMPLETE) ||
+                            partySchedule.getPartyBatchType().equals(PartyBatchType.SET_GUEST_COMPLETE)
+                    ) {
+                        Party party =
+                                checkPriKeyService.checkAndGetParty(partySchedule.getParty().getId());
+                        partyCommonService.partyTotalHandler(party);
+                    }
+                    partySchedule.setIsActive(false);
+                    partyScheduleRepository.save(partySchedule);
+                } catch (Exception ignore) {}
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return false;
         }
     }
 }

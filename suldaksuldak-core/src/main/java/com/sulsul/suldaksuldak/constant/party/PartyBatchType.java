@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PartyBatchType {
-    SET_RECRUITMENT_END,
-    SET_ON_GOING,
-    SET_MEETING_COMPLETE,
-    SET_GUEST_COMPLETE
+    SET_RECRUITMENT_END(1),
+    SET_ON_GOING(2),
+    SET_MEETING_COMPLETE(3),
+    SET_GUEST_COMPLETE(4)
     ;
+    private final Integer num;
+
     public static PartyBatchType findText(
             String text
     ) {
