@@ -59,6 +59,11 @@ public class PartyService {
                         "모임의 최소 인원은 3명입니다."
                 );
             checkPartyData(partyDto);
+            if (partyDto.getMeetingDay().minusHours(3).isBefore(LocalDateTime.now()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임 시간 3시간 전에는 모임을 생성할 수 없습니다."
+                );
             if (partyDto.getHostUserPriKey() == null)
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -122,6 +127,11 @@ public class PartyService {
                         "모집이 종료된 모임은 수정할 수 없습니다."
                 );
             checkPartyData(partyDto);
+            if (partyDto.getMeetingDay().minusHours(3).isBefore(LocalDateTime.now()))
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "모임 시간 3시간 전에는 모임을 수정할 수 없습니다."
+                );
             partyRepository.save(
                     partyDto.updateEntity(
                             party
