@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +47,9 @@ public class PartyFeedbackViewController {
             Long partyPriKey,
             Long writerPriKey,
             Long targetUserPriKey,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime searchStartTime,
+            @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
             LocalDateTime searchEndTime
     ) {
         return ApiDataResponse.of(
