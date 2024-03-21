@@ -54,6 +54,8 @@ public class PartyViewService {
     ) {
         try {
             List<ReportPartyDto> reportPartyDtos =
+                    searchUser == null ?
+                            List.of() :
                     reportPartyRepository.findByOption(
                             searchUser,
                             null,
