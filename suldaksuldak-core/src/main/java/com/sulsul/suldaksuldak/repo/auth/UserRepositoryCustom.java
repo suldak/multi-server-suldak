@@ -2,8 +2,10 @@ package com.sulsul.suldaksuldak.repo.auth;
 
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
+import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,4 +35,8 @@ public interface UserRepositoryCustom {
     );
 
     Optional<UserDto> findByPriKey(Long priKey);
+
+    List<User> findEntityByWarningCount(
+            Double warningCount
+    );
 }

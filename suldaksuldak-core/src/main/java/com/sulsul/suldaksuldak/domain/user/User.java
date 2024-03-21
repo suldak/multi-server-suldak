@@ -98,11 +98,11 @@ public class User extends BaseEntity {
     @Setter
     private Boolean marketingActive;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "DATETIME")
     @Setter
     private LocalDateTime suspensionStartDate;
 
-    @Column(columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "DATETIME")
     @Setter
     private LocalDateTime suspensionEndDate;
 

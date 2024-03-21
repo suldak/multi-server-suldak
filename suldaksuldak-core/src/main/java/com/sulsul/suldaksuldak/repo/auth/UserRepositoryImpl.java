@@ -6,11 +6,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.constant.auth.Gender;
 import com.sulsul.suldaksuldak.constant.auth.Registration;
+import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,6 +108,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         .where(user.id.eq(priKey))
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public List<User> findEntityByWarningCount(
+            Double warningCount
+    ) {
+        return jpaQueryFactory
+                .selectFrom(user)
+                .where(
+                        user.warningCnt.goe(warningCount)
+                )
+                .fetch();
     }
 
     private JPAQuery<UserDto> getUserDtoQuery() {

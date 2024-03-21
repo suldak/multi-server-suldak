@@ -10,7 +10,6 @@ import org.quartz.JobExecutionException;
 @Slf4j
 @Setter
 public class LevelJob extends AbstractJob {
-
     @Override
     protected void executeJob(JobExecutionContext context) throws JobExecutionException {
         try {

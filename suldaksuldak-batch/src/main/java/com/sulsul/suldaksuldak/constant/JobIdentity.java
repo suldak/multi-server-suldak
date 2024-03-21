@@ -30,7 +30,11 @@ public enum JobIdentity {
 
     // 모임 피드백에 의한 유저 레벨 조정
     USER_LEVEL_APPLY_TRIGGER("USER_LEVEL_APPLY_TRIGGER"),
-    USER_LEVEL_APPLY_JOB("USER_LEVEL_APPLY_JOB")
+    USER_LEVEL_APPLY_JOB("USER_LEVEL_APPLY_JOB"),
+
+    // 경고 점수 누적에 의한 계정 정지 스케줄
+    WARNING_COUNT_TRIGGER("WARNING_COUNT_TRIGGER"),
+    WARNING_COUNT_JOB("WARNING_COUNT_JOB")
     ;
 
     private final String name;
