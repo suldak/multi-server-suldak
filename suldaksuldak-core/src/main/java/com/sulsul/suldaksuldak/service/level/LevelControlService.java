@@ -1,10 +1,12 @@
 package com.sulsul.suldaksuldak.service.level;
 
+import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.party.PartyComplete;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.admin.feedback.GroupUserFeedbackDto;
 import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteDto;
 import com.sulsul.suldaksuldak.dto.party.complete.PartyCompleteGroupDto;
+import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.admin.feedback.UserPartyFeedbackRepository;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
 import com.sulsul.suldaksuldak.repo.party.complete.PartyCompleteRepository;
@@ -153,5 +155,49 @@ public class LevelControlService {
             return 0.5;
         }
         return 1.0;
+    }
+
+    public Boolean updateUserWarningCnt(
+            Long userPriKey,
+            Double warningCnt
+    ) throws GeneralException {
+        try {
+            return updateUserWarningCnt(
+                    checkPriKeyService.checkAndGetUser(userPriKey),
+                    warningCnt
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public Boolean updateUserWarningCnt(
+            User user,
+            Double warningCnt
+    ) throws GeneralException {
+        try {
+            user.setWarningCnt(user.getWarningCnt() + warningCnt);
+            log.info("[{}] {} 경고 점수 {}", user.getId(), user.getNickname(), user.getWarningCnt());
+            userRepository.save(user);
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
     }
 }

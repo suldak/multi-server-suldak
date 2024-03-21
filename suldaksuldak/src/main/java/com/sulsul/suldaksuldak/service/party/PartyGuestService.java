@@ -14,12 +14,14 @@ import com.sulsul.suldaksuldak.repo.party.cancel.PartyCancelRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.PartyCommonService;
+import com.sulsul.suldaksuldak.service.level.LevelControlService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -31,6 +33,7 @@ public class PartyGuestService {
     private final PartyGuestRepository partyGuestRepository;
     private final PartyCommonService partyCommonService;
     private final PartyCancelRepository partyCancelRepository;
+    private final LevelControlService levelControlService;
 
     /**
      * 모임 참가 신청
@@ -149,6 +152,18 @@ public class PartyGuestService {
                             partyGuest.getUser()
                     )
             );
+            try {
+                // 모임 시작 하루 전이고 이미 승인 상태이면 경고 점수 부여
+                if (
+                        LocalDateTime.now().isAfter(party.getMeetingDay().minusDays(1))
+                        && partyGuest.getConfirm().equals(GuestType.CONFIRM)
+                ) {
+                    levelControlService.updateUserWarningCnt(
+                            partyGuest.getUser(),
+                            1.0
+                    );
+                }
+            } catch (Exception ignore) {}
             partyGuest.setConfirm(GuestType.CANCEL);
             partyGuestRepository.save(partyGuest);
             return true;

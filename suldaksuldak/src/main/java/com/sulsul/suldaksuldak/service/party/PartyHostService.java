@@ -13,9 +13,13 @@ import com.sulsul.suldaksuldak.repo.party.cancel.PartyCancelRepository;
 import com.sulsul.suldaksuldak.repo.party.guest.PartyGuestRepository;
 import com.sulsul.suldaksuldak.service.common.CheckPriKeyService;
 import com.sulsul.suldaksuldak.service.common.PartyCommonService;
+import com.sulsul.suldaksuldak.service.level.LevelControlService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class PartyHostService {
     private final PartyGuestRepository partyGuestRepository;
     private final PartyCommonService partyCommonService;
     private final PartyCancelRepository partyCancelRepository;
+    private final LevelControlService levelControlService;
 
     /**
      * 관계 기본기
@@ -88,6 +93,9 @@ public class PartyHostService {
         }
     }
 
+    /**
+     * 모임의 상태를 모집 졸료 상태로 수정합니다.
+     */
     public Boolean modifiedRecruitmentEndParty(
             Long partyPriKey,
             Long hostPriKey
@@ -126,8 +134,9 @@ public class PartyHostService {
     }
 
     /**
-     * 모임의 상태를 수정합니다.
+     * 모임의 상태를 모임 취소로 수정합니다.
      */
+    @Transactional
     public Boolean modifiedCancelParty(
             Long partyPriKey,
             Long hostPriKey,
@@ -135,7 +144,7 @@ public class PartyHostService {
             PartyCancelDto partyCancelDto
     ) {
         try {
-            Party party = partyService.checkParty(partyPriKey, false);
+            Party party = partyService.checkParty(partyPriKey, true);
             if (party.getPartyStateType().equals(PartyStateType.RECRUITMENT_END))
                 throw new GeneralException(
                         ErrorCode.BAD_REQUEST,
@@ -165,6 +174,14 @@ public class PartyHostService {
                             party.getUser()
                     )
             );
+            try {
+                if (LocalDateTime.now().isAfter(party.getMeetingDay().minusDays(1))) {
+                    levelControlService.updateUserWarningCnt(
+                            party.getUser(),
+                            1.0
+                    );
+                }
+            } catch (Exception ignore) {}
             return partyCommonService.partyTotalHandler(
                     party
             );
