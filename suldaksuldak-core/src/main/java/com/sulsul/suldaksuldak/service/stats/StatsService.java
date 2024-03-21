@@ -392,7 +392,7 @@ public class StatsService {
                             + "_" + partyPriKey;
             if (
                     partySearchLogDto.isEmpty() ||
-                            partySearchLogDto.get().getSearchAt().plusMinutes(10)
+                            partySearchLogDto.get().getSearchAt().plusMinutes(30)
                                     .isBefore(LocalDateTime.now())
             ) {
                 partySearchLogRepository.save(
