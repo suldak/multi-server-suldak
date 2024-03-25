@@ -226,7 +226,8 @@ public class PartyViewController {
                                         null,
                                         null,
                                         partyDto.get().getId(),
-                                        List.of(GuestType.CONFIRM, GuestType.ON_GOING, GuestType.COMPLETE_WAIT, GuestType.COMPLETE)
+                                        null
+//                                        List.of(GuestType.CONFIRM, GuestType.ON_GOING, GuestType.COMPLETE_WAIT, GuestType.COMPLETE)
                                 )
                                 .stream()
                                 .map(PartyGuestRes::from)
