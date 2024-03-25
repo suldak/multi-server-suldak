@@ -16,7 +16,6 @@ import com.sulsul.suldaksuldak.repo.bridge.snack.SnToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.st.StToLiRepository;
 import com.sulsul.suldaksuldak.repo.bridge.tt.TtToLiRepository;
 import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
-import com.sulsul.suldaksuldak.service.search.SearchService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +26,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorViewService {
-    private final SearchService searchService;
     private final LiquorDataService liquorDataService;
     private final LiquorRepository liquorRepository;
     private final SnToLiRepository snToLiRepository;
@@ -54,11 +51,11 @@ public class LiquorViewService {
             List<Long> resultLiquorPriKey = liquorRepository.findAllLiquorPriKey();
             if (liquorTagSearchDto.getSearchTag() != null && !liquorTagSearchDto.getSearchTag().isBlank()) {
                 // =============
-                if (userPriKey != null)
-                    searchService.createSearchLog(
-                            userPriKey,
-                            liquorTagSearchDto.getSearchTag()
-                    );
+//                if (userPriKey != null)
+//                    searchService.createSearchLog(
+//                            userPriKey,
+//                            liquorTagSearchDto.getSearchTag()
+//                    );
                 // =============
                 if (andBool) {
                     resultLiquorPriKey = UtilTool.findOverlappingElements(

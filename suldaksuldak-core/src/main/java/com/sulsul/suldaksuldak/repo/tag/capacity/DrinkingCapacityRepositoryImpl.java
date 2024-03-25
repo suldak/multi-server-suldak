@@ -1,12 +1,14 @@
 package com.sulsul.suldaksuldak.repo.tag.capacity;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.tag.DrinkingCapacityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.sulsul.suldaksuldak.domain.tag.QDrinkingCapacity.drinkingCapacity;
@@ -26,6 +28,14 @@ public class DrinkingCapacityRepositoryImpl implements DrinkingCapacityRepositor
         );
     }
 
+    @Override
+    public List<DrinkingCapacityDto> findByPriKeyList(List<Long> priKeyList) {
+        return getDrinkingCapacityDtoQuery()
+                .from(drinkingCapacity)
+                .where(priKeyListIn(priKeyList))
+                .fetch();
+    }
+
     private JPAQuery<DrinkingCapacityDto> getDrinkingCapacityDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -36,5 +46,12 @@ public class DrinkingCapacityRepositoryImpl implements DrinkingCapacityRepositor
                                 drinkingCapacity.color
                         )
                 );
+    }
+
+    private BooleanExpression priKeyListIn(
+            List<Long> priKeyList
+    ) {
+        return priKeyList == null || priKeyList.isEmpty() ?
+                null : drinkingCapacity.id.in(priKeyList);
     }
 }

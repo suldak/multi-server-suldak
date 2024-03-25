@@ -7,4 +7,5 @@ import java.util.List;
 public interface LiquorSnackRepositoryCustom {
     List<LiquorSnackDto> findAllLiquorSnack();
     List<LiquorSnackDto> findByLiquorPriKey(Long liquorPriKey);
+    List<LiquorSnackDto> findByPriKeyList(List<Long> priKeyList);
 }

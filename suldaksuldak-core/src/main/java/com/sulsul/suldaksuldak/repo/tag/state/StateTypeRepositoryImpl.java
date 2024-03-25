@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.repo.tag.state;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.tag.StateTypeDto;
@@ -26,6 +27,14 @@ public class StateTypeRepositoryImpl implements StateTypeRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<StateTypeDto> findByPriKeyList(List<Long> priKeyList) {
+        return getStateTypeDtoQuery()
+                .from(stateType)
+                .where(priKeyListIn(priKeyList))
+                .fetch();
+    }
+
     private JPAQuery<StateTypeDto> getStateTypeDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -35,5 +44,12 @@ public class StateTypeRepositoryImpl implements StateTypeRepositoryCustom {
                                 stateType.name
                         )
                 );
+    }
+
+    private BooleanExpression priKeyListIn(
+            List<Long> priKeyList
+    ) {
+        return priKeyList == null || priKeyList.isEmpty() ?
+                null : stateType.id.in(priKeyList);
     }
 }

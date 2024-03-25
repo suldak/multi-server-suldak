@@ -1,6 +1,7 @@
 package com.sulsul.suldaksuldak.repo.tag.sell;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.tag.LiquorSellDto;
@@ -26,6 +27,14 @@ public class LiquorSellRepositoryImpl implements LiquorSellRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<LiquorSellDto> findByPriKeyList(List<Long> priKeyList) {
+        return getLiquorSellDtoQuery()
+                .from(liquorSell)
+                .where(priKeyListIn(priKeyList))
+                .fetch();
+    }
+
     private JPAQuery<LiquorSellDto> getLiquorSellDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -35,5 +44,12 @@ public class LiquorSellRepositoryImpl implements LiquorSellRepositoryCustom {
                                 liquorSell.name
                         )
                 );
+    }
+
+    private BooleanExpression priKeyListIn(
+            List<Long> priKeyList
+    ) {
+        return priKeyList == null || priKeyList.isEmpty() ?
+                null : liquorSell.id.in(priKeyList);
     }
 }

@@ -6,6 +6,7 @@ import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchReq;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTotalRes;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import com.sulsul.suldaksuldak.service.common.LiquorViewService;
+import com.sulsul.suldaksuldak.service.search.SearchService;
 import com.sulsul.suldaksuldak.service.stats.StatsService;
 import com.sulsul.suldaksuldak.tool.UtilTool;
 import io.swagger.annotations.Api;
@@ -32,6 +33,7 @@ import java.util.List;
 @RequestMapping("/api/liquor/view")
 @Api(tags = "[COMMON] 술 관련 정보 조회")
 public class LiquorViewController {
+    private final SearchService searchService;
     private final LiquorViewService liquorViewService;
     private final StatsService statsService;
     private final LiquorDataService liquorDataService;
@@ -48,7 +50,10 @@ public class LiquorViewController {
             LiquorTagSearchReq liquorTagSearchReq
     ) {
         Long userPriKey = UtilTool.getUserPriKeyFromHeader(request);
-
+        searchService.createSearchLog(
+                userPriKey,
+                liquorTagSearchReq.toDto()
+        );
         return ApiDataResponse.of(
                 liquorViewService.getLiquorByTag(
                         userPriKey,

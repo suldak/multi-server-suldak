@@ -38,6 +38,14 @@ public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<LiquorSnackDto> findByPriKeyList(List<Long> priKeyList) {
+        return getLiquorSnackDtoQuery()
+                .from(liquorSnack)
+                .where(priKeyListIn(priKeyList))
+                .fetch();
+    }
+
     private JPAQuery<LiquorSnackDto> getLiquorSnackDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -50,9 +58,10 @@ public class LiquorSnackRepositoryImpl implements LiquorSnackRepositoryCustom {
                 );
     }
 
-    private BooleanExpression priKeyIn(
+    private BooleanExpression priKeyListIn(
             List<Long> priKeyList
     ) {
-        return priKeyList == null || priKeyList.isEmpty() ? null : liquorSnack.id.in(priKeyList);
+        return priKeyList == null || priKeyList.isEmpty() ?
+                null : liquorSnack.id.in(priKeyList);
     }
 }

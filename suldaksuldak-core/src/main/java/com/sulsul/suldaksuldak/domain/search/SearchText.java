@@ -21,13 +21,17 @@ import java.time.LocalDateTime;
 @Entity(name = "searchText")
 public class SearchText {
     @Id
-    @Column(columnDefinition = "VARCHAR(255)")
-    private String id;
+    @Column(columnDefinition = "BIGINT UNSIGNED")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private Boolean isTag;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(100)")
     private String content;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User user;
 
     @CreatedDate
@@ -45,22 +49,26 @@ public class SearchText {
     protected SearchText () {}
 
     protected SearchText (
-            String id,
+            Long id,
+            Boolean isTag,
             String content,
             User user
     ) {
         this.id = id;
+        this.isTag = isTag;
         this.content = content;
         this.user = user;
     }
 
     public static SearchText of (
-            String id,
+            Long id,
+            Boolean isTag,
             String content,
             User user
     ) {
         return new SearchText(
                 id,
+                isTag,
                 content,
                 user
         );

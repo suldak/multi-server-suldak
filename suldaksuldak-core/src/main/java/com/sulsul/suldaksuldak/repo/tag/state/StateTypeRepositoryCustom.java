@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface StateTypeRepositoryCustom {
     List<StateTypeDto> findByLiquorPriKey(Long liquorPriKey);
+    List<StateTypeDto> findByPriKeyList(List<Long> priKeyList);
 }

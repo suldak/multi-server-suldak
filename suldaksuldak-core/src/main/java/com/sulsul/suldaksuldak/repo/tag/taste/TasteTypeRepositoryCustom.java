@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TasteTypeRepositoryCustom {
     List<TasteTypeDto> findByLiquorPriKey(Long liquorPriKey);
+    List<TasteTypeDto> findByPriKeyList(List<Long> priKeyList);
 }

@@ -391,4 +391,211 @@ public class LiquorDataService {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
         }
     }
+
+    /**
+     * 기본키 리스틀 이용해서 도수 목록 조회
+     */
+    public List<LiquorAbvDto> getLiquorAbvDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorAbvRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 2차 분류 목록 조회
+     */
+    public List<LiquorDetailDto> getLiquorDetailDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorDetailRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 1차 분류 목록 조회
+     */
+    public List<LiquorNameDto> getLiquorNameDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorNameRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 추천 안주 목록 조회
+     */
+    public List<LiquorSnackDto> getLiquorSnackDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorSnackRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 주량 정보 목록 조회
+     */
+    public List<DrinkingCapacityDto> getDrinkingCapacityDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return drinkingCapacityRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 재료 목록 조회
+     */
+    public List<LiquorMaterialDto> getLiquorMaterialDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorMaterialRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 판매처 목록 조회
+     */
+    public List<LiquorSellDto> getLiquorSellDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return liquorSellRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 맛 정보 목록 조회
+     */
+    public List<StateTypeDto> getStateTypeDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return stateTypeRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 기본키 리스틀 이용해서 상태 정보 목록 조회
+     */
+    public List<TasteTypeDto> getTasteTypeDtoList(
+            List<Long> priKeyList
+    ) {
+        try {
+            if (priKeyList == null || priKeyList.isEmpty())
+                return List.of();
+            return tasteTypeRepository.findByPriKeyList(priKeyList);
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
 }
