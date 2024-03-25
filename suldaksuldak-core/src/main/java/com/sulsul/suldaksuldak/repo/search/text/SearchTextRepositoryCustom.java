@@ -9,6 +9,7 @@ public interface SearchTextRepositoryCustom {
     List<SearchTextDto> findListByOption(
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
-            Long userPriKey
+            Long userPriKey,
+            Integer limitNum
     );
 }

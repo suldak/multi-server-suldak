@@ -159,13 +159,15 @@ public class SearchService {
     public List<SearchTextDto> getSearchList(
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
-            Long userPriKey
+            Long userPriKey,
+            Integer limitNum
     ) {
         try {
             return searchTextRepository.findListByOption(
                     searchStartTime,
                     searchEndTime,
-                    userPriKey
+                    userPriKey,
+                    limitNum
             );
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());

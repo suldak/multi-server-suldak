@@ -25,17 +25,18 @@ public class SearchTextRepositoryImpl
     public List<SearchTextDto> findListByOption(
             LocalDateTime searchStartTime,
             LocalDateTime searchEndTime,
-            Long userPriKey
+            Long userPriKey,
+            Integer limitNum
     ) {
         return getSearchTextDtoQuery()
                 .from(searchText)
                 .innerJoin(searchText.user, user)
-                .on(
-                        userPriKey == null ?
-                                searchText.user.id.eq(user.id) :
-                                searchText.user.id.eq(userPriKey)
+                .on(searchText.user.id.eq(userPriKey))
+                .where(
+                        isTagEq(false),
+                        searchAtBetween(searchStartTime, searchEndTime)
                 )
-                .where(searchAtBetween(searchStartTime, searchEndTime))
+                .orderBy(searchText.searchAt.desc())
                 .fetch();
     }
 
@@ -58,5 +59,12 @@ public class SearchTextRepositoryImpl
     ) {
         if ((startAt == null) || (endAt == null)) return null;
         return searchText.searchAt.between(startAt, endAt);
+    }
+
+    private BooleanExpression isTagEq(
+            Boolean isTag
+    ) {
+        return isTag == null ? null :
+                searchText.isTag.eq(isTag);
     }
 }
