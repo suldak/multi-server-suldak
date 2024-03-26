@@ -5,6 +5,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sulsul.suldaksuldak.dto.search.SearchTextDto;
+import com.sulsul.suldaksuldak.dto.search.SearchTextRankingDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -40,6 +41,25 @@ public class SearchTextRepositoryImpl
                 .fetch();
     }
 
+    @Override
+    public List<SearchTextRankingDto> findRankingList(
+            LocalDateTime searchStartTime,
+            LocalDateTime searchEndTime,
+            Integer limitNum
+    ) {
+        return getSearchTextRankingDtoQuery()
+                .from(searchText)
+                .innerJoin(searchText.user, user)
+                .on(searchText.user.id.eq(user.id))
+                .where(searchAtBetween(searchStartTime, searchEndTime))
+                .limit(limitNum)
+                .groupBy(searchText.content)
+                .orderBy(
+                        searchText.content.count().desc()
+                )
+                .fetch();
+    }
+
     private JPAQuery<SearchTextDto> getSearchTextDtoQuery() {
         return jpaQueryFactory
                 .select(
@@ -49,6 +69,16 @@ public class SearchTextRepositoryImpl
                                 searchText.user.nickname,
                                 searchText.content,
                                 searchText.searchAt
+                        )
+                );
+    }
+
+    private JPAQuery<SearchTextRankingDto> getSearchTextRankingDtoQuery() {
+        return jpaQueryFactory
+                .select(
+                        Projections.constructor(
+                                SearchTextRankingDto.class,
+                                searchText.content
                         )
                 );
     }

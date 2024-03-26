@@ -6,6 +6,8 @@ import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
 import com.sulsul.suldaksuldak.dto.search.RecommendSearchTextDto;
 import com.sulsul.suldaksuldak.dto.search.SearchTextDto;
+import com.sulsul.suldaksuldak.dto.search.SearchTextRankingDto;
+import com.sulsul.suldaksuldak.dto.search.SearchTextRankingRes;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
@@ -298,6 +300,70 @@ public class SearchService {
                 );
             recommendSearchTextRepository.deleteById(priKey);
             return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    public List<SearchTextRankingRes> getSearchTextRankingList(
+            Integer searchHour,
+            Integer limitNum
+    ) {
+        try {
+            if (searchHour == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "조회할 시간을 입력해주세요."
+                );
+            if (searchHour < 0 || searchHour > 23)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "조회할 시는 0부터 23까지 입력해주세요."
+                );
+            LocalDateTime now =
+                    LocalDateTime.now().withMinute(0).withSecond(0).withNano(0);
+            List<SearchTextRankingDto> nowRank =
+                    searchTextRepository.findRankingList(
+                            now.withHour(searchHour - 1),
+                            now.withHour(searchHour),
+                            limitNum
+                    );
+            List<SearchTextRankingDto> preRank =
+                    searchTextRepository.findRankingList(
+                            now.withHour(searchHour - 2),
+                            now.withHour(searchHour - 1),
+                            limitNum
+                    );
+            return nowRank.stream()
+                    .map(nowDto -> {
+                        Integer nowIndex = nowRank.indexOf(nowDto);
+                        Integer preIndex = preRank.indexOf(nowDto);
+                        Boolean isNew = preIndex.equals(-1);
+                        Boolean isDown = false;
+                        Boolean isUp = false;
+
+                        if (!isNew && nowIndex < preIndex) {
+                            isUp = true;
+                        } else if (!isNew && nowIndex > preIndex) {
+                            isDown = true;
+                        }
+                        return SearchTextRankingRes.of(
+                                nowIndex + 1,
+                                nowDto,
+                                isNew,
+                                isDown,
+                                isUp
+                        );
+                    })
+                    .toList();
         } catch (GeneralException e) {
             throw new GeneralException(
                     e.getErrorCode(),

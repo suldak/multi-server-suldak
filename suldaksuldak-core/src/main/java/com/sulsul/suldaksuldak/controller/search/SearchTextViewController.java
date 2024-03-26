@@ -2,6 +2,7 @@ package com.sulsul.suldaksuldak.controller.search;
 
 import com.sulsul.suldaksuldak.dto.ApiDataResponse;
 import com.sulsul.suldaksuldak.dto.search.RecommendSearchTextRes;
+import com.sulsul.suldaksuldak.dto.search.SearchTextRankingRes;
 import com.sulsul.suldaksuldak.service.search.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,4 +48,27 @@ public class SearchTextViewController {
         );
     }
 
+    @ApiOperation(
+            value = "검색어 랭킹 조회",
+            notes = """
+                    검색어의 랭킹 목록을 조회합니다.
+                    \nEx: searchHour에 11을 입력하면 9시 ~ 10시의 순위와 10시 부터 11시의 순위를 비교합니다. 
+                    """
+    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "searchHour", value = "조회할 시간 (0 ~ 23)", required = true, dataTypeClass = Integer.class),
+            @ApiImplicitParam(name = "limitNum", value = "검색 항목 개수 (기본 10개)", dataTypeClass = Integer.class)
+    })
+    @GetMapping(value = "/ranking")
+    public ApiDataResponse<List<SearchTextRankingRes>> getSearchTextRankingList(
+            Integer searchHour,
+            Integer limitNum
+    ) {
+        return ApiDataResponse.of(
+                searchService.getSearchTextRankingList(
+                            searchHour,
+                            limitNum == null ? 10 : limitNum
+                )
+        );
+    }
 }
