@@ -4,11 +4,13 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.domain.search.SearchText;
 import com.sulsul.suldaksuldak.domain.user.User;
 import com.sulsul.suldaksuldak.dto.liquor.liquor.LiquorTagSearchDto;
+import com.sulsul.suldaksuldak.dto.search.RecommendSearchTextDto;
 import com.sulsul.suldaksuldak.dto.search.SearchTextDto;
 import com.sulsul.suldaksuldak.dto.tag.*;
 import com.sulsul.suldaksuldak.dto.tag.snack.LiquorSnackDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.repo.auth.UserRepository;
+import com.sulsul.suldaksuldak.repo.search.recommend.RecommendSearchTextRepository;
 import com.sulsul.suldaksuldak.repo.search.text.SearchTextRepository;
 import com.sulsul.suldaksuldak.service.common.LiquorDataService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ public class SearchService {
     private final UserRepository userRepository;
     private final LiquorDataService liquorDataService;
     private final SearchTextRepository searchTextRepository;
+    private final RecommendSearchTextRepository recommendSearchTextRepository;
 
     public Boolean createSearchLog(
             Long userPriKey,
@@ -173,6 +176,138 @@ public class SearchService {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
             throw new GeneralException(ErrorCode.DATA_ACCESS_ERROR, e.getMessage());
+        }
+    }
+
+    /**
+     * 추천 검색어 조회
+     */
+    public List<RecommendSearchTextDto> getRecommendSearchTextList(
+            Boolean isActive,
+            Integer limitNum
+    ) {
+        try {
+            return recommendSearchTextRepository.findByOption(
+                    isActive,
+                    limitNum
+            );
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 추천 검색어 생성 및 수정
+     */
+    public Boolean createRecommendSearchText(
+            RecommendSearchTextDto recommendSearchTextDto
+    ) {
+        try {
+            if (recommendSearchTextDto.getId() == null) {
+                recommendSearchTextRepository.save(
+                        recommendSearchTextDto.toEntity()
+                );
+            } else {
+                recommendSearchTextRepository.findById(recommendSearchTextDto.getId())
+                        .ifPresentOrElse(
+                                findEntity -> {
+                                    recommendSearchTextRepository.save(
+                                            recommendSearchTextDto.updateEntity(findEntity)
+                                    );
+                                },
+                                () -> {
+                                    throw new GeneralException(
+                                            ErrorCode.NOT_FOUND,
+                                            "해당 추천 검색어를 찾을 수 없습니다."
+                                    );
+                                }
+                        );
+            }
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 추천 검색어 활성화 여부 수정
+     */
+    public Boolean updateRecommendSearchTextActive(
+            Long priKey
+    ) {
+        try {
+            if (priKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "기본키 정보가 누락되었습니다."
+                );
+            recommendSearchTextRepository.findById(priKey)
+                    .ifPresentOrElse(
+                            findEntity -> {
+                                findEntity.setIsActive(!findEntity.getIsActive());
+                                recommendSearchTextRepository.save(findEntity);
+                            },
+                            () -> {
+                                throw new GeneralException(
+                                        ErrorCode.NOT_FOUND,
+                                        "해당 추천 검색어를 찾을 수 없습니다."
+                                );
+                            }
+                    );
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    /**
+     * 추천 검색어를 삭제합니다.
+     */
+    public Boolean deleteRecommendSearchText(
+            Long priKey
+    ) {
+        try {
+            if (priKey == null)
+                throw new GeneralException(
+                        ErrorCode.BAD_REQUEST,
+                        "기본키 정보가 누락되었습니다."
+                );
+            recommendSearchTextRepository.deleteById(priKey);
+            return true;
+        } catch (GeneralException e) {
+            throw new GeneralException(
+                    e.getErrorCode(),
+                    e.getMessage()
+            );
+        } catch (Exception e) {
+            throw new GeneralException(
+                    ErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
         }
     }
 }
