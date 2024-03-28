@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  profiles:
+    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/suldaksuldak?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
@@ -70,3 +72,17 @@ jwt:
 batch:
   server:
     uri: http://localhost:8084
+
+cloud:
+  aws:
+    s3:
+      enabled: false
+      bucket: suldak-images
+    credentials:
+      access-key: <accessKey>
+      secret-key: <secretKey>
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
