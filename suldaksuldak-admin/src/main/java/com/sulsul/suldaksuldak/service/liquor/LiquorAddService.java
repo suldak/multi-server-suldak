@@ -15,8 +15,10 @@ import com.sulsul.suldaksuldak.repo.liquor.liquor.LiquorRepository;
 import com.sulsul.suldaksuldak.repo.liquor.name.LiquorNameRepository;
 import com.sulsul.suldaksuldak.repo.tag.capacity.DrinkingCapacityRepository;
 import com.sulsul.suldaksuldak.service.file.FileService;
+import com.sulsul.suldaksuldak.service.file.S3FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +26,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Slf4j
 public class LiquorAddService {
+    @Value("${cloud.aws.s3.enabled}")
+    private Boolean s3Enabled;
+
+    private final S3FileService s3FileService;
     private final FileService fileService;
     private final LiquorRepository liquorRepository;
     private final LiquorAbvRepository liquorAbvRepository;
@@ -69,7 +75,13 @@ public class LiquorAddService {
             }
             if (liquorDto.getId() == null) {
                 // 신규 생성
-                FileBase fileBase = fileService.saveFile(file);
+                FileBase fileBase = null;
+                if (s3Enabled) {
+                    fileBase = s3FileService.saveFile(file);
+                } else {
+                    fileBase = fileService.saveFile(file);
+                }
+//                FileBase fileBase = fileService.saveFile(file);
                 return liquorRepository
                         .save(liquorDto.toEntity(liquorAbv, liquorDetail, drinkingCapacity, liquorName, fileBase))
                         .getId();
@@ -83,12 +95,23 @@ public class LiquorAddService {
                                         );
                                     } else {
                                         FileBase oriFileBase = findEntity.getFileBase();
-                                        FileBase fileBase = fileService.saveFile(file);
+                                        FileBase fileBase = null;
+                                        if (s3Enabled) {
+                                            fileBase = s3FileService.saveFile(file);
+                                        } else {
+                                            fileBase = fileService.saveFile(file);
+                                        }
+//                                        FileBase fileBase = fileService.saveFile(file);
                                         liquorRepository.save(
                                                 liquorDto.updateEntity(findEntity, liquorAbv, liquorDetail, drinkingCapacity, liquorName, fileBase)
                                         );
-                                        if (oriFileBase != null)
-                                            fileService.deleteFile(oriFileBase.getFileNm());
+                                        if (oriFileBase != null) {
+                                            if (s3Enabled) {
+                                                s3FileService.deleteFile(oriFileBase.getFileNm());
+                                            } else {
+                                                fileService.deleteFile(oriFileBase.getFileNm());
+                                            }
+                                        }
                                     }
                                 },
                                 () -> {

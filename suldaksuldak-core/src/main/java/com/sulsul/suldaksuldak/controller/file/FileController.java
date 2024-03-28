@@ -4,9 +4,11 @@ import com.sulsul.suldaksuldak.constant.error.ErrorCode;
 import com.sulsul.suldaksuldak.dto.file.FileBaseDto;
 import com.sulsul.suldaksuldak.exception.GeneralException;
 import com.sulsul.suldaksuldak.service.file.FileService;
+import com.sulsul.suldaksuldak.service.file.S3FileService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,31 +31,50 @@ import java.util.Optional;
 @RequestMapping("/api/file")
 @Api(tags = "[COMMON] 파일 관련 API")
 public class FileController {
+    @Value("${cloud.aws.s3.enabled}")
+    private Boolean s3Enabled;
+
     private final FileService fileService;
+    private final S3FileService s3FileService;
 
     @GetMapping(value = "/download/{fileNm}")
-    public ResponseEntity<ByteArrayResource> downloadFile(
+//    public ResponseEntity<ByteArrayResource> downloadFile(
+    public ResponseEntity<?> downloadFile(
             @PathVariable String fileNm
     ) {
         try {
             Optional<FileBaseDto> fileBaseDto = fileService.getFileNm(fileNm);
             if (fileBaseDto.isEmpty()) throw new GeneralException(ErrorCode.BAD_REQUEST, "파일을 찾지 못하였습니다.");
 
-            Path fileFullPath = Paths.get(fileBaseDto.get().getFileLocation(), fileBaseDto.get().getFileNm());
-            byte[] fileBytes = Files.readAllBytes(fileFullPath);
-
             String attachment = "attachment; filename=\"" +
-                    URLEncoder.encode(fileBaseDto.get().getOriFileNm() + fileBaseDto.get().getFileExt(), StandardCharsets.UTF_8).replaceAll("\\+", "%20") +
-                    "\";";
+                    URLEncoder.encode(
+                            fileBaseDto.get().getOriFileNm() +
+                                    fileBaseDto.get().getFileExt(),
+                                    StandardCharsets.UTF_8
+                            )
+                            .replaceAll("\\+", "%20") + "\";";
 
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, attachment);
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(new ByteArrayResource(fileBytes));
+
+            if (s3Enabled) {
+                return ResponseEntity
+                        .ok()
+                        .headers(headers)
+                        .body(
+                                s3FileService.getFileDownUrl(fileBaseDto.get().getFileNm())
+                        );
+            } else {
+                Path fileFullPath = Paths.get(fileBaseDto.get().getFileLocation(), fileBaseDto.get().getFileNm());
+                byte[] fileBytes = Files.readAllBytes(fileFullPath);
+
+                return ResponseEntity
+                        .ok()
+                        .headers(headers)
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .body(new ByteArrayResource(fileBytes));
+            }
         } catch (GeneralException e) {
             throw new GeneralException(e.getErrorCode(), e.getMessage());
         } catch (Exception e) {
